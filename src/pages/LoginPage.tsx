@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { X, ShieldCheck, Zap, Lock, Calendar, Trophy, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';

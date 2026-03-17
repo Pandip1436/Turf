@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Zap, Shield, Sun, Moon, Users, Trophy, Car,

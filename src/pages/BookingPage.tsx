@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
-import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, User, Calendar } from 'lucide-react';
+import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar } from 'lucide-react';
 
 interface SlotInfo {
   label: string;
