@@ -30,7 +30,7 @@ const MyBookingsPage = () => {
     <div className="min-h-screen bg-gray-50 pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4">
         <div className="mb-8">
-          <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-1">MY BOOKINGS</h1>
+          <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-1">My Bookings</h1>
           <p className="text-gray-500">Welcome back, {user?.name}!</p>
         </div>
 

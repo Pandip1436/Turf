@@ -331,7 +331,7 @@ const BookingPage = () => {
 
         {/* ══════════════════ STEP 2 ══════════════════ */}
         {step === 2 && (
-          <div className=" max-w-2xl ml-50 bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+          <div className="w-full bg-white rounded-2xl shadow-sm p-6 sm:p-8">
             <h2 className="font-bold text-2xl text-gray-900 mb-6">Your Details</h2>
 
             <div className="space-y-5 mb-8">
@@ -400,7 +400,7 @@ const BookingPage = () => {
 
         {/* ══════════════════ STEP 3 ══════════════════ */}
         {step === 3 && (
-          <div className="bg-white max-w-2xl ml-50 rounded-2xl shadow-sm p-6 sm:p-8">
+          <<div className="bg-white w-full rounded-2xl shadow-sm p-6 sm:p-8">
             <h2 className="font-bold text-2xl text-gray-900 mb-6">Complete Payment</h2>
 
             {/* Booking details */}

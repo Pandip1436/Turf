@@ -18,9 +18,9 @@ const Footer = () => (
                 className="w-20 h-20 object-contain"
               />
           </div>
-          <span className="font-display text-xl text-white tracking-wider">HyperGreen 360</span>
+          <span className="font-display text-xl text-white tracking-wider">HyperGreen 360 Turf</span>
         </div>
-        <p className="text-sm leading-relaxed mb-4">Premium sports turf facility in the heart of Sivakasi. Football & Cricket with floodlights, open 24/7.</p>
+        <p className="text-sm leading-relaxed mb-4">Premium sports turf facility in the heart of Sivakasi.<br/> Football & Cricket with floodlights, open 24/7.</p>
         <div className="flex gap-3">
           <a href="#" className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
             <Instagram className="w-4 h-4" />
