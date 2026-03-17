@@ -1,6 +1,8 @@
 
 import { Link } from 'react-router-dom';
 import { Zap, MapPin, Phone, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
+import logo from "../assets/logo.png";
+
 
 const Footer = () => (
   <footer className="bg-gray-900 text-gray-300">
@@ -8,8 +10,13 @@ const Footer = () => (
       {/* Brand */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-            <Zap className="w-4 h-4 text-white" />
+          <div className="w-20 h-20  rounded-lg flex items-center justify-center">
+              {/* Logo Image */}
+              <img
+                src={logo}
+                alt="HyperGreen 360 Turf"
+                className="w-20 h-20 object-contain"
+              />
           </div>
           <span className="font-display text-lg text-white tracking-wider">HyperGreen 360</span>
         </div>
