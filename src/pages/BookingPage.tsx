@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/purity */
+import React, { useState, useEffect } from 'react';
 import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar } from 'lucide-react';
 
 interface SlotInfo {
@@ -109,6 +110,16 @@ const BookingPage = () => {
     if (selectedSlots.has(slot.label)) return 'bg-green-600 border-2 border-green-700 text-white cursor-pointer';
     return 'bg-white border border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50 cursor-pointer';
   };
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }, [step]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [confirmed]);
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -116,6 +127,7 @@ const BookingPage = () => {
     setLoading(false);
     setConfirmed(true);
   };
+
 
   /* ── CONFIRMED ── */
   if (confirmed) {
