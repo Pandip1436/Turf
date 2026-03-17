@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import  { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 interface AdminUser {
@@ -24,6 +25,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const t = localStorage.getItem('hg360_admin_token');
     const u = localStorage.getItem('hg360_admin_user');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (t && u) { setToken(t); setAdmin(JSON.parse(u)); }
   }, []);
 
