@@ -4,6 +4,13 @@ import {
   CheckCircle, Star, ChevronRight, Phone, MapPin, Mail, Clock, Navigation
 } from 'lucide-react';
 import { Calendar, CreditCard } from 'lucide-react';
+import { useEffect, useState } from "react";
+
+import hero1 from "../assets/hero/hero1.png";
+import hero2 from "../assets/hero/hero2.png";
+import hero3 from "../assets/hero/hero3.jpg";
+import hero4 from "../assets/hero/hero4.jpg";
+
 
 const steps = [
   { icon: <Calendar className="w-7 h-7 text-white" />, title: 'Step 1: Pick Date & Time', desc: 'Choose your preferred date and available time slot from the calendar' },
@@ -44,48 +51,109 @@ const reviews = [
   { name: 'Karthik R.', rating: 5, text: 'Organized a tournament here – staff was excellent and the field was perfect.', avatar: 'KR' },
 ];
 
+const images = [hero1, hero2, hero3, hero4];
+
+function Hero() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const slider = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(slider);
+  }, []);
+
+  return (
+    <section
+      className="relative min-h-[90vh] mt-15 flex items-center bg-cover bg-center transition-all duration-1000"
+      style={{ backgroundImage: `url(${images[current]})` }}
+    >
+      {/* dark overlay */}
+      <div className="absolute inset-0 bg-black/60"></div>
+
+      <div className="relative max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
+
+        {/* LEFT CONTENT */}
+        <div className="text-white">
+          <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/40 text-green-400 text-sm px-4 py-1.5 rounded-full font-semibold mb-6">
+            <Zap className="w-3.5 h-3.5" /> Premium Sports Facility — Sivakasi
+          </span>
+
+          <h1 className="font-display text-5xl sm:text-7xl tracking-wider leading-none mb-6">
+            HYPERGREEN<br />
+            <span className="text-green-400">360 TURF</span>
+          </h1>
+
+          <p className="text-gray-300 text-lg mb-8 max-w-md">
+            Football & Cricket with professional floodlights. Our unique 360° circular field delivers a playing experience unlike any other.
+          </p>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/booking"
+              className="bg-green-500 hover:bg-green-400 text-white px-8 py-3 rounded-xl font-bold text-lg"
+            >
+              Book Now
+            </Link>
+
+            <Link
+              to="/gallery"
+              className="border border-gray-500 hover:border-green-400 text-gray-300 hover:text-white px-8 py-3 rounded-xl font-bold text-lg"
+            >
+              View Gallery
+            </Link>
+          </div>
+        </div>
+
+        {/* RIGHT CARD */}
+        <div className="hidden md:block">
+          <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 text-white">
+
+            <div className="text-center mb-6">
+              <div className="text-4xl mb-2">⚽</div>
+              <h3 className="text-2xl text-green-400 font-bold">
+                NEXT AVAILABLE SLOT
+              </h3>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                "6:00 PM – 7:00 PM ₹1000",
+                "7:00 PM – 8:00 PM ₹1000",
+                "8:00 PM – 9:00 PM ₹1000",
+              ].map((slot, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between bg-green-500/20 border border-green-500/40 rounded-lg px-4 py-2 text-sm"
+                >
+                  <span>{slot}</span>
+                  <span className="text-green-400 font-bold text-xs">
+                    AVAILABLE
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              to="/booking"
+              className="mt-5 block text-center bg-green-500 hover:bg-green-400 text-white rounded-xl py-3 font-bold"
+            >
+              Check All Slots →
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const HomePage = () => {
   return (
     <div className="pt-[72px]">
-      {/* Hero */}
-      <section className="relative hero-gradient min-h-[90vh] flex items-center overflow-hidden">
-        <div className="absolute top-20 right-10 w-64 h-64 bg-green-500 opacity-10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-green-400 opacity-5 rounded-full blur-3xl" />
-        <div className="relative max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-2 gap-12 items-center">
-          <div className="text-white animate-fade-in">
-            <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/40 text-green-400 text-sm px-4 py-1.5 rounded-full font-semibold mb-6">
-              <Zap className="w-3.5 h-3.5" /> Premium Sports Facility — Sivakasi
-            </span>
-            <h1 className="font-display text-6xl sm:text-7xl tracking-wider leading-none mb-6">
-              HYPERGREEN<br /><span className="text-green-400">360 TURF</span>
-            </h1>
-            <p className="text-gray-300 text-lg mb-8 max-w-md">
-              Football & Cricket with professional floodlights. Our unique 360° circular field delivers a playing experience unlike any other in Tamil Nadu.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/booking" className="bg-green-500 hover:bg-green-400 text-white px-8 py-3 rounded-xl font-bold text-lg transition-all green-glow">Book Now</Link>
-              <Link to="/gallery" className="border border-gray-500 hover:border-green-400 text-gray-300 hover:text-white px-8 py-3 rounded-xl font-bold text-lg transition-all">View Gallery</Link>
-            </div>
-          </div>
-          <div className="hidden md:block">
-            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 text-white">
-              <div className="text-center mb-6">
-                <div className="text-4xl mb-2">⚽</div>
-                <h3 className="font-display text-2xl tracking-wider text-green-400">NEXT AVAILABLE SLOT</h3>
-              </div>
-              <div className="space-y-3">
-                {['6:00 PM – 7:00 PM  ₹1000', '7:00 PM – 8:00 PM  ₹1000', '8:00 PM – 9:00 PM  ₹1000'].map((slot, i) => (
-                  <div key={i} className="flex items-center justify-between bg-green-500/20 border border-green-500/40 rounded-lg px-4 py-2 text-sm">
-                    <span>{slot}</span>
-                    <span className="text-green-400 font-bold text-xs">AVAILABLE</span>
-                  </div>
-                ))}
-              </div>
-              <Link to="/booking" className="mt-5 block text-center bg-green-500 hover:bg-green-400 text-white rounded-xl py-3 font-bold transition-colors">Check All Slots →</Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* hero */}
+      <Hero/>
+    
 
       {/* Stats */}
       <section className="bg-white py-10">
