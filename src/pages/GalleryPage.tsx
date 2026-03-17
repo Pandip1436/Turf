@@ -43,11 +43,11 @@ type Category = 'all' | 'field' | 'night' | 'facilities' | 'tournament';
 type ViewMode = 'grid' | 'list';
 
 const CATEGORIES: { key: Category; label: string }[] = [
-  { key: 'all',        label: '🌐 All Photos'  },
-  { key: 'field',      label: '⚽ Field'        },
-  { key: 'night',      label: '🌙 Night'        },
-  { key: 'facilities', label: '🏢 Facilities'   },
-  { key: 'tournament', label: '🏆 Tournaments'  },
+  { key: 'all',        label: ' All Photos'  },
+  { key: 'field',      label: ' Field'        },
+  { key: 'night',      label: 'Night'        },
+  { key: 'facilities', label: 'Facilities'   },
+  { key: 'tournament', label: ' Tournaments'  },
 ];
 
 const BADGE_STYLES: Record<string, string> = {
