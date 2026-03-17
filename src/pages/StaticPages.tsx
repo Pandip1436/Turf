@@ -5,7 +5,7 @@ export const TermsPage = () => (
   <div className="min-h-screen bg-gray-50 pt-24 pb-16">
     <div className="max-w-3xl mx-auto px-4">
       <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-2">TERMS & CONDITIONS</h1>
-      <p className="text-gray-500 mb-8">Last updated: March 2025</p>
+      <p className="text-gray-500 mb-8">Last updated: March 2026</p>
       <div className="bg-white rounded-2xl shadow-sm p-8 space-y-6 text-sm text-gray-600 leading-relaxed">
         {[
           ['1. Booking & Payments', 'All bookings must be confirmed with full payment in advance. Slots are allocated on a first-come, first-served basis. Online payment via UPI, net banking, or cash at facility is accepted. Booking confirmation will be shared via WhatsApp/SMS after payment verification.'],

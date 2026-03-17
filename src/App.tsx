@@ -11,14 +11,17 @@ import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import { TermsPage, CancellationPage, PricingPage } from './pages/StaticPages';
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <ScrollToTop />
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-1">
+            
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/booking" element={<BookingPage />} />
