@@ -9,7 +9,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
       {/* Brand */}
       <div>
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 ">
           <div className="w-20 h-20  rounded-lg flex items-center justify-center">
               {/* Logo Image */}
               <img
@@ -18,7 +18,7 @@ const Footer = () => (
                 className="w-20 h-20 object-contain"
               />
           </div>
-          <span className="font-display text-lg text-white tracking-wider">HyperGreen 360</span>
+          <span className="font-display text-xl text-white tracking-wider">HyperGreen 360</span>
         </div>
         <p className="text-sm leading-relaxed mb-4">Premium sports turf facility in the heart of Sivakasi. Football & Cricket with floodlights, open 24/7.</p>
         <div className="flex gap-3">
