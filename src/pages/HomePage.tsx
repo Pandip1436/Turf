@@ -387,7 +387,7 @@ const HomePage = () => {
               <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center justify-between">
                 <div>
                   <span className="text-xs font-bold text-green-700 uppercase tracking-wide">GPS Coordinates</span>
-                  <p className="text-green-800 font-mono text-sm mt-0.5">9.4534° N, 77.8042° E</p>
+                  <p className="text-green-800 font-mono text-sm mt-0.5">9.4534° N,77.8042° E</p>
                 </div>
                 <a
                   href="https://maps.google.com/?q=9.4534,77.8042"
