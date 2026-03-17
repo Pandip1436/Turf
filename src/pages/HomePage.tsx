@@ -12,8 +12,8 @@ const steps = [
 ];
 
 const stats = [
-  { value: '30K+', label: 'Happy Players' },
-  { value: '2', label: 'Sports Fields' },
+  { value: '70K+', label: 'Happy Players' },
+  { value: '9+', label: 'Sports Facilities' },
   { value: '800+', label: 'Monthly Bookings' },
   { value: '4.9★', label: 'Average Rating' },
 ];
@@ -88,12 +88,12 @@ const HomePage = () => {
       </section>
 
       {/* Stats */}
-      <section className="bg-green-600 py-10">
-        <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+      <section className="bg-white py-10">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-10 text-center text-black">
           {stats.map(s => (
             <div key={s.label}>
-              <div className="font-display text-4xl tracking-wider">{s.value}</div>
-              <div className="text-green-100 text-sm mt-1">{s.label}</div>
+              <div className="font-display text-5xl tracking-wider">{s.value}</div>
+              <div className="text-gray-500 text-md font-bold mt-1">{s.label}</div>
             </div>
           ))}
         </div>
