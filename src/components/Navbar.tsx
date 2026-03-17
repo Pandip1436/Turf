@@ -5,6 +5,29 @@ import { Menu, X, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import logo from "../assets/logo.png";
 
+function OfferBanner() {
+  const location = useLocation();
+
+  if (location.pathname !== "/") return null;
+
+  return (
+    <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full h-20 text-white text-center py-5 text-lg font-bold tracking-wide">
+      💰 Save More! Book consecutive hours for discounts: &nbsp;💰
+      <br />
+      <span>
+        🌅 Morning (6AM–6PM): 2+ hours =
+        <span className="font-extrabold"> ₹500/hr</span>
+      </span>
+      &nbsp;|&nbsp;
+      <span>
+        🌙 Evening (6PM–6AM): 2hrs =
+        <span className="font-extrabold"> 10% off</span>, 3hrs =
+        <span className="font-extrabold"> 20% off</span>
+      </span>
+    </div>
+  );
+}
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -126,13 +149,7 @@ const Navbar = () => {
         </div>
       )}
        {/* Promo banner — sits below the navbar */}
-      <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full text-white text-center py-2 h-20text-xs font-bold tracking-wide  " >
-        💰 Save More! Book consecutive hours for discounts: &nbsp;💰
-       <br /> <span className="opacity-100">🌅 Morning (6AM–6PM): 2+ hours = <span className="font-extrabold">₹500/hr</span></span>
-        &nbsp;|&nbsp;
-        <span className="opacity-100">🌙 Evening (6PM–6AM): 2hrs = <span className="font-extrabold">10% off</span>, 3hrs = <span className="font-extrabold">20% off</span></span>
-        &nbsp; 
-      </div>
+      <OfferBanner />
     </nav>
   );
 };
