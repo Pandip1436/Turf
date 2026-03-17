@@ -12,6 +12,7 @@ import ContactPage from './pages/ContactPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import { TermsPage, CancellationPage, PricingPage } from './pages/StaticPages';
 import ScrollToTop from "./components/ScrollToTop";
+import AdminApp from './admin/AdminApp';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/admin/*" element={<AdminApp />} />
               <Route path="/booking" element={<BookingPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/login" element={<LoginPage />} />

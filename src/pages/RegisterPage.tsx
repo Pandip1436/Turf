@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { X, ShieldCheck, Eye, EyeOff, User, Mail, Phone, Lock, CheckCircle } from 'lucide-react';

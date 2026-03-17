@@ -427,7 +427,7 @@ const HomePage = () => {
 
               {/* Email */}
               <div className="bg-gray-50 rounded-2xl p-6 flex gap-4 items-start card-hover">
-                <div className="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 bg-orange-100 rounded-xl flex items-center justify-center shrink-0">
                   <Mail className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
@@ -441,7 +441,7 @@ const HomePage = () => {
 
               {/* Hours */}
               <div className="bg-gray-50 rounded-2xl p-6 flex gap-4 items-start card-hover">
-                <div className="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
+                <div className="w-11 h-11 bg-violet-100 rounded-xl flex items-center justify-center shrink-0">
                   <Clock className="w-5 h-5 text-violet-600" />
                 </div>
                 <div>
