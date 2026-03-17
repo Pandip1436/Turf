@@ -66,7 +66,7 @@ const Footer = () => (
     </div>
 
     <div className="border-t border-gray-800 text-center py-4 text-xs text-gray-500">
-      © 2025 HyperGreen 360 Turf. All rights reserved.
+      © 2026 HyperGreen 360 Turf. All rights reserved.
     </div>
   </footer>
 );
