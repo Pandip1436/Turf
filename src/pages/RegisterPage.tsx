@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { X, ShieldCheck, Eye, EyeOff, User, Mail, Phone, Lock, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import logo from "../assets/logo.png";
+
 
 const benefits = [
   { icon: '⚡', label: 'Instant Booking' },
@@ -80,11 +82,16 @@ const RegisterPage = () => {
           <X className="w-5 h-5 text-gray-600" />
         </button>
 
-        <div className="p-8 pt-10">
+        <div className="p-8 ">
           {/* Shield icon */}
-          <div className="flex justify-center mb-5">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <ShieldCheck className="w-8 h-8 text-green-600" />
+          <div className="flex justify-center ">
+            <div className="w-40 h-40  rounded-full flex ">
+              {/* Logo Image */}
+              <img
+                src={logo}
+                alt="HyperGreen 360 Turf"
+                className="w-40 h-40 object-contain"
+              />
             </div>
           </div>
 

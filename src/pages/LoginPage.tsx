@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { X, ShieldCheck, Zap, Lock, Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
+import logo from "../assets/logo.png";
+
 
 // ── Google Identity Services type declarations
 declare global {
@@ -190,16 +192,21 @@ const LoginPage = () => {
           <X className="w-5 h-5 text-gray-600" />
         </button>
 
-        <div className="p-8 pt-10">
+        <div className="p-8 ">
           {/* Shield */}
-          <div className="flex justify-center mb-5">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <ShieldCheck className="w-8 h-8 text-green-600" />
+          <div className="flex justify-center ">
+            <div className="w-40 h-40  rounded-full flex ">
+              {/* Logo Image */}
+              <img
+                src={logo}
+                alt="HyperGreen 360 Turf"
+                className="w-40 h-40 object-contain"
+              />
             </div>
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-1">Welcome to HyperGreen 360</h2>
-          <p className="text-gray-500 text-center text-sm mb-7">
+          <p className="text-gray-500 text-center text-sm mb-3">
             {GOOGLE_CLIENT_ID ? 'Sign in with Google to book your turf' : 'Sign in to book your turf'}
           </p>
 
