@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react';
 import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -72,6 +73,26 @@ function calcTotal(slots: SlotInfo[] | undefined, selected: Set<string>): number
 const BookingPage = () => {
   const today = new Date().toISOString().split('T')[0];
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // ── Auth guard ──────────────────────────────────────────────────────────────
+  // user === undefined  → auth still loading  → render nothing (avoid flash)
+  // user === null       → not logged in        → redirect to login
+  // user === object     → logged in            → render page
+  useEffect(() => {
+    if (user === null) {
+      navigate('/login', { state: { from: '/booking' } });
+    }
+  }, [user, navigate]);
+
+  if (user === undefined || user === null) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+  // ────────────────────────────────────────────────────────────────────────────
 
   const [step,          setStep]         = useState(1);
   const [date,          setDate]         = useState(today);
@@ -80,7 +101,7 @@ const BookingPage = () => {
   const [slotsError,    setSlotsError]   = useState('');
   const [selectedSlots, setSelected]     = useState<Set<string>>(new Set());
   const [form,          setForm]         = useState({
-    name: user?.name || '', email: user?.email || '', phone: '', teamSize: '',
+    name: user.name || '', email: user.email || '', phone: '', teamSize: '',
   });
   const [confirmed,    setConfirmed]    = useState(false);
   const [bookingRef,   setBookingRef]   = useState('');
@@ -103,7 +124,6 @@ const BookingPage = () => {
   }, []);
 
   useEffect(() => { fetchSlots(date); }, [date]);
-  useEffect(() => { if (user) setForm(f => ({ ...f, name: user.name, email: user.email })); }, [user]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, confirmed]);
   useEffect(() => { if (step === 3) loadRazorpayScript(); }, [step]);
 
@@ -228,7 +248,7 @@ const BookingPage = () => {
 
   const resetAll = () => {
     setConfirmed(false); setStep(1); setSelected(new Set());
-    setForm({ name: user?.name || '', email: user?.email || '', phone: '', teamSize: '' });
+    setForm({ name: user.name || '', email: user.email || '', phone: '', teamSize: '' });
     setBookingError(''); setPayError(''); setBookingId(''); setBookingRef('');
   };
 
