@@ -35,12 +35,27 @@ const ENV_RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefi
 
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
-    if (window.Razorpay) { resolve(true); return; }
-    const s = document.createElement('script');
-    s.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.body.appendChild(s);
+
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const existing = document.getElementById("razorpay-script");
+    if (existing) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "razorpay-script";
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+
+    document.body.appendChild(script);
   });
 }
 
