@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Eye, EyeOff, Shield } from 'lucide-react';
+import { Shield, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import adminApi from '../utils/adminApi';
+import logo from "../../assets/logo.png";
+
 
 const AdminLogin = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -43,8 +45,13 @@ const AdminLogin = () => {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 border border-green-500/30 rounded-2xl mb-4">
-            <Zap className="w-8 h-8 text-green-400" />
+          <div className="inline-flex w-70 h-40 ">
+              {/* Logo Image */}
+              <img
+                src={logo}
+                alt="HyperGreen 360 Turf"
+                className="w-70 h-40 object-contain"
+              />
           </div>
           <h1 className="text-3xl font-black text-white tracking-tight">HyperGreen 360</h1>
           <div className="flex items-center justify-center gap-2 mt-2">
