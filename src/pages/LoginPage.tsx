@@ -133,26 +133,23 @@ const LoginPage = () => {
     loadGoogleScript(GOOGLE_CLIENT_ID, handleGoogleCredential);
 
     // Render the styled Google button into our container
-    const interval = setInterval(() => {
-      if (window.google?.accounts?.id && googleBtnRef.current) {
-        clearInterval(interval);
-        // Re-init with callback (needed after script already loaded)
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback:  handleGoogleCredential,
-          auto_select: false,
-          cancel_on_tap_outside: true,
-        });
-        window.google.accounts.id.renderButton(googleBtnRef.current, {
-          theme:         'outline',
-          size:          'large',
-          width:         384,
-          text:          'continue_with',
-          shape:         'rectangular',
-          logo_alignment:'left',
-        });
+   const interval = setInterval(() => {
+  if (window.google?.accounts?.id && googleBtnRef.current) {
+    clearInterval(interval);
+
+    window.google.accounts.id.renderButton(
+      googleBtnRef.current,
+      {
+        theme: 'outline',
+        size: 'large',
+        width: 384,
+        text: 'continue_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
       }
-    }, 100);
+    );
+  }
+}, 100);
 
     return () => clearInterval(interval);
   }, [GOOGLE_CLIENT_ID, showEmailForm]);

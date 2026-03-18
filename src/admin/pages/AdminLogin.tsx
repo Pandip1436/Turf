@@ -45,12 +45,12 @@ const AdminLogin = () => {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex w-70 h-40 ">
+          <div className="inline-flex w-60 h-40 ">
               {/* Logo Image */}
               <img
                 src={logo}
                 alt="HyperGreen 360 Turf"
-                className="w-70 h-40 object-contain"
+                className="w-60 h-40 object-contain"
               />
           </div>
           <h1 className="text-3xl font-black text-white tracking-tight">HyperGreen 360</h1>
