@@ -4,7 +4,7 @@ import {
   IndianRupee, Clock, CheckCircle, AlertCircle
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 interface Stats {
   totalBookings:  number;
@@ -50,7 +50,6 @@ const AdminDashboard = () => {
   const [stats, setStats]       = useState<Stats | null>(null);
   const [recent, setRecent]     = useState<RecentBooking[]>([]);
   const [loading, setLoading]   = useState(true);
-  const navigate = useNavigate();
 
 
   useEffect(() => {
