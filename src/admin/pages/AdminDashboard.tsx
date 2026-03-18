@@ -4,6 +4,7 @@ import {
   IndianRupee, Clock, CheckCircle, AlertCircle
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface Stats {
   totalBookings:  number;
@@ -49,6 +50,8 @@ const AdminDashboard = () => {
   const [stats, setStats]       = useState<Stats | null>(null);
   const [recent, setRecent]     = useState<RecentBooking[]>([]);
   const [loading, setLoading]   = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     adminApi.get('/admin/dashboard')
@@ -131,9 +134,9 @@ const AdminDashboard = () => {
       <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
           <h2 className="text-white font-bold">Recent Bookings</h2>
-          <a href="/admin/bookings" className="text-green-400 text-sm font-semibold hover:text-green-300">
+          <NavLink to="/admin/bookings" className="text-green-400 text-sm font-semibold hover:text-green-300">
             View all →
-          </a>
+          </NavLink>
         </div>
         {recent.length === 0 ? (
           <div className="text-center py-12 text-gray-600">No bookings yet</div>
