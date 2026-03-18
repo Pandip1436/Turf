@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, ShieldCheck, Zap, Lock, Calendar, Trophy } from 'lucide-react';
+import { X, Zap, Lock, Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import logo from "../assets/logo.png";

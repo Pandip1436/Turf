@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import  { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { X, ShieldCheck, Eye, EyeOff, User, Mail, Phone, Lock, CheckCircle } from 'lucide-react';
+import { X, Eye, EyeOff, User, Mail, Phone, Lock, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
 import logo from "../assets/logo.png";
