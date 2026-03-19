@@ -152,7 +152,7 @@ const LoginPage = () => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [GOOGLE_CLIENT_ID, showEmailForm]);
+  }, [from, login, navigate, showEmailForm]);
 
   // ── Re-render Google button on window resize
   useEffect(() => {
@@ -172,7 +172,7 @@ const LoginPage = () => {
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [GOOGLE_CLIENT_ID, showEmailForm]);
+  }, [showEmailForm]);
 
   // ── Email/password login
   const handleEmailLogin = async (e: React.FormEvent) => {

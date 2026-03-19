@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable react-refresh/only-export-components */
-import  { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 interface AdminUser {
   id: string;
@@ -9,29 +10,51 @@ interface AdminUser {
 }
 
 interface AdminAuthContextType {
-  admin: AdminUser | null;
-  token: string | null;
+  admin:           AdminUser | null;
+  token:           string | null;
   isAuthenticated: boolean;
-  login: (token: string, user: AdminUser) => void;
-  logout: () => void;
+  isLoading:       boolean;
+  login:           (token: string, user: AdminUser) => void;
+  logout:          () => void;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
 export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
-  const [admin, setAdmin] = useState<AdminUser | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // ── Read localStorage synchronously as initial state so first render is correct
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem('hg360_admin_token')
+  );
+  const [admin, setAdmin] = useState<AdminUser | null>(() => {
+    try {
+      const u = localStorage.getItem('hg360_admin_user');
+      return u ? (JSON.parse(u) as AdminUser) : null;
+    } catch { return null; }
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Re-verify on mount (handles multi-tab changes)
     const t = localStorage.getItem('hg360_admin_token');
     const u = localStorage.getItem('hg360_admin_user');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (t && u) { setToken(t); setAdmin(JSON.parse(u)); }
+    if (t && u) {
+      try {
+        setToken(t);
+        setAdmin(JSON.parse(u) as AdminUser);
+      } catch {
+        localStorage.removeItem('hg360_admin_token');
+        localStorage.removeItem('hg360_admin_user');
+        setToken(null); setAdmin(null);
+      }
+    } else {
+      setToken(null); setAdmin(null);
+    }
+    setIsLoading(false);
   }, []);
 
-  const login = (token: string, user: AdminUser) => {
-    setToken(token); setAdmin(user);
-    localStorage.setItem('hg360_admin_token', token);
+  const login = (newToken: string, user: AdminUser) => {
+    setToken(newToken); setAdmin(user);
+    localStorage.setItem('hg360_admin_token', newToken);
     localStorage.setItem('hg360_admin_user', JSON.stringify(user));
   };
 
@@ -42,7 +65,9 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AdminAuthContext.Provider value={{ admin, token, isAuthenticated: !!token, login, logout }}>
+    <AdminAuthContext.Provider
+      value={{ admin, token, isAuthenticated: !!token && !!admin, isLoading, login, logout }}
+    >
       {children}
     </AdminAuthContext.Provider>
   );

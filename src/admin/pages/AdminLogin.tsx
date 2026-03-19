@@ -1,18 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Eye, EyeOff } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import adminApi from '../utils/adminApi';
 import logo from "../../assets/logo.png";
 
-
 const AdminLogin = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { login } = useAdminAuth();
+  const [form,           setForm]          = useState({ email: '', password: '' });
+  const [showPw,         setShowPw]        = useState(false);
+  const [error,          setError]         = useState('');
+  const [loading,        setLoading]       = useState(false);
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  const { login, isAuthenticated, isLoading } = useAdminAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // If already logged in, go straight to dashboard
+    if (!isLoading && isAuthenticated) {
+      navigate('/admin/dashboard', { replace: true });
+    }
+    // Show banner when redirected here after token expiry
+    if (window.location.search.includes('reason=session_expired')) {
+      setSessionExpired(true);
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  // Show spinner while auth state is being determined
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,10 +46,10 @@ const AdminLogin = () => {
         return;
       }
       login(res.data.token, res.data.user);
-      navigate('/admin/dashboard');
+      navigate('/admin/dashboard', { replace: true });
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
-      setError(e.response?.data?.message || 'Login failed');
+      setError(e.response?.data?.message || 'Login failed. Check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -45,13 +66,8 @@ const AdminLogin = () => {
       <div className="relative w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex w-60 h-40 ">
-              {/* Logo Image */}
-              <img
-                src={logo}
-                alt="HyperGreen 360 Turf"
-                className="w-60 h-40 object-contain"
-              />
+          <div className="inline-flex w-60 h-40">
+            <img src={logo} alt="HyperGreen 360 Turf" className="w-60 h-40 object-contain" />
           </div>
           <h1 className="text-3xl font-black text-white tracking-tight">HyperGreen 360</h1>
           <div className="flex items-center justify-center gap-2 mt-2">
@@ -65,6 +81,14 @@ const AdminLogin = () => {
           <h2 className="text-xl font-bold text-white mb-1">Sign In</h2>
           <p className="text-gray-500 text-sm mb-6">Enter your admin credentials to continue</p>
 
+          {/* Session expired banner */}
+          {sessionExpired && !error && (
+            <div className="bg-orange-500/10 border border-orange-500/30 text-orange-400 rounded-xl px-4 py-3 text-sm mb-5 flex items-center gap-2">
+              ⏱️ Your session expired. Please sign in again.
+            </div>
+          )}
+
+          {/* Error banner */}
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 text-sm mb-5">
               {error}
@@ -101,9 +125,15 @@ const AdminLogin = () => {
 
             <button
               type="submit" disabled={loading}
-              className="w-full bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl py-3 font-bold transition-colors mt-2"
+              className="w-full bg-green-500 hover:bg-green-400 disabled:opacity-50 text-white rounded-xl py-3 font-bold transition-colors mt-2 flex items-center justify-center gap-2"
             >
-              {loading ? 'Signing in...' : 'Sign In to Admin'}
+              {loading
+                ? <><svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>Signing in...</>
+                : 'Sign In to Admin'
+              }
             </button>
           </form>
         </div>
