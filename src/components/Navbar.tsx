@@ -21,7 +21,6 @@ function OfferBanner() {
 
 const Navbar = () => {
   const [open,          setOpen]          = useState(false);
-  const [scrolled,      setScrolled]      = useState(false);
   const [dropdownOpen,  setDropdownOpen]  = useState(false);   // desktop
   const [mobileProfile, setMobileProfile] = useState(false);   // mobile profile dropdown
 
@@ -31,11 +30,6 @@ const Navbar = () => {
   const desktopRef  = useRef<HTMLDivElement>(null);
   const mobileRef   = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   // Close everything on route change
   useEffect(() => {
