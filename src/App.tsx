@@ -10,7 +10,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
 import MyBookingsPage from './pages/MyBookingsPage';
-import { TermsPage, CancellationPage, PricingPage } from './pages/StaticPages';
+import { TermsPage, CancellationPage, PricingPage, PrivacyPage } from './pages/StaticPages';
 import ScrollToTop from "./components/ScrollToTop";
 import AdminApp from './admin/AdminApp';
 
@@ -35,7 +35,7 @@ function App() {
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/cancellation" element={<CancellationPage />} />
-              <Route path="/privacy" element={<TermsPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="*" element={
                 <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
                   <div className="text-6xl mb-4">🏟️</div>

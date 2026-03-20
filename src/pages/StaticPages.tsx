@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Shield } from 'lucide-react';
 
 export const TermsPage = () => (
   <div className="min-h-screen bg-gray-50 pt-24 pb-16">
@@ -70,7 +70,7 @@ export const CancellationPage = () => (
 );
 
 export const PricingPage = () => (
-  <div className="min-h-screen bg-gray-50  pt-24 pb-16">
+  <div className="min-h-screen bg-gray-50 pt-24 pb-16">
     <div className="max-w-5xl mx-auto px-4">
       <div className="text-center mb-12">
         <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-2">PRICING</h1>
@@ -93,7 +93,7 @@ export const PricingPage = () => (
               <li key={f} className="flex gap-2"><CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />{f}</li>
             ))}
           </ul>
-          <Link to="/booking" className="block bg-gradient-to-r from-green-500 to-blue-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold">Book Day Slot</Link>
+          <Link to="/booking" className="block bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 text-white rounded-xl py-3 font-bold">Book Day Slot</Link>
         </div>
 
         <div className="relative bg-gradient-to-r from-green-600 to-blue-500 text-white rounded-2xl p-8 text-center shadow-xl">
@@ -128,7 +128,7 @@ export const PricingPage = () => (
               <li key={f} className="flex gap-2"><CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />{f}</li>
             ))}
           </ul>
-          <a href="tel:8056564775" className="block bg-gradient-to-r from-green-600 to-blue-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold">Call to Register</a>
+          <a href="tel:8056564775" className="block bg-gradient-to-r from-green-600 to-blue-500 hover:opacity-90 text-white rounded-xl py-3 font-bold">Call to Register</a>
         </div>
       </div>
 
@@ -162,6 +162,204 @@ export const PricingPage = () => (
           </table>
         </div>
         <p className="text-xs text-gray-400 text-center mt-3">All prices include ground maintenance, floodlights, changing rooms & drinking water</p>
+      </div>
+    </div>
+  </div>
+);
+
+export const PrivacyPage = () => (
+  <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="max-w-3xl mx-auto px-4">
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-2">
+        <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <Shield className="w-6 h-6 text-green-600" />
+        </div>
+        <h1 className="font-display text-5xl tracking-wider text-gray-900">PRIVACY POLICY</h1>
+      </div>
+      <p className="text-gray-500 mb-2">Last updated: March 2026</p>
+      <p className="text-gray-500 text-sm mb-8">
+        This policy explains how HyperGreen 360 Turf ("we", "our", "us") collects, uses, and
+        protects your personal information when you use our website and booking services.
+      </p>
+
+      {/* Trust badges */}
+      <div className="grid grid-cols-3 gap-3 mb-8">
+        {[
+          { icon: '🔒', label: 'Secure Payments', sub: 'Razorpay encrypted' },
+          { icon: '🚫', label: 'No Data Selling', sub: 'We never sell your data' },
+          { icon: '📧', label: 'No Spam', sub: 'Only booking updates' },
+        ].map(b => (
+          <div key={b.label} className="bg-white border border-gray-200 rounded-2xl p-4 text-center">
+            <div className="text-2xl mb-1">{b.icon}</div>
+            <div className="text-xs font-bold text-gray-900">{b.label}</div>
+            <div className="text-xs text-gray-400 mt-0.5">{b.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-sm p-8 space-y-7 text-sm text-gray-600 leading-relaxed">
+
+        {/* 1 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">1. Information We Collect</h3>
+          <p className="mb-3">We collect the following types of personal information:</p>
+          <div className="space-y-3">
+            {[
+              ['Account Information', 'Name, email address, and password (hashed) when you create an account. If you sign in with Google, we receive your name, email, and profile picture from Google.'],
+              ['Booking Information', 'Phone number, team size, selected date and time slots, and payment details. Payment card/UPI information is processed directly by Razorpay and is never stored on our servers.'],
+              ['Contact Form Data', 'Name, email, phone number, subject, and message when you submit the contact form.'],
+              ['Usage Data', 'Browser type, IP address, pages visited, and time spent — collected automatically to improve our service.'],
+            ].map(([title, desc]) => (
+              <div key={title as string} className="flex gap-3">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 shrink-0" />
+                <div><span className="font-semibold text-gray-800">{title}:</span> {desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 2 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">2. How We Use Your Information</h3>
+          <div className="space-y-2">
+            {[
+              'Process and confirm your turf slot bookings',
+              'Send booking confirmation and payment receipts by email',
+              'Respond to your contact form enquiries',
+              'Notify you of booking status changes or cancellations',
+              'Improve our website, services, and user experience',
+              'Prevent fraudulent transactions and ensure platform security',
+              'Comply with legal obligations under Indian law',
+            ].map(item => (
+              <div key={item} className="flex gap-2.5 items-start">
+                <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">3. How We Share Your Information</h3>
+          <p className="mb-3">We do not sell, rent, or trade your personal information. We share data only in these limited cases:</p>
+          <div className="space-y-3">
+            {[
+              ['Razorpay', 'Our payment processor. They receive payment details necessary to process your transaction. Razorpay is PCI-DSS compliant. See Razorpay\'s Privacy Policy at razorpay.com.'],
+              ['Google', 'If you sign in with Google, we share your authentication request with Google Identity Services. See Google\'s Privacy Policy at policies.google.com.'],
+              ['Legal Authorities', 'We may disclose information if required by law, court order, or government authority in accordance with Indian law.'],
+              ['Business Transfer', 'In the unlikely event of a merger or acquisition, your data may be transferred to the new entity, which will be bound by this privacy policy.'],
+            ].map(([party, desc]) => (
+              <div key={party as string} className="bg-gray-50 rounded-xl p-4">
+                <div className="font-semibold text-gray-800 mb-1">{party}</div>
+                <div>{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 4 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">4. Data Storage & Security</h3>
+          <p className="mb-3">Your data is stored on secure servers with the following protections:</p>
+          <div className="space-y-2">
+            {[
+              'Passwords are hashed using bcryptjs — we never store plain-text passwords',
+              'Authentication uses JWT tokens with expiry — not stored on our servers',
+              'All API endpoints are protected with rate limiting and Helmet security headers',
+              'Payment data is handled entirely by Razorpay (PCI-DSS Level 1 compliant)',
+              'HTTPS encryption for all data in transit',
+              'MongoDB data stored with access controls and authentication',
+            ].map(item => (
+              <div key={item} className="flex gap-2.5 items-start">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 shrink-0" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 5 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">5. Cookies & Local Storage</h3>
+          <p className="mb-3">We use browser localStorage (not cookies) to store your login session token. This keeps you signed in between visits. We do not use advertising cookies or third-party tracking pixels.</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <p className="text-blue-800"><strong>To sign out and clear your session:</strong> click "Logout" in the navbar. This removes your token from localStorage immediately.</p>
+          </div>
+        </div>
+
+        {/* 6 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">6. Your Rights</h3>
+          <p className="mb-3">You have the following rights regarding your personal data:</p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              ['Access', 'Request a copy of the personal data we hold about you'],
+              ['Correction', 'Update your name, email, or phone via your profile settings'],
+              ['Deletion', 'Request deletion of your account and associated data'],
+              ['Portability', 'Receive your booking history in a readable format'],
+              ['Opt-out', 'Unsubscribe from non-transactional emails at any time'],
+              ['Objection', 'Object to processing of your data for any purpose'],
+            ].map(([right, desc]) => (
+              <div key={right as string} className="border border-gray-200 rounded-xl p-3">
+                <div className="font-semibold text-gray-800 text-xs mb-0.5">{right}</div>
+                <div className="text-xs text-gray-500">{desc}</div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-gray-500">To exercise any of these rights, contact us at <a href="mailto:info@hypergreen360.com" className="text-green-600 underline hover:text-green-700">info@hypergreen360.com</a>. We will respond within 30 days.</p>
+        </div>
+
+        {/* 7 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">7. Data Retention</h3>
+          <p>We retain your personal information for as long as your account is active or as needed to provide services. Booking records are retained for 3 years for accounting and legal compliance. You may request deletion of your account at any time, after which personal data is removed within 30 days, except where retention is required by law.</p>
+        </div>
+
+        {/* 8 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">8. Children's Privacy</h3>
+          <p>Our services are not directed at children under 13 years of age. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us immediately and we will delete it.</p>
+        </div>
+
+        {/* 9 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">9. Third-Party Links</h3>
+          <p>Our website may contain links to Google Maps and external services. We are not responsible for the privacy practices of those websites. We encourage you to read their privacy policies before providing any personal information.</p>
+        </div>
+
+        {/* 10 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">10. Changes to This Policy</h3>
+          <p>We may update this Privacy Policy from time to time. The "Last updated" date at the top will reflect any changes. We will notify registered users of significant changes by email. Continued use of our services after changes constitutes acceptance of the updated policy.</p>
+        </div>
+
+        {/* 11 */}
+        <div>
+          <h3 className="font-bold text-gray-900 mb-3 text-base">11. Governing Law</h3>
+          <p>This Privacy Policy is governed by the laws of India, including the Information Technology Act, 2000 and applicable rules. Any disputes shall be resolved in the courts of Virudhunagar district, Tamil Nadu.</p>
+        </div>
+
+        {/* Contact */}
+        <div className="bg-green-50 border border-green-200 rounded-xl p-5">
+          <h3 className="font-bold text-green-900 mb-2">Contact Our Privacy Team</h3>
+          <p className="text-green-800 text-sm mb-3">For any privacy-related questions, requests, or concerns:</p>
+          <div className="space-y-1.5 text-sm text-green-800">
+            <div>📧 <a href="mailto:info@hypergreen360.com" className="underline font-semibold hover:text-green-900">info@hypergreen360.com</a></div>
+            <div>📞 <a href="tel:8056564775" className="underline font-semibold hover:text-green-900">+91 80565 64775</a></div>
+            <div>📍 Housing Board, Near Water Tank, Sivakasi – 626 123, Tamil Nadu</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom nav */}
+      <div className="flex flex-wrap gap-3 mt-8 text-sm">
+        <Link to="/terms" className="text-green-600 hover:text-green-700 font-semibold underline">Terms & Conditions</Link>
+        <span className="text-gray-300">·</span>
+        <Link to="/cancellation" className="text-green-600 hover:text-green-700 font-semibold underline">Cancellation Policy</Link>
+        <span className="text-gray-300">·</span>
+        <Link to="/contact" className="text-green-600 hover:text-green-700 font-semibold underline">Contact Us</Link>
       </div>
     </div>
   </div>
