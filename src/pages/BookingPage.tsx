@@ -1,83 +1,76 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react';
-import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar, Lock } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
-declare global {
-  interface Window {
-    Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
-  }
-}
+declare global { interface Window { Razorpay: new (o: RazorpayOptions) => RazorpayInstance; } }
 interface RazorpayOptions {
-  key: string; amount: number; currency: string;
-  name: string; description: string; order_id: string;
+  key: string; amount: number; currency: string; name: string;
+  description: string; order_id: string;
   prefill: { name: string; email: string; contact: string };
   notes: Record<string, string>;
   theme: { color: string };
-  handler: (response: RazorpayResponse) => void;
+  handler: (r: RazorpayResponse) => void;
   modal: { ondismiss: () => void };
 }
-interface RazorpayInstance { open: () => void; on: (event: string, handler: (r: unknown) => void) => void; }
-interface RazorpayResponse {
-  razorpay_payment_id: string;
-  razorpay_order_id: string;
-  razorpay_signature: string;
-}
-interface SlotInfo {
-  slot: string; from: string; to: string;
-  isNight: boolean; price: number; available: boolean; isYours: boolean;
-}
+interface RazorpayInstance { open: () => void; on: (e: string, h: (r: unknown) => void) => void; }
+interface RazorpayResponse { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string; }
+interface SlotInfo { slot: string; from: string; to: string; isNight: boolean; price: number; available: boolean; isYours: boolean; }
+interface Sport    { id: string; label: string; emoji: string; color: string; bg: string; }
+interface TurfInfo { id: string; name: string; sport: string; description: string; features: string[]; priceDay: number; priceNight: number; image: string; }
 
-// Read Razorpay key from env — fallback to key returned by backend
+const SPORTS: Sport[] = [
+  { id: 'football',  label: 'Football',  emoji: '⚽', color: 'text-green-700',  bg: 'bg-green-50  border-green-400'  },
+  { id: 'cricket',   label: 'Cricket',   emoji: '🏏', color: 'text-blue-700',   bg: 'bg-blue-50   border-blue-400'   },
+  { id: 'badminton', label: 'Badminton', emoji: '🏸', color: 'text-purple-700', bg: 'bg-purple-50 border-purple-400' },
+];
+
+const TURFS: TurfInfo[] = [
+  { id: 'thunder-arena',   name: 'Thunder Arena',   sport: 'football',  description: 'FIFA-grade artificial grass · 360° floodlit arena · Sivakasi',                    features: ['5-a-side', 'Pro floodlights', 'Changing rooms', 'Free parking'],      priceDay: 600, priceNight: 1000, image: '/images/Turf.jpg'   },
+  { id: 'blitz-ground',    name: 'Blitz Ground',    sport: 'football',  description: 'Compact 3-a-side arena · Rubber-infill surface · Perfect for speed training',     features: ['3-a-side', 'LED lights', 'Water station', 'Free parking'],           priceDay: 600, priceNight: 1000, image: '/images/field2.png' },
+  { id: 'kickoff-zone',    name: 'Kickoff Zone',    sport: 'football',  description: '6-a-side full-width turf · Advanced drainage system · Weekend tournaments',       features: ['6-a-side', 'Drainage system', 'Referee service', 'Canteen'],         priceDay: 600, priceNight: 1000, image: '/images/hero1.png'  },
+  { id: 'goal-rush-field', name: 'Goal Rush Field', sport: 'football',  description: 'Dual-purpose 5v5 & 7v7 · Hybrid grass surface · Ideal for club matches',          features: ['5v5 / 7v7', 'Hybrid grass', 'Scoreboard', 'First aid kit'],         priceDay: 600, priceNight: 1000, image: '/images/hero2.png'  },
+  { id: 'century-pitch',   name: 'Century Pitch',   sport: 'cricket',   description: 'Full 22-yard matting pitch · Regulated stumps · Day/night matches',               features: ['Full 22 yards', 'Matting pitch', 'Stumps included', 'Scoreboard'],   priceDay: 600, priceNight: 1000, image: '/images/hero3.jpg'  },
+  { id: 'spin-king-nets',  name: 'Spin King Nets',  sport: 'cricket',   description: '4-lane practice nets · Auto bowling machine · Coaching sessions available',      features: ['4 net lanes', 'Bowling machine', 'Coaching bay', 'Floodlights'],     priceDay: 600, priceNight: 1000, image: '/images/hero4.jpg'  },
+  { id: 'powerplay-arena', name: 'Powerplay Arena', sport: 'cricket',   description: 'Box cricket format · Covered rooftop court · High-impact rubber surface',         features: ['Box cricket', 'Rooftop covered', 'Rubber surface', 'Snacks bar'],    priceDay: 600, priceNight: 1000, image: '/images/Turf.jpg'   },
+  { id: 'smash-court-a',   name: 'Smash Court A',   sport: 'badminton', description: 'BWF-approved wooden flooring · Anti-slip surface · Air-cooled indoor hall',       features: ['BWF flooring', 'Anti-slip', 'Air cooled', 'Equipment rental'],      priceDay: 300, priceNight: 300,  image: '/images/field2.png' },
+  { id: 'shuttle-court-b', name: 'Shuttle Court B', sport: 'badminton', description: 'PVC synthetic court · Doubles & singles · Tournament-grade lighting',             features: ['PVC synthetic', 'Doubles/singles', 'Pro lighting', 'Racket rental'], priceDay: 300, priceNight: 300,  image: '/images/hero2.png'  },
+  { id: 'ace-court-c',     name: 'Ace Court C',     sport: 'badminton', description: 'Premium rubber mat · Ideal for coaching & tournaments · Spectator seating',       features: ['Rubber mat', 'Coaching zone', 'Spectator seats', 'Air cooled'],     priceDay: 300, priceNight: 300,  image: '/images/hero3.jpg'  },
+];
+
 const ENV_RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
+const STEP_LABELS = ['Sport', 'Turf', 'Slots', 'Details', 'Payment'];
+const today = new Date().toISOString().split('T')[0];
 
 function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
-
-    const existing = document.getElementById("razorpay-script");
-    if (existing) {
-      resolve(true);
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "razorpay-script";
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-
-    document.body.appendChild(script);
+  return new Promise(resolve => {
+    if (window.Razorpay) { resolve(true); return; }
+    const existing = document.getElementById('razorpay-script');
+    if (existing) { resolve(true); return; }
+    const s = document.createElement('script');
+    s.id = 'razorpay-script'; s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.async = true;
+    s.onload = () => resolve(true); s.onerror = () => resolve(false);
+    document.body.appendChild(s);
   });
 }
-
 function getDatePills() {
   const now = new Date();
   const DN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(now); d.setDate(now.getDate() + i);
-    return { label: i === 0 ? 'Today' : DN[d.getDay()], date: d.getDate(), month: MN[d.getMonth()], iso: d.toISOString().split('T')[0] };
+    return { label: i===0?'Today':DN[d.getDay()], date: d.getDate(), month: MN[d.getMonth()], iso: d.toISOString().split('T')[0] };
   });
 }
-
 function fmtDisplay(iso: string) {
   const d = new Date(iso + 'T00:00:00');
   const DN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   return `${DN[d.getDay()]}, ${MN[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
 }
-
-function calcTotal(slots: SlotInfo[] | undefined, selected: Set<string>): number {
-  if (!slots || !Array.isArray(slots)) return 0;
+function calcTotal(slots: SlotInfo[], selected: Set<string>): number {
   const base = slots.filter(s => selected.has(s.slot)).reduce((a, s) => a + s.price, 0);
   const n = selected.size;
   if (n === 2) return Math.round(base * 0.9);
@@ -86,190 +79,209 @@ function calcTotal(slots: SlotInfo[] | undefined, selected: Set<string>): number
 }
 
 const BookingPage = () => {
-  const today = new Date().toISOString().split('T')[0];
-  const { user } = useAuth();
+  // ══════════════════════════════════════════════════════════════════════════
+  // ALL HOOKS MUST BE AT THE TOP — no early returns before this block ends
+  // ══════════════════════════════════════════════════════════════════════════
+  const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  // ── Auth guard ──────────────────────────────────────────────────────────────
-  // user === undefined  → auth still loading  → render nothing (avoid flash)
-  // user === null       → not logged in        → redirect to login
-  // user === object     → logged in            → render page
-  useEffect(() => {
-    if (user === null) {
-      navigate('/login', { state: { from: '/booking' } });
-    }
-  }, [user, navigate]);
+  const [step,         setStep]        = useState(0);
+  const [sport,        setSport]       = useState<Sport | null>(null);
+  const [turf,         setTurf]        = useState<TurfInfo | null>(null);
+  const [date,         setDate]        = useState(today);
+  const [slots,        setSlots]       = useState<SlotInfo[]>([]);
+  const [slotsLoading, setSlotsLoading]= useState(false);
+  const [slotsError,   setSlotsError]  = useState('');
+  const [selected,     setSelected]    = useState<Set<string>>(new Set());
+  const [form,         setForm]        = useState({ name: '', email: '', phone: '', teamSize: '' });
+  const [confirmed,    setConfirmed]   = useState(false);
+  const [bookingRef,   setBookingRef]  = useState('');
+  const [bookingId,    setBookingId]   = useState('');
+  const [loading,      setLoading]     = useState(false);
+  const [payLoading,   setPayLoading]  = useState(false);
+  const [bookingError, setBookingError]= useState('');
+  const [payError,     setPayError]    = useState('');
 
-  if (user === undefined || user === null) {
+  // Sync form name/email once user loads (only runs when user object becomes available)
+  useEffect(() => {
+    if (user) setForm(f => ({
+      ...f,
+      name:  f.name  || user.name  || '',
+      email: f.email || user.email || '',
+    }));
+  }, [user]);
+
+  const fetchSlots = useCallback(async (d: string, turfId: string) => {
+    setSlotsLoading(true); setSlotsError('');
+    try {
+      const res = await api.get<{ success: boolean; slots: SlotInfo[] }>(
+        `/bookings/slots?date=${d}&turfId=${turfId}`
+      );
+      setSlots(res.data.slots ?? []);
+    } catch {
+      setSlotsError('Failed to load slots. Please try again.');
+    } finally {
+      setSlotsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { if (step === 2 && turf) fetchSlots(date, turf.id); }, [date, step, turf]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, confirmed]);
+  useEffect(() => { if (step === 4) loadRazorpayScript(); }, [step]);
+  // ══════════════════════════════════════════════════════════════════════════
+  // END OF HOOKS — safe to return early from here onwards
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // Auth: still reading localStorage
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
-  // ────────────────────────────────────────────────────────────────────────────
 
-  const [step,          setStep]         = useState(1);
-  const [date,          setDate]         = useState(today);
-  const [slots,         setSlots]        = useState<SlotInfo[]>([]);
-  const [slotsLoading,  setSlotsLoading] = useState(false);
-  const [slotsError,    setSlotsError]   = useState('');
-  const [selectedSlots, setSelected]     = useState<Set<string>>(new Set());
-  const [form,          setForm]         = useState({
-    name: user.name || '', email: user.email || '', phone: '', teamSize: '',
-  });
-  const [confirmed,    setConfirmed]    = useState(false);
-  const [bookingRef,   setBookingRef]   = useState('');
-  const [bookingId,    setBookingId]    = useState('');
-  const [loading,      setLoading]      = useState(false);
-  const [payLoading,   setPayLoading]   = useState(false);
-  const [bookingError, setBookingError] = useState('');
-  const [payError,     setPayError]     = useState('');
+  // Auth: confirmed not logged in
+  if (!isAuthenticated) {
+    sessionStorage.setItem('hg360_redirect_after_login', '/booking');
+    return (
+      <div className="min-h-screen bg-gray-50 pt-24 pb-16 flex items-center justify-center px-4">
+        <div className="bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full text-center">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-10 h-10 text-green-600" />
+          </div>
+          <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-2">SIGN IN REQUIRED</h2>
+          <p className="text-gray-500 text-sm mb-8">You need to be signed in to book a slot.</p>
+          <div className="space-y-3">
+            <button onClick={() => navigate('/login')}
+              className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3.5 font-bold transition-colors">
+              Sign In to Book
+            </button>
+            <Link to="/register"
+              className="block w-full border-2 border-gray-200 hover:border-green-400 text-gray-700 rounded-xl py-3.5 font-bold transition-colors">
+              Create Free Account
+            </Link>
+          </div>
+          <p className="text-xs text-gray-400 mt-6">
+            By continuing you agree to our <Link to="/terms" className="underline">Terms & Conditions</Link>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
+  // ── Derived values (authenticated only) ────────────────────────────────────
   const pills = getDatePills();
-  const total = calcTotal(slots, selectedSlots);
-
-  const fetchSlots = useCallback(async (d: string) => {
-    setSlotsLoading(true); setSlotsError('');
-    try {
-      const res = await api.get(`/bookings/slots?date=${d}`);
-      setSlots(res.data.slots ?? []);
-    } catch { setSlotsError('Failed to load slots. Please try again.'); }
-    finally { setSlotsLoading(false); }
-  }, []);
-
-  useEffect(() => { fetchSlots(date); }, [date]);
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, confirmed]);
-  useEffect(() => { if (step === 3) loadRazorpayScript(); }, [step]);
+  const total = calcTotal(slots, selected);
+  const filteredTurfs = sport ? TURFS.filter(t => t.sport === sport.id) : [];
 
   const toggleSlot = (slot: SlotInfo) => {
     if (!slot.available) return;
-    const next = new Set(selectedSlots);
+    const next = new Set(selected);
     if (next.has(slot.slot)) next.delete(slot.slot); else next.add(slot.slot);
     setSelected(next);
   };
-
   const slotClass = (slot: SlotInfo) => {
     if (!slot.available && !slot.isYours) return 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed opacity-60';
     if (slot.isYours)                     return 'bg-blue-100 border-2 border-blue-400 text-blue-700 cursor-default';
-    if (selectedSlots.has(slot.slot))     return 'bg-green-600 border-2 border-green-700 text-white cursor-pointer';
+    if (selected.has(slot.slot))          return 'bg-green-600 border-2 border-green-700 text-white cursor-pointer';
     return 'bg-white border border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50 cursor-pointer';
   };
 
   const handlePay = async () => {
     setBookingError(''); setPayError(''); setLoading(true);
     let bkId = bookingId;
-
     try {
-      // ── A: Create booking record
       if (!bkId) {
-        const bkRes = await api.post('/bookings', {
+        const bkRes = await api.post<{
+          success: boolean; booking: { _id: string; bookingRef: string }; message: string;
+        }>('/bookings', {
           userName:  form.name,
           userEmail: form.email,
           userPhone: form.phone,
           teamSize:  form.teamSize ? parseInt(form.teamSize) : undefined,
-          sport:     'football',
+          sport:     sport?.id ?? 'football',
+          turfId:    turf?.id   ?? null,
+          turfName:  turf?.name ?? null,
           date,
-          timeSlots: Array.from(selectedSlots),
+          timeSlots: Array.from(selected),
         });
+        if (!bkRes.data.success) { setBookingError(bkRes.data.message || 'Failed to create booking.'); setLoading(false); return; }
         bkId = bkRes.data.booking._id;
         setBookingId(bkId);
         setBookingRef(bkRes.data.booking.bookingRef);
       }
 
-      // ── B: Create Razorpay order (send rupees; backend converts to paise)
-      const orderRes = await api.post('/payments/create-order', {
-        bookingId: bkId,
-        amount:    total,
-      });
+      const orderRes = await api.post<{
+        success: boolean; orderId: string; keyId: string; amount: number; currency: string;
+      }>('/payments/create-order', { bookingId: bkId, amount: total });
+
+      if (!orderRes.data.success) { setPayError('Failed to create payment order. Please try again.'); setLoading(false); return; }
       const { orderId, keyId: backendKeyId, amount: paise } = orderRes.data;
-
-      // ── Use env key first, fallback to key from backend response
       const razorpayKey = ENV_RAZORPAY_KEY || backendKeyId;
-
-      if (!razorpayKey) {
-        setPayError('Razorpay key not configured. Set VITE_RAZORPAY_KEY_ID in your .env.local file.');
-        setLoading(false);
-        return;
-      }
+      if (!razorpayKey) { setPayError('Razorpay key not configured. Contact support.'); setLoading(false); return; }
 
       setLoading(false);
-
-      // ── C: Load Razorpay SDK
       const loaded = await loadRazorpayScript();
-      if (!loaded) {
-        setPayError('Razorpay SDK failed to load. Check your internet connection.');
-        return;
-      }
+      if (!loaded) { setPayError('Razorpay SDK failed to load. Check your internet.'); return; }
 
-      const options: RazorpayOptions = {
-        key:         razorpayKey,
-        amount:      paise,
-        currency:    'INR',
-        name:        import.meta.env.VITE_APP_NAME || 'HyperGreen 360 Turf',
-        description: `Slot booking – ${date}`,
-        order_id:    orderId,
-        prefill: {
-          name:    form.name,
-          email:   form.email,
-          contact: `+91${form.phone}`,
-        },
-        notes: {
-          bookingId: bkId,
-          date,
-          slots: Array.from(selectedSlots).join(', '),
-        },
+      const rzp = new window.Razorpay({
+        key: razorpayKey, amount: paise, currency: 'INR',
+        name: import.meta.env.VITE_APP_NAME || 'HyperGreen 360 Turf',
+        description: `${turf?.name ?? 'Turf'} – ${date}`,
+        order_id: orderId,
+        prefill: { name: form.name, email: form.email, contact: `+91${form.phone}` },
+        notes: { bookingId: bkId, turfId: turf?.id||'', turfName: turf?.name||'', date, slots: Array.from(selected).join(', ') },
         theme: { color: '#22c55e' },
-
         handler: async (response: RazorpayResponse) => {
           setPayLoading(true);
           try {
-            await api.post('/payments/verify', {
-              bookingId:          bkId,
-              razorpayOrderId:    response.razorpay_order_id,
-              razorpayPaymentId:  response.razorpay_payment_id,
-              razorpaySignature:  response.razorpay_signature,
-            });
-            setConfirmed(true);
-          } catch {
-            setPayError(
-              `Verification failed. Contact support with Payment ID: ${response.razorpay_payment_id}`
+            const verifyRes = await api.post<{ success: boolean; bookingRef: string; message: string }>(
+              '/payments/verify', {
+                bookingId:         bkId,
+                razorpayOrderId:   response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+              }
             );
-          } finally {
-            setPayLoading(false);
-          }
+            if (verifyRes.data.success) {
+              if (verifyRes.data.bookingRef) setBookingRef(verifyRes.data.bookingRef);
+              setConfirmed(true);
+            } else {
+              setPayError(verifyRes.data.message || `Verification failed. Payment ID: ${response.razorpay_payment_id}`);
+            }
+          } catch {
+            setPayError(`Verification failed. Payment ID: ${response.razorpay_payment_id}. Contact support.`);
+          } finally { setPayLoading(false); }
         },
-
-        modal: {
-          ondismiss: () => setPayError('Payment cancelled. Slot is held for 10 minutes. Try again.'),
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
+        modal: { ondismiss: () => setPayError('Payment cancelled. Slot held for 10 mins — click Pay to retry.') },
+      });
       rzp.on('payment.failed', (r: unknown) => {
-        const err = (r as { error?: { description?: string } }).error;
-        setPayError(err?.description || 'Payment failed. Try a different method.');
+        const errDesc = (r as { error?: { description?: string } }).error?.description;
+        setPayError(errDesc || 'Payment failed. Please try a different payment method.');
       });
       rzp.open();
-
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string; takenSlots?: string[] } } };
       setBookingError(e.response?.data?.message || 'Something went wrong. Please try again.');
-      if (e.response?.data?.takenSlots) { fetchSlots(date); setStep(1); }
-    } finally {
-      setLoading(false);
-    }
+      if (e.response?.data?.takenSlots) {
+        setBookingId(''); setBookingRef(''); setSelected(new Set());
+        if (turf) fetchSlots(date, turf.id);
+        setStep(2);
+      }
+    } finally { setLoading(false); }
   };
 
   const resetAll = () => {
-    setConfirmed(false); setStep(1); setSelected(new Set());
-    setForm({ name: user.name || '', email: user.email || '', phone: '', teamSize: '' });
+    setConfirmed(false); setStep(0); setSport(null); setTurf(null);
+    setSelected(new Set()); setSlots([]);
+    setForm({ name: user?.name||'', email: user?.email||'', phone: '', teamSize: '' });
     setBookingError(''); setPayError(''); setBookingId(''); setBookingRef('');
   };
 
-  /* ── CONFIRMED ── */
+  // ── CONFIRMED ─────────────────────────────────────────────────────────────
   if (confirmed) {
-    const slotList = (slots ?? []).filter(s => selectedSlots.has(s.slot));
+    const slotList = slots.filter(s => selected.has(s.slot));
     return (
       <div className="min-h-screen bg-gray-50 pt-24 pb-16 flex items-center justify-center px-4">
         <div className="bg-white rounded-3xl shadow-xl p-10 max-w-lg w-full text-center">
@@ -280,322 +292,322 @@ const BookingPage = () => {
           <p className="text-gray-500 mb-6">Payment successful. See you on the field! 🏆</p>
           <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-left space-y-2 mb-6">
             <div className="flex justify-between text-sm"><span className="text-gray-500">Booking ID</span><span className="font-bold text-green-700">{bookingRef}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500">Turf</span><span className="font-semibold">{turf?.name}</span></div>
             <div className="flex justify-between text-sm"><span className="text-gray-500">Name</span><span className="font-semibold">{form.name}</span></div>
             <div className="flex justify-between text-sm"><span className="text-gray-500">Date</span><span className="font-semibold">{fmtDisplay(date)}</span></div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Slots</span>
-              <span className="font-semibold text-right text-xs max-w-[60%]">{slotList.map(s => `${s.from} - ${s.to}`).join(', ')}</span>
+              <span className="font-semibold text-right text-xs max-w-[60%]">{slotList.map(s=>`${s.from} - ${s.to}`).join(', ')}</span>
             </div>
             {form.teamSize && <div className="flex justify-between text-sm"><span className="text-gray-500">Team Size</span><span className="font-semibold">{form.teamSize}</span></div>}
             <div className="border-t pt-2 flex justify-between font-bold text-green-700 text-sm"><span>Total Paid</span><span>₹{total}</span></div>
           </div>
           <p className="text-sm text-gray-400 mb-6">Confirmation sent to <strong>{form.email}</strong></p>
-          <button onClick={resetAll} className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold transition-colors">
-            Book Another Slot
-          </button>
+          <div className="flex gap-3 justify-center">
+            <button onClick={resetAll} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-colors">Book Another</button>
+            <button onClick={() => navigate('/my-bookings')} className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-bold transition-colors">My Bookings</button>
+          </div>
         </div>
       </div>
     );
   }
 
-  const stepLabels = ['Select Slot', 'Your Details', 'Payment'];
+  // ── Step bar ──────────────────────────────────────────────────────────────
+  const StepBar = () => (
+    <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-[56px] z-30 shadow-sm">
+      <button onClick={() => step > 0 ? setStep(step - 1) : window.history.back()}
+        className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-semibold text-sm">
+        <ChevronLeft className="w-5 h-5" />
+        {step === 0 ? 'Home' : step === 1 ? sport?.label : step === 2 ? turf?.name : 'Back'}
+      </button>
+      <div className="flex items-center gap-1">
+        {STEP_LABELS.map((lbl, idx) => {
+          const done = step > idx; const active = step === idx;
+          return (
+            <React.Fragment key={idx}>
+              <div className={`flex items-center gap-1 ${idx > 0 ? 'hidden sm:flex' : ''}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all
+                  ${done?'bg-green-600 text-white':active?'bg-green-500 text-white ring-4 ring-green-100':'bg-gray-200 text-gray-500'}`}>
+                  {done ? <CheckCircle className="w-3.5 h-3.5" /> : idx + 1}
+                </div>
+                <span className={`text-xs font-semibold hidden md:block ${active?'text-green-600':done?'text-green-500':'text-gray-400'}`}>{lbl}</span>
+              </div>
+              {idx < STEP_LABELS.length - 1 && <div className={`h-0.5 w-5 sm:w-8 mx-0.5 ${done?'bg-green-500':'bg-gray-200'}`} />}
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <div className="w-20" />
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 pt-20 pb-16">
-      {/* TOP BAR */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between sticky top-[56px] z-30 shadow-sm">
-        <button onClick={() => step > 1 ? setStep(step - 1) : window.history.back()}
-          className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-semibold text-sm">
-          <ChevronLeft className="w-5 h-5" /> Book Your Slot
-        </button>
-        <div className="flex items-center">
-          {stepLabels.map((lbl, idx) => {
-            const s = idx + 1; const done = step > s; const active = step === s;
-            return (
-              <React.Fragment key={s}>
-                <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all
-                    ${done ? 'bg-green-600 text-white' : active ? 'bg-green-500 text-white ring-4 ring-green-100' : 'bg-gray-200 text-gray-500'}`}>
-                    {done ? <CheckCircle className="w-4 h-4" /> : s}
-                  </div>
-                  <span className={`text-sm font-semibold hidden sm:block ${active ? 'text-green-600' : done ? 'text-green-500' : 'text-gray-400'}`}>{lbl}</span>
-                </div>
-                {idx < 2 && <div className={`h-0.5 w-8 sm:w-16 mx-1 ${done ? 'bg-green-500' : 'bg-gray-200'}`} />}
-              </React.Fragment>
-            );
-          })}
-        </div>
-        <div className="w-24" />
-      </div>
+      <StepBar />
+      <div className="max-w-5xl mx-auto px-4 pt-6">
 
-      <div className={`max-w-6xl mx-auto px-4 pt-6 ${step === 1 ? 'grid lg:grid-cols-[1fr_340px] gap-6' : 'max-w-2xl'}`}>
-
-        {/* ══ STEP 1 ══ */}
-        {step === 1 && (
-          <>
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h2 className="font-bold text-xl text-gray-900 mb-5">Select Date</h2>
-                <p className="text-sm text-gray-500 mb-3 font-medium">Quick selection</p>
-                <div className="grid grid-cols-7 gap-2 mb-5">
-                  {pills.map(p => (
-                    <button key={p.iso} onClick={() => { setDate(p.iso); setSelected(new Set()); }}
-                      className={`rounded-xl py-2.5 px-1 text-center transition-all border-2 ${
-                        date === p.iso ? 'bg-green-600 border-green-600 text-white' : 'border-gray-200 hover:border-green-400 text-gray-700'}`}>
-                      <div className="text-xs font-semibold">{p.label}</div>
-                      <div className="text-lg font-bold leading-tight">{p.date}</div>
-                      <div className="text-xs">{p.month}</div>
-                    </button>
-                  ))}
-                </div>
-                <p className="text-sm text-gray-500 mb-2 font-medium flex items-center gap-2">
-                  <Calendar className="w-4 h-4" /> Or select a specific date
-                </p>
-                <input type="date" value={date} min={today}
-                  max={new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0]}
-                  onChange={e => { setDate(e.target.value); setSelected(new Set()); }}
-                  className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
-                <p className="text-xs text-gray-400 mt-2">Book up to 30 days in advance</p>
-              </div>
-
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h2 className="font-bold text-xl text-gray-900 mb-4">Available Time Slots</h2>
-                <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-5 flex gap-2 items-start">
-                  <Lightbulb className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
-                  <div className="text-sm text-green-800">
-                    <strong>Save More!</strong> Book consecutive hours:
-                    <ul className="mt-1 text-xs text-green-700 space-y-0.5">
-                      <li>• Morning (6AM–6PM): 2+ hrs = ₹500/hr</li>
-                      <li>• Evening (6PM–6AM): 2 hrs = 10% off, 3+ hrs = 20% off</li>
-                    </ul>
-                  </div>
-                </div>
-                {slotsError && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4 flex justify-between">
-                    {slotsError}
-                    <button onClick={() => fetchSlots(date)} className="font-bold underline ml-2">Retry</button>
-                  </div>
-                )}
-                {slotsLoading ? (
-                  <div className="flex items-center justify-center h-32">
-                    <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-4">
-                    {slots.map(slot => (
-                      <button key={slot.slot} disabled={!slot.available && !slot.isYours}
-                        onClick={() => toggleSlot(slot)}
-                        className={`rounded-xl p-2.5 text-center transition-all ${slotClass(slot)}`}>
-                        <div className="text-xs font-bold leading-tight">{slot.from}</div>
-                        <div className="text-xs opacity-70">to</div>
-                        <div className="text-xs font-bold leading-tight">{slot.to}</div>
-                        <div className={`text-xs mt-1 font-semibold ${
-                          selectedSlots.has(slot.slot) ? 'text-green-100' :
-                          slot.isYours ? 'text-blue-500' :
-                          slot.available ? 'text-gray-500' : 'text-gray-400'}`}>
-                          {slot.isYours ? 'Yours' : `₹${slot.price}`}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <div className="flex flex-wrap gap-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> Selected</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white border border-gray-300 inline-block" /> Available</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Booked</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-200 inline-block" /> Your Booking</span>
-                </div>
-              </div>
+        {/* ══ STEP 0: Sport ══ */}
+        {step === 0 && (
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">BOOK A SLOT</h2>
+              <p className="text-gray-500">Choose your sport to get started</p>
             </div>
-
-            {/* Sidebar */}
-            <div className="lg:sticky lg:top-[120px] space-y-4 self-start">
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h3 className="font-bold text-lg text-gray-900 mb-5">Booking Summary</h3>
-                <div className="space-y-3 text-sm mb-5">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Facility</span>
-                    <span className="font-semibold">{import.meta.env.VITE_APP_NAME || 'HyperGreen 360 Turf'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Date</span>
-                    <span className="font-semibold text-xs">{fmtDisplay(date)}</span>
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <span className="text-gray-500 shrink-0">Slots ({selectedSlots.size})</span>
-                    <span className="font-semibold text-right text-xs ml-2">
-                      {selectedSlots.size === 0
-                        ? <span className="text-gray-400 italic">None selected</span>
-                        : slots.filter(s => selectedSlots.has(s.slot)).map(s => `${s.from} - ${s.to}`).join(', ')}
-                    </span>
-                  </div>
-                </div>
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Base Amount</span>
-                    <span>₹{slots.filter(s => selectedSlots.has(s.slot)).reduce((a, s) => a + s.price, 0)}</span>
-                  </div>
-                  {selectedSlots.size >= 2 && (
-                    <div className="flex justify-between text-sm text-green-600">
-                      <span>Discount</span>
-                      <span>- ₹{slots.filter(s => selectedSlots.has(s.slot)).reduce((a, s) => a + s.price, 0) - total}</span>
-                    </div>
-                  )}
-                  <div className="flex justify-between font-bold text-base text-green-700 pt-1">
-                    <span>Total</span><span>₹{total}</span>
-                  </div>
-                </div>
-                <button disabled={selectedSlots.size === 0 || slotsLoading}
-                  onClick={() => setStep(2)}
-                  className="mt-5 w-full bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-bold transition-all">
-                  Continue with {selectedSlots.size} slot{selectedSlots.size !== 1 ? 's' : ''}
+            <div className="grid sm:grid-cols-3 gap-4">
+              {SPORTS.map(s => (
+                <button key={s.id} onClick={() => { setSport(s); setTurf(null); setSelected(new Set()); setSlots([]); setStep(1); }}
+                  className={`bg-white border-2 hover:shadow-lg rounded-2xl p-8 flex flex-col items-center gap-3 transition-all hover:scale-105 active:scale-100 ${s.bg}`}>
+                  <span className="text-6xl">{s.emoji}</span>
+                  <span className={`font-display text-2xl tracking-wider ${s.color}`}>{s.label}</span>
+                  <span className="text-xs text-gray-500">{TURFS.filter(t=>t.sport===s.id).length} turfs available</span>
                 </button>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* ══ STEP 2 ══ */}
-        {step === 2 && (
-          <div className="w-full bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-            <h2 className="font-bold text-2xl text-gray-900 mb-6">Your Details</h2>
-            <div className="space-y-5 mb-8">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
-                <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                  placeholder="Your full name"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
-                <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                  placeholder="you@example.com"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number (10 digits) *</label>
-                <input type="tel" maxLength={10} value={form.phone}
-                  onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })}
-                  placeholder="8056564775"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
-                <p className="text-xs text-gray-400 mt-1.5">Without country code</p>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Team Size <span className="text-gray-400 font-normal">(Optional)</span>
-                </label>
-                <input type="number" min={1} max={22} value={form.teamSize}
-                  onChange={e => setForm({ ...form, teamSize: e.target.value })}
-                  placeholder="5"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button onClick={() => setStep(1)}
-                className="flex-1 border-2 border-gray-200 text-gray-600 rounded-xl py-3.5 font-bold hover:bg-gray-50 transition-colors">
-                Back
-              </button>
-              <button onClick={() => setStep(3)}
-                disabled={!form.name || !form.email || form.phone.length !== 10}
-                className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-bold transition-all">
-                Continue to Payment
-              </button>
+              ))}
             </div>
           </div>
         )}
 
-        {/* ══ STEP 3 ══ */}
-        {step === 3 && (
-          <div className="bg-white w-full rounded-2xl shadow-sm p-6 sm:p-8">
-            <h2 className="font-bold text-2xl text-gray-900 mb-6">Complete Payment</h2>
-
-            <div className="bg-gray-50 rounded-xl p-5 mb-5">
-              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Booking Details</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Date</span>
-                  <span className="font-semibold">
-                    {new Date(date + 'T00:00:00').toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Slots</span>
-                  <span className="font-semibold">{selectedSlots.size} slot{selectedSlots.size !== 1 ? 's' : ''}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Name</span>
-                  <span className="font-semibold">{form.name}</span>
-                </div>
-                {form.teamSize && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Team Size</span>
-                    <span className="font-semibold">{form.teamSize} players</span>
+        {/* ══ STEP 1: Turf ══ */}
+        {step === 1 && sport && (
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="text-4xl mb-2">{sport.emoji}</div>
+              <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-1">SELECT {sport.label.toUpperCase()} TURF</h2>
+              <p className="text-gray-500 text-sm">{filteredTurfs.length} turfs available in Sivakasi</p>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-5">
+              {filteredTurfs.map(t => (
+                <button key={t.id} onClick={() => { setTurf(t); setSelected(new Set()); setSlots([]); setStep(2); }}
+                  className="bg-white border-2 border-gray-200 hover:border-green-400 hover:shadow-xl rounded-2xl overflow-hidden text-left transition-all group active:scale-[0.99]">
+                  <div className="relative h-40 bg-gray-100 overflow-hidden">
+                    <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-3 left-4"><span className="text-white font-bold text-lg leading-tight">{t.name}</span></div>
+                    <div className="absolute top-3 right-3 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">from ₹{t.priceDay}/hr</div>
                   </div>
-                )}
-              </div>
-            </div>
-
-            <div className="border border-gray-200 rounded-xl p-5 mb-5 space-y-3 text-sm">
-              <div className="flex justify-between text-gray-600">
-                <span>Base Amount</span>
-                <span>₹{slots.filter(s => selectedSlots.has(s.slot)).reduce((a, s) => a + s.price, 0)}</span>
-              </div>
-              {selectedSlots.size >= 2 && (
-                <div className="flex justify-between text-green-600">
-                  <span>Multi-slot discount</span>
-                  <span>- ₹{slots.filter(s => selectedSlots.has(s.slot)).reduce((a, s) => a + s.price, 0) - total}</span>
-                </div>
-              )}
-              <div className="border-t pt-3 flex justify-between font-bold text-base">
-                <span>Total to Pay</span>
-                <span className="text-green-600 text-xl">₹{total}</span>
-              </div>
-            </div>
-
-            {bookingError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4 flex items-center gap-2">
-                <span>⚠️</span> {bookingError}
-              </div>
-            )}
-            {payError && (
-              <div className="bg-orange-50 border border-orange-200 text-orange-700 rounded-xl px-4 py-3 text-sm mb-4">
-                <strong>Payment Status:</strong> {payError}
-              </div>
-            )}
-
-            <button onClick={handlePay} disabled={loading || payLoading}
-              className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:opacity-90 text-white rounded-xl py-4 font-bold text-lg transition-all disabled:opacity-70 flex items-center justify-center gap-3 mb-3">
-              {loading || payLoading ? (
-                <>
-                  <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                  </svg>
-                  {payLoading ? 'Verifying...' : 'Opening Razorpay...'}
-                </>
-              ) : (
-                <><CreditCard className="w-5 h-5" /> Pay ₹{total} with Razorpay</>
-              )}
-            </button>
-
-            <p className="text-center text-xs text-gray-400 mb-4 flex items-center justify-center gap-2">
-              <span>🔒 Secured by Razorpay</span><span>•</span><span>UPI · Cards · Netbanking · Wallets</span>
-            </p>
-
-            <div className="flex items-center justify-center gap-2 mb-5 opacity-50">
-              {['Visa', 'Mastercard', 'UPI', 'RuPay', 'PhonePe', 'GPay'].map(m => (
-                <span key={m} className="text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded">{m}</span>
+                  <div className="p-4">
+                    <p className="text-gray-500 text-xs mb-3">{t.description}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {t.features.map(f => <span key={f} className="bg-green-50 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">{f}</span>)}
+                    </div>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="text-xs text-gray-500">
+                        {t.priceDay === t.priceNight
+                          ? <><span className="font-semibold text-gray-800">₹{t.priceDay}/hr</span> flat</>
+                          : <><span className="font-semibold text-gray-800">₹{t.priceDay}/hr</span> day · <span className="font-semibold text-gray-800">₹{t.priceNight}/hr</span> night</>}
+                      </div>
+                      <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-green-600 transition-colors">Select →</span>
+                    </div>
+                  </div>
+                </button>
               ))}
             </div>
+          </div>
+        )}
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800 mb-5">
-              <strong>Note:</strong> Your slot is reserved once payment succeeds. Failed payments release the slot automatically.
+        {/* ══ STEP 2: Date + Slots ══ */}
+        {step === 2 && turf && (
+          <div className="grid lg:grid-cols-[1fr_320px] gap-6">
+            <div className="space-y-5">
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 flex items-center gap-4">
+                <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0">
+                  <img src={turf.image} alt={turf.name} className="w-full h-full object-cover"
+                    onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-lg">{sport?.emoji}</span>
+                    <span className="font-bold text-gray-900">{turf.name}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 truncate">{turf.description}</p>
+                  <p className="text-xs text-green-700 font-semibold mt-0.5">
+                    {turf.priceDay === turf.priceNight ? `₹${turf.priceDay}/hr flat` : `₹${turf.priceDay}/hr day · ₹${turf.priceNight}/hr night`}
+                  </p>
+                </div>
+                <button onClick={() => setStep(1)} className="text-xs text-green-600 font-bold hover:underline shrink-0">Change</button>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-sm p-5">
+                <h2 className="font-bold text-lg text-gray-900 mb-4">Select Date</h2>
+                <div className="grid grid-cols-7 gap-1.5 mb-4">
+                  {pills.map(p => (
+                    <button key={p.iso} onClick={() => { setDate(p.iso); setSelected(new Set()); }}
+                      className={`rounded-xl py-2 px-1 text-center transition-all border-2 ${date===p.iso?'bg-green-600 border-green-600 text-white':'border-gray-200 hover:border-green-400 text-gray-700'}`}>
+                      <div className="text-xs font-semibold">{p.label}</div>
+                      <div className="text-base font-bold leading-tight">{p.date}</div>
+                      <div className="text-xs">{p.month}</div>
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 mb-1 text-sm text-gray-500 font-medium">
+                  <Calendar className="w-4 h-4" /> Or pick a specific date
+                </div>
+                <input type="date" value={date} min={today}
+                  max={new Date(Date.now() + 30*86400000).toISOString().split('T')[0]}
+                  onChange={e => { setDate(e.target.value); setSelected(new Set()); }}
+                  className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-sm p-5">
+                <h2 className="font-bold text-lg text-gray-900 mb-3">Available Time Slots</h2>
+                <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-4 flex gap-2 items-start">
+                  <Lightbulb className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                  <div className="text-xs text-green-800">
+                    <strong>Save more!</strong> 2 slots = 10% off · 3+ slots = 20% off
+                    {turf.priceDay !== turf.priceNight
+                      ? <span className="block mt-0.5 text-green-700">Day (6AM–6PM): ₹{turf.priceDay}/hr · Night (6PM–6AM): ₹{turf.priceNight}/hr</span>
+                      : <span className="block mt-0.5 text-green-700">Flat rate: ₹{turf.priceDay}/hr all hours</span>}
+                  </div>
+                </div>
+                {slotsError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-3 flex justify-between">
+                    {slotsError}<button onClick={() => fetchSlots(date, turf.id)} className="font-bold underline ml-2">Retry</button>
+                  </div>
+                )}
+                {slotsLoading
+                  ? <div className="flex items-center justify-center h-28"><div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" /></div>
+                  : (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 mb-3">
+                      {slots.map(slot => (
+                        <button key={slot.slot} disabled={!slot.available && !slot.isYours} onClick={() => toggleSlot(slot)}
+                          className={`rounded-xl p-2.5 text-center transition-all ${slotClass(slot)}`}>
+                          <div className="text-xs font-bold leading-tight">{slot.from}</div>
+                          <div className="text-xs opacity-70">to</div>
+                          <div className="text-xs font-bold leading-tight">{slot.to}</div>
+                          <div className={`text-xs mt-1 font-semibold ${selected.has(slot.slot)?'text-green-100':slot.isYours?'text-blue-500':slot.available?'text-gray-500':'text-gray-400'}`}>
+                            {slot.isYours ? 'Yours' : `₹${slot.price}`}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> Selected</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white border border-gray-300 inline-block" /> Available</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Booked</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-200 inline-block" /> Yours</span>
+                </div>
+              </div>
             </div>
 
-            <button onClick={() => setStep(2)}
-              className="w-full border border-gray-200 text-gray-600 rounded-xl py-3.5 font-semibold hover:bg-gray-50 transition-colors">
-              Back to Details
-            </button>
+            <div className="lg:sticky lg:top-[120px] self-start space-y-4">
+              <div className="bg-white rounded-2xl shadow-sm p-5">
+                <h3 className="font-bold text-base text-gray-900 mb-4">Booking Summary</h3>
+                <div className="space-y-2.5 text-sm mb-4">
+                  <div className="flex justify-between"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500">Turf</span><span className="font-semibold text-xs text-right max-w-[55%]">{turf.name}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500">Date</span><span className="font-semibold text-xs">{fmtDisplay(date)}</span></div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-gray-500 shrink-0">Slots ({selected.size})</span>
+                    <span className="font-semibold text-right text-xs ml-2">
+                      {selected.size === 0
+                        ? <span className="text-gray-400 italic">None</span>
+                        : slots.filter(s=>selected.has(s.slot)).map(s=>`${s.from}-${s.to}`).join(', ')}
+                    </span>
+                  </div>
+                </div>
+                <div className="border-t pt-3 space-y-1.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">Base</span>
+                    <span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
+                  </div>
+                  {selected.size >= 2 && (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount ({selected.size >= 3 ? '20%' : '10%'})</span>
+                      <span>-₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)-total}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-green-700 pt-1"><span>Total</span><span>₹{total}</span></div>
+                </div>
+                <button disabled={selected.size === 0 || slotsLoading} onClick={() => setStep(3)}
+                  className="mt-4 w-full bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3 font-bold transition-all text-sm">
+                  Continue with {selected.size} slot{selected.size!==1?'s':''}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══ STEP 3: Details ══ */}
+        {step === 3 && (
+          <div className="max-w-lg mx-auto">
+            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+              <h2 className="font-bold text-2xl text-gray-900 mb-6">Your Details</h2>
+              <div className="space-y-4 mb-8">
+                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                  <input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your full name"
+                    className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
+                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                  <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@example.com"
+                    className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
+                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Phone (10 digits) *</label>
+                  <input type="tel" maxLength={10} value={form.phone} onChange={e=>setForm({...form,phone:e.target.value.replace(/\D/g,'')})}
+                    placeholder="8056564775" className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
+                  <p className="text-xs text-gray-400 mt-1">Without country code</p></div>
+                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Team Size <span className="text-gray-400 font-normal">(Optional)</span></label>
+                  <input type="number" min={1} max={22} value={form.teamSize} onChange={e=>setForm({...form,teamSize:e.target.value})}
+                    placeholder="5" className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
+              </div>
+              <div className="flex gap-3">
+                <button onClick={()=>setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 rounded-xl py-3.5 font-bold hover:bg-gray-50 transition-colors">Back</button>
+                <button onClick={()=>setStep(4)} disabled={!form.name||!form.email||form.phone.length!==10}
+                  className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-bold transition-all">
+                  Continue to Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ══ STEP 4: Payment ══ */}
+        {step === 4 && (
+          <div className="max-w-lg mx-auto">
+            <div className="bg-white w-full rounded-2xl shadow-sm p-6 sm:p-8">
+              <h2 className="font-bold text-2xl text-gray-900 mb-6">Complete Payment</h2>
+              <div className="bg-gray-50 rounded-xl p-4 mb-5 space-y-2 text-sm">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Booking Details</h3>
+                <div className="flex justify-between"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Turf</span><span className="font-semibold">{turf?.name}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Date</span>
+                  <span className="font-semibold">{new Date(date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Slots</span><span className="font-semibold">{selected.size} slot{selected.size!==1?'s':''}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500">Name</span><span className="font-semibold">{form.name}</span></div>
+                {form.teamSize && <div className="flex justify-between"><span className="text-gray-500">Team</span><span className="font-semibold">{form.teamSize} players</span></div>}
+              </div>
+              <div className="border border-gray-200 rounded-xl p-4 mb-5 space-y-2 text-sm">
+                <div className="flex justify-between text-gray-600">
+                  <span>Base Amount</span><span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
+                </div>
+                {selected.size >= 2 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({selected.size >= 3 ? '20%' : '10%'})</span>
+                    <span>-₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)-total}</span>
+                  </div>
+                )}
+                <div className="border-t pt-2 flex justify-between font-bold text-base">
+                  <span>Total</span><span className="text-green-600 text-xl">₹{total}</span>
+                </div>
+              </div>
+              {bookingError && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4">⚠️ {bookingError}</div>}
+              {payError     && <div className="bg-orange-50 border border-orange-200 text-orange-700 rounded-xl px-4 py-3 text-sm mb-4"><strong>Payment:</strong> {payError}</div>}
+              <button onClick={handlePay} disabled={loading||payLoading}
+                className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:opacity-90 text-white rounded-xl py-4 font-bold text-lg disabled:opacity-70 flex items-center justify-center gap-3 mb-3">
+                {loading||payLoading
+                  ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>{payLoading?'Verifying...':'Opening Razorpay...'}</>
+                  : <><CreditCard className="w-5 h-5"/> Pay ₹{total} with Razorpay</>}
+              </button>
+              <p className="text-center text-xs text-gray-400 mb-4">🔒 Secured by Razorpay · UPI · Cards · Netbanking · Wallets</p>
+              <div className="flex justify-center gap-2 mb-4 opacity-50">
+                {['Visa','Mastercard','UPI','RuPay','PhonePe','GPay'].map(m=>(
+                  <span key={m} className="text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded">{m}</span>
+                ))}
+              </div>
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 mb-4">
+                <strong>Note:</strong> Slot reserved once payment succeeds. Failed payments release the slot automatically.
+              </div>
+              <button onClick={()=>setStep(3)} className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 font-semibold hover:bg-gray-50 transition-colors">Back to Details</button>
+            </div>
           </div>
         )}
       </div>

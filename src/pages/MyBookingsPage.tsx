@@ -10,6 +10,8 @@ interface Booking {
   date:          string;
   timeSlots:     string[];
   sport:         string;
+  turfId:        string;
+  turfName:      string;
   duration:      number;
   totalAmount:   number;
   status:        string;
@@ -136,6 +138,9 @@ const MyBookingsPage = () => {
                       <span className="text-gray-400 text-xs capitalize">
                         {b.sport === 'football' ? '⚽' : b.sport === 'cricket' ? '🏏' : '🏆'} {b.sport}
                       </span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      🏟️ <span className="font-semibold text-gray-800">{b.turfName}</span>
                     </div>
 
                     {/* Date & slot */}
