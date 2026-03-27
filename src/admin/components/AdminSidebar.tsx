@@ -1,17 +1,19 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CalendarCheck, Users, MessageSquare,
-  TrendingUp, LogOut, X
+  TrendingUp, LogOut, Trophy, X, MapPin
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import logo from '../../assets/logo.png';
 
 const navItems = [
-  { to: '/admin/dashboard',  icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'  },
-  { to: '/admin/bookings',   icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'   },
-  { to: '/admin/users',      icon: <Users           className="w-5 h-5" />, label: 'Users'      },
-  { to: '/admin/contacts',   icon: <MessageSquare   className="w-5 h-5" />, label: 'Contacts'   },
-  { to: '/admin/revenue',    icon: <TrendingUp      className="w-5 h-5" />, label: 'Revenue'    },
+  { to: '/admin/dashboard',   icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'   },
+  { to: '/admin/bookings',    icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'    },
+  { to: '/admin/turfs',       icon: <MapPin          className="w-5 h-5" />, label: 'Turfs'       },
+  { to: '/admin/tournaments', icon: <Trophy          className="w-5 h-5" />, label: 'Tournaments' },
+  { to: '/admin/users',       icon: <Users           className="w-5 h-5" />, label: 'Users'       },
+  { to: '/admin/contacts',    icon: <MessageSquare   className="w-5 h-5" />, label: 'Contacts'    },
+  { to: '/admin/revenue',     icon: <TrendingUp      className="w-5 h-5" />, label: 'Revenue'     },
 ];
 
 interface Props { onClose?: () => void; }

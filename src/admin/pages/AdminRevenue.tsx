@@ -86,21 +86,20 @@ const AdminRevenue = () => {
         ) : (
           <>
             {/* Bars */}
-            <div className="flex items-end gap-1.5 h-48 overflow-x-auto pb-2">
+            <div className="flex items-end gap-1.5 h-52 overflow-x-auto pb-6">
               {data.map(d => {
-                const pct = (d.totalRevenue / maxRevenue) * 100;
+                const barHeight = Math.round((d.totalRevenue / maxRevenue) * 160);
                 return (
-                  <div key={d._id} className="flex flex-col items-center gap-1 min-w-[32px] group">
+                  <div key={d._id} className="flex flex-col items-center gap-1 min-w-[32px] group relative">
                     {/* Tooltip */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap pointer-events-none absolute -translate-y-8">
-                      ₹{d.totalRevenue} · {d.bookingCount} booking{d.bookingCount !== 1 ? 's' : ''}
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-gray-700 text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap pointer-events-none absolute bottom-full mb-1 left-1/2 -translate-x-1/2 z-10">
+                      ₹{d.totalRevenue.toLocaleString('en-IN')} · {d.bookingCount} booking{d.bookingCount !== 1 ? 's' : ''}
                     </div>
                     <div
-                      className="w-full bg-green-500 rounded-t-lg hover:bg-green-400 transition-colors relative"
-                      style={{ height: `${Math.max(pct, 4)}%` }}
-                      title={`₹${d.totalRevenue} (${d.bookingCount} bookings)`}
+                      className="w-full bg-green-500 hover:bg-green-400 rounded-t-lg transition-colors cursor-pointer"
+                      style={{ height: `${Math.max(barHeight, 6)}px` }}
                     />
-                    <span className="text-gray-600 text-xs">{d._id.split('-')[2]}</span>
+                    <span className="text-gray-500 text-xs absolute -bottom-5">{d._id.split('-')[2]}</span>
                   </div>
                 );
               })}

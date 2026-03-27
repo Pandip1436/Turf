@@ -36,13 +36,13 @@ const STATUS_BADGE: Record<string, string> = {
 const StatCard = ({
   icon, label, value, sub, color,
 }: { icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string }) => (
-  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-gray-700 transition-colors">
-    <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 ${color}`}>
+  <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 lg:p-6 hover:border-gray-700 transition-colors">
+    <div className={`inline-flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 rounded-xl mb-3 lg:mb-4 ${color}`}>
       {icon}
     </div>
-    <div className="text-3xl font-black text-white mb-1">{value}</div>
-    <div className="text-gray-400 text-sm font-medium">{label}</div>
-    {sub && <div className="text-xs text-gray-600 mt-1">{sub}</div>}
+    <div className="text-2xl lg:text-3xl font-black text-white mb-1">{value}</div>
+    <div className="text-gray-400 text-xs lg:text-sm font-medium">{label}</div>
+    {sub && <div className="text-xs text-gray-600 mt-1 hidden sm:block">{sub}</div>}
   </div>
 );
 
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="p-4 lg:p-8 space-y-6 lg:space-y-8">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-white">Dashboard</h1>
@@ -141,11 +141,11 @@ const AdminDashboard = () => {
           <div className="text-center py-12 text-gray-600">No bookings yet</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-sm min-w-[500px]">
               <thead>
                 <tr className="border-b border-gray-800">
                   {['Customer', 'Date', 'Slot', 'Amount', 'Status'].map(h => (
-                    <th key={h} className="text-left px-6 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">
+                    <th key={h} className="text-left px-4 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                       {h}
                     </th>
                   ))}
@@ -154,14 +154,14 @@ const AdminDashboard = () => {
               <tbody>
                 {recent.map((b, i) => (
                   <tr key={b._id} className={`border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors ${i === recent.length - 1 ? 'border-b-0' : ''}`}>
-                    <td className="px-6 py-4">
-                      <div className="text-white font-semibold">{b.userName}</div>
+                    <td className="px-4 py-3">
+                      <div className="text-white font-semibold text-sm">{b.userName}</div>
                       <div className="text-gray-500 text-xs">{b.userEmail}</div>
                     </td>
-                    <td className="px-6 py-4 text-gray-300">{b.date}</td>
-                    <td className="px-6 py-4 text-gray-300 text-xs">{b.timeSlots?.[0]}</td>
-                    <td className="px-6 py-4 text-white font-bold">₹{b.totalAmount}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 py-3 text-gray-300 text-sm whitespace-nowrap">{b.date}</td>
+                    <td className="px-4 py-3 text-gray-300 text-xs whitespace-nowrap">{b.timeSlots?.[0]}</td>
+                    <td className="px-4 py-3 text-white font-bold text-sm whitespace-nowrap">₹{b.totalAmount}</td>
+                    <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${STATUS_BADGE[b.status] || STATUS_BADGE['pending']}`}>
                         {b.status === 'confirmed' ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
                         {b.status}

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/static-components */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, LogOut, User, Calendar, ChevronDown } from 'lucide-react';
@@ -62,6 +64,7 @@ const Navbar = () => {
     { to: '/',        label: 'Home'     },
     { to: '/gallery', label: 'Gallery'  },
     { to: '/booking', label: 'Book Now' },
+    { to: '/tournaments', label: 'Tournaments' },
     { to: '/pricing', label: 'Pricing'  },
     { to: '/contact', label: 'Contact'  },
   ];

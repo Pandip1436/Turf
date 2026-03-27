@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
 import MyBookingsPage from './pages/MyBookingsPage';
+import TournamentsPage from './pages/TournamentsPage';
 import { TermsPage, CancellationPage, PricingPage, PrivacyPage } from './pages/StaticPages';
 import ScrollToTop from "./components/ScrollToTop";
 import AdminApp from './admin/AdminApp';
@@ -18,36 +19,43 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-      <ScrollToTop />
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-1">
-            
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/admin/*" element={<AdminApp />} />
-              <Route path="/booking" element={<BookingPage />} />
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/my-bookings" element={<MyBookingsPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/cancellation" element={<CancellationPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="*" element={
-                <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
-                  <div className="text-6xl mb-4">🏟️</div>
-                  <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">PAGE NOT FOUND</h2>
-                  <p className="text-gray-500 mb-6">The page you're looking for doesn't exist.</p>
-                  <a href="/" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Go Home</a>
-                </div>
-              } />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <ScrollToTop />
+        <Routes>
+          {/* Admin — no Navbar / Footer */}
+          <Route path="/admin/*" element={<AdminApp />} />
+
+          {/* Public site — with Navbar + Footer */}
+          <Route path="*" element={
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/booking" element={<BookingPage />} />
+                  <Route path="/gallery" element={<GalleryPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/my-bookings" element={<MyBookingsPage />} />
+                  <Route path="/tournaments" element={<TournamentsPage />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/cancellation" element={<CancellationPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="*" element={
+                    <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
+                      <div className="text-6xl mb-4">🏟️</div>
+                      <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">PAGE NOT FOUND</h2>
+                      <p className="text-gray-500 mb-6">The page you're looking for doesn't exist.</p>
+                      <a href="/" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Go Home</a>
+                    </div>
+                  } />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          } />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );

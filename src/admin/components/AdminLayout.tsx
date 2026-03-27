@@ -11,7 +11,7 @@ const AdminLayout = () => {
   if (!isAuthenticated) return <Navigate to="/admin/login" replace />;
 
   return (
-    <div className="flex h-screen bg-gray-900 mt-15 overflow-hidden">
+    <div className="flex h-screen bg-gray-900 overflow-hidden">
       {/* Desktop sidebar */}
       <div className="hidden lg:flex shrink-0">
         <AdminSidebar />

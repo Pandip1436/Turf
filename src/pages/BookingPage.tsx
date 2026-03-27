@@ -27,18 +27,8 @@ const SPORTS: Sport[] = [
   { id: 'badminton', label: 'Badminton', emoji: '🏸', color: 'text-purple-700', bg: 'bg-purple-50 border-purple-400' },
 ];
 
-const TURFS: TurfInfo[] = [
-  { id: 'thunder-arena',   name: 'Thunder Arena',   sport: 'football',  description: 'FIFA-grade artificial grass · 360° floodlit arena · Sivakasi',                    features: ['5-a-side', 'Pro floodlights', 'Changing rooms', 'Free parking'],      priceDay: 600, priceNight: 1000, image: '/images/Turf.jpg'   },
-  { id: 'blitz-ground',    name: 'Blitz Ground',    sport: 'football',  description: 'Compact 3-a-side arena · Rubber-infill surface · Perfect for speed training',     features: ['3-a-side', 'LED lights', 'Water station', 'Free parking'],           priceDay: 600, priceNight: 1000, image: '/images/field2.png' },
-  { id: 'kickoff-zone',    name: 'Kickoff Zone',    sport: 'football',  description: '6-a-side full-width turf · Advanced drainage system · Weekend tournaments',       features: ['6-a-side', 'Drainage system', 'Referee service', 'Canteen'],         priceDay: 600, priceNight: 1000, image: '/images/hero1.png'  },
-  { id: 'goal-rush-field', name: 'Goal Rush Field', sport: 'football',  description: 'Dual-purpose 5v5 & 7v7 · Hybrid grass surface · Ideal for club matches',          features: ['5v5 / 7v7', 'Hybrid grass', 'Scoreboard', 'First aid kit'],         priceDay: 600, priceNight: 1000, image: '/images/hero2.png'  },
-  { id: 'century-pitch',   name: 'Century Pitch',   sport: 'cricket',   description: 'Full 22-yard matting pitch · Regulated stumps · Day/night matches',               features: ['Full 22 yards', 'Matting pitch', 'Stumps included', 'Scoreboard'],   priceDay: 600, priceNight: 1000, image: '/images/hero3.jpg'  },
-  { id: 'spin-king-nets',  name: 'Spin King Nets',  sport: 'cricket',   description: '4-lane practice nets · Auto bowling machine · Coaching sessions available',      features: ['4 net lanes', 'Bowling machine', 'Coaching bay', 'Floodlights'],     priceDay: 600, priceNight: 1000, image: '/images/hero4.jpg'  },
-  { id: 'powerplay-arena', name: 'Powerplay Arena', sport: 'cricket',   description: 'Box cricket format · Covered rooftop court · High-impact rubber surface',         features: ['Box cricket', 'Rooftop covered', 'Rubber surface', 'Snacks bar'],    priceDay: 600, priceNight: 1000, image: '/images/Turf.jpg'   },
-  { id: 'smash-court-a',   name: 'Smash Court A',   sport: 'badminton', description: 'BWF-approved wooden flooring · Anti-slip surface · Air-cooled indoor hall',       features: ['BWF flooring', 'Anti-slip', 'Air cooled', 'Equipment rental'],      priceDay: 300, priceNight: 300,  image: '/images/field2.png' },
-  { id: 'shuttle-court-b', name: 'Shuttle Court B', sport: 'badminton', description: 'PVC synthetic court · Doubles & singles · Tournament-grade lighting',             features: ['PVC synthetic', 'Doubles/singles', 'Pro lighting', 'Racket rental'], priceDay: 300, priceNight: 300,  image: '/images/hero2.png'  },
-  { id: 'ace-court-c',     name: 'Ace Court C',     sport: 'badminton', description: 'Premium rubber mat · Ideal for coaching & tournaments · Spectator seating',       features: ['Rubber mat', 'Coaching zone', 'Spectator seats', 'Air cooled'],     priceDay: 300, priceNight: 300,  image: '/images/hero3.jpg'  },
-];
+// Turfs are now loaded dynamically from the API (managed by admin).
+// TurfInfo.id maps to the turfId slug stored in the database.
 
 const ENV_RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
 const STEP_LABELS = ['Sport', 'Turf', 'Slots', 'Details', 'Payment'];
@@ -97,6 +87,8 @@ const BookingPage = () => {
   const [confirmed,    setConfirmed]   = useState(false);
   const [bookingRef,   setBookingRef]  = useState('');
   const [bookingId,    setBookingId]   = useState('');
+  const [turfs,        setTurfs]       = useState<TurfInfo[]>([]);
+  const [turfsLoading, setTurfsLoading]= useState(false);
   const [loading,      setLoading]     = useState(false);
   const [payLoading,   setPayLoading]  = useState(false);
   const [bookingError, setBookingError]= useState('');
@@ -123,6 +115,22 @@ const BookingPage = () => {
     } finally {
       setSlotsLoading(false);
     }
+  }, []);
+
+  // Fetch all active turfs from API once on mount
+  useEffect(() => {
+    setTurfsLoading(true);
+    api.get<{ turfs: Array<{ turfId: string; name: string; sport: string; description: string; features: string[]; priceDay: number; priceNight: number; image: string }> }>('/turfs?active=true')
+      .then(res => {
+        const mapped: TurfInfo[] = res.data.turfs.map(t => ({
+          id: t.turfId, name: t.name, sport: t.sport,
+          description: t.description, features: t.features,
+          priceDay: t.priceDay, priceNight: t.priceNight, image: t.image,
+        }));
+        setTurfs(mapped);
+      })
+      .catch(() => { /* non-fatal — show empty state */ })
+      .finally(() => setTurfsLoading(false));
   }, []);
 
   useEffect(() => { if (step === 2 && turf) fetchSlots(date, turf.id); }, [date, step, turf]);
@@ -173,7 +181,7 @@ const BookingPage = () => {
   // ── Derived values (authenticated only) ────────────────────────────────────
   const pills = getDatePills();
   const total = calcTotal(slots, selected);
-  const filteredTurfs = sport ? TURFS.filter(t => t.sport === sport.id) : [];
+  const filteredTurfs = sport ? turfs.filter((t: TurfInfo) => t.sport === sport.id) : [];
 
   const toggleSlot = (slot: SlotInfo) => {
     if (!slot.available) return;
@@ -360,7 +368,7 @@ const BookingPage = () => {
                   className={`bg-white border-2 hover:shadow-lg rounded-2xl p-8 flex flex-col items-center gap-3 transition-all hover:scale-105 active:scale-100 ${s.bg}`}>
                   <span className="text-6xl">{s.emoji}</span>
                   <span className={`font-display text-2xl tracking-wider ${s.color}`}>{s.label}</span>
-                  <span className="text-xs text-gray-500">{TURFS.filter(t=>t.sport===s.id).length} turfs available</span>
+                  <span className="text-xs text-gray-500">{turfs.filter((t: TurfInfo)=>t.sport===s.id).length} turfs available</span>
                 </button>
               ))}
             </div>
@@ -375,8 +383,13 @@ const BookingPage = () => {
               <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-1">SELECT {sport.label.toUpperCase()} TURF</h2>
               <p className="text-gray-500 text-sm">{filteredTurfs.length} turfs available in Sivakasi</p>
             </div>
+            {turfsLoading && (
+              <div className="flex justify-center py-12">
+                <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
             <div className="grid sm:grid-cols-3 gap-5">
-              {filteredTurfs.map(t => (
+              {!turfsLoading && filteredTurfs.map(t => (
                 <button key={t.id} onClick={() => { setTurf(t); setSelected(new Set()); setSlots([]); setStep(2); }}
                   className="bg-white border-2 border-gray-200 hover:border-green-400 hover:shadow-xl rounded-2xl overflow-hidden text-left transition-all group active:scale-[0.99]">
                   <div className="relative h-40 bg-gray-100 overflow-hidden">
