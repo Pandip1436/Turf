@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
 import { NavLink } from 'react-router-dom';
+import { useAdminAuth } from '../context/AdminAuthContext';
 
 interface Stats {
   totalBookings:  number;
@@ -47,6 +48,8 @@ const StatCard = ({
 );
 
 const AdminDashboard = () => {
+  const { admin } = useAdminAuth();
+  const isTurfManager = admin?.role === 'turf_manager';
   const [stats, setStats]       = useState<Stats | null>(null);
   const [recent, setRecent]     = useState<RecentBooking[]>([]);
   const [loading, setLoading]   = useState(true);
@@ -80,8 +83,15 @@ const AdminDashboard = () => {
         </p>
       </div>
 
+      {/* Branch view banner for turf_manager */}
+      {isTurfManager && (
+        <div className="bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl px-4 py-2 text-sm">
+          Branch View: {admin?.assignedTurfId} — Showing stats for your branch only
+        </div>
+      )}
+
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid gap-4 ${isTurfManager ? 'grid-cols-2 lg:grid-cols-3' : 'grid-cols-2 lg:grid-cols-4'}`}>
         <StatCard
           icon={<CalendarCheck className="w-6 h-6 text-green-400" />}
           label="Total Bookings" value={stats?.totalBookings ?? 0}
@@ -98,24 +108,28 @@ const AdminDashboard = () => {
           value={`₹${((stats?.totalRevenue ?? 0) / 1000).toFixed(1)}K`}
           sub="Net earnings" color="bg-yellow-500/15"
         />
-        <StatCard
-          icon={<Users className="w-6 h-6 text-purple-400" />}
-          label="Total Users" value={stats?.totalUsers ?? 0}
-          sub="Registered accounts" color="bg-purple-500/15"
-        />
+        {!isTurfManager && (
+          <StatCard
+            icon={<Users className="w-6 h-6 text-purple-400" />}
+            label="Total Users" value={stats?.totalUsers ?? 0}
+            sub="Registered accounts" color="bg-purple-500/15"
+          />
+        )}
       </div>
 
       {/* Secondary stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex items-center gap-4">
-          <div className="w-12 h-12 bg-orange-500/15 rounded-xl flex items-center justify-center shrink-0">
-            <MessageSquare className="w-6 h-6 text-orange-400" />
+        {!isTurfManager && (
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-5 flex items-center gap-4">
+            <div className="w-12 h-12 bg-orange-500/15 rounded-xl flex items-center justify-center shrink-0">
+              <MessageSquare className="w-6 h-6 text-orange-400" />
+            </div>
+            <div>
+              <div className="text-2xl font-black text-white">{stats?.pendingContacts ?? 0}</div>
+              <div className="text-gray-400 text-sm">Pending Enquiries</div>
+            </div>
           </div>
-          <div>
-            <div className="text-2xl font-black text-white">{stats?.pendingContacts ?? 0}</div>
-            <div className="text-gray-400 text-sm">Pending Enquiries</div>
-          </div>
-        </div>
+        )}
         <div className="bg-gradient-to-r from-green-500/10 to-green-600/5 border border-green-500/20 rounded-2xl p-5 flex items-center gap-4">
           <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center shrink-0">
             <TrendingUp className="w-6 h-6 text-green-400" />

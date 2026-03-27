@@ -1,18 +1,26 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CalendarCheck, Users, MessageSquare,
-  TrendingUp, LogOut, Trophy, X, MapPin
+  TrendingUp, LogOut, Trophy, X, MapPin, ShieldCheck
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import logo from '../../assets/logo.png';
 
-const navItems = [
+const adminNavItems = [
   { to: '/admin/dashboard',   icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'   },
   { to: '/admin/bookings',    icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'    },
   { to: '/admin/turfs',       icon: <MapPin          className="w-5 h-5" />, label: 'Turfs'       },
   { to: '/admin/tournaments', icon: <Trophy          className="w-5 h-5" />, label: 'Tournaments' },
   { to: '/admin/users',       icon: <Users           className="w-5 h-5" />, label: 'Users'       },
   { to: '/admin/contacts',    icon: <MessageSquare   className="w-5 h-5" />, label: 'Contacts'    },
+  { to: '/admin/revenue',     icon: <TrendingUp      className="w-5 h-5" />, label: 'Revenue'     },
+  { to: '/admin/staff',       icon: <ShieldCheck     className="w-5 h-5" />, label: 'Admin Users' },
+];
+
+const managerNavItems = [
+  { to: '/admin/dashboard',   icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'   },
+  { to: '/admin/bookings',    icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'    },
+  { to: '/admin/tournaments', icon: <Trophy          className="w-5 h-5" />, label: 'Tournaments' },
   { to: '/admin/revenue',     icon: <TrendingUp      className="w-5 h-5" />, label: 'Revenue'     },
 ];
 
@@ -21,6 +29,8 @@ interface Props { onClose?: () => void; }
 const AdminSidebar = ({ onClose }: Props) => {
   const { admin, logout } = useAdminAuth();
   const navigate = useNavigate();
+  const isTurfManager = admin?.role === 'turf_manager';
+  const navItems = isTurfManager ? managerNavItems : adminNavItems;
 
   const handleLogout = () => { logout(); navigate('/admin/login'); };
 
@@ -38,7 +48,9 @@ const AdminSidebar = ({ onClose }: Props) => {
           </div>
           <div>
             <div className="bg-gradient-to-r from-green-700 to-blue-600 bg-clip-text text-transparent font-black text-sm leading-tight">HyperGreen 360 Turf</div>
-            <div className="text-green-400 text-xs font-semibold">Admin Panel</div>
+            <div className="text-green-400 text-xs font-semibold">
+              {isTurfManager ? 'Branch Manager' : 'Admin Panel'}
+            </div>
           </div>
         </div>
         {onClose && (
@@ -77,6 +89,11 @@ const AdminSidebar = ({ onClose }: Props) => {
           <div className="min-w-0">
             <div className="text-white text-sm font-semibold truncate">{admin?.name}</div>
             <div className="text-gray-500 text-xs truncate">{admin?.email}</div>
+            {isTurfManager && (
+              <div className="text-green-400 text-xs truncate">
+                Branch: {admin?.assignedTurfId || 'unassigned'}
+              </div>
+            )}
           </div>
         </div>
         <button

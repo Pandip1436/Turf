@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import  { useEffect, useState } from 'react';
-import { IndianRupee, TrendingUp, CalendarCheck, BarChart3 } from 'lucide-react';
+import { IndianRupee, TrendingUp, CalendarCheck, BarChart3, MapPin } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import { useAdminAuth } from '../context/AdminAuthContext';
 
 interface DayRevenue {
   _id:          string;
@@ -10,6 +11,9 @@ interface DayRevenue {
 }
 
 const AdminRevenue = () => {
+  const { admin } = useAdminAuth();
+  const isTurfManager = admin?.role === 'turf_manager';
+
   const [data, setData]           = useState<DayRevenue[]>([]);
   const [totalRevenue, setTotal]  = useState(0);
   const [loading, setLoading]     = useState(true);
@@ -36,7 +40,9 @@ const AdminRevenue = () => {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-black text-white">Revenue</h1>
-          <p className="text-gray-500 text-sm mt-1">Monthly earnings breakdown</p>
+          <p className="text-gray-500 text-sm mt-1">
+            {isTurfManager ? `Branch: ${admin?.assignedTurfId} — monthly earnings` : 'Monthly earnings breakdown'}
+          </p>
         </div>
         <input
           type="month" value={month}
@@ -44,6 +50,14 @@ const AdminRevenue = () => {
           className="bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-green-500"
         />
       </div>
+
+      {/* Branch badge for managers */}
+      {isTurfManager && (
+        <div className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-xl px-4 py-2.5 text-sm w-fit">
+          <MapPin className="w-4 h-4 shrink-0" />
+          Showing revenue for branch: <span className="font-mono font-bold ml-1">{admin?.assignedTurfId}</span>
+        </div>
+      )}
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

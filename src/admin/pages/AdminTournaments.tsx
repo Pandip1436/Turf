@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import {
   Trophy, Plus, Users, Calendar, Clock, ChevronLeft, ChevronRight,
-  Edit2, Trash2, X, Check, AlertCircle, Eye, ChevronDown,
+  Edit2, Trash2, X, Check, AlertCircle, Eye, ChevronDown, MapPin,
+  Upload, ImageIcon,
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import { useAdminAuth } from '../context/AdminAuthContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Player        { name: string; age?: number; position?: string; }
@@ -59,25 +61,47 @@ const BLANK: Omit<Tournament, '_id' | 'registrations' | 'registeredTeams' | 'spo
 
 // ── Create / Edit modal ───────────────────────────────────────────────────────
 const TournamentFormModal = ({
-  initial, onClose, onSaved,
+  initial, onClose, onSaved, lockedTurfId,
 }: {
   initial: typeof BLANK | Tournament;
   onClose: () => void;
   onSaved: (t: Tournament) => void;
+  lockedTurfId?: string;
 }) => {
   const isEdit = '_id' in initial;
   const [form, setForm]     = useState({ ...initial });
-  const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState('');
-  const [turfs, setTurfs]   = useState<TurfOption[]>([]);
+  const [loading, setLoading]     = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError]         = useState('');
+  const [turfs, setTurfs]         = useState<TurfOption[]>([]);
+
+  const handleBannerUpload = async (file: File) => {
+    setUploading(true);
+    setError('');
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await adminApi.post<{ url: string }>('/tournaments/upload', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      set('banner', res.data.url);
+    } catch {
+      setError('Image upload failed. Try again.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
     adminApi.get<{ turfs: Array<{ turfId: string; name: string; sport: string }> }>('/turfs')
       .then(res => {
         const opts: TurfOption[] = res.data.turfs.map(t => ({ id: t.turfId, name: t.name, sport: t.sport }));
         setTurfs(opts);
-        // Auto-select first turf if form has none yet
-        if (!form.turfId && opts.length > 0) {
+        if (lockedTurfId) {
+          // Manager: lock to their branch turf
+          const myTurf = opts.find(t => t.id === lockedTurfId);
+          if (myTurf) setForm(f => ({ ...f, turfId: myTurf.id, turfName: myTurf.name }));
+        } else if (!form.turfId && opts.length > 0) {
           const first = opts.find(t => t.sport === form.sport) ?? opts[0];
           setForm(f => ({ ...f, turfId: first.id, turfName: first.name }));
         }
@@ -166,12 +190,19 @@ const TournamentFormModal = ({
             </div>
             <div>
               <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1.5">Turf *</label>
-              <select value={form.turfId} onChange={e => handleTurfChange(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-green-500">
-                {filteredTurfs.map(t => (
-                  <option key={t.id} value={t.id}>{t.name}</option>
-                ))}
-              </select>
+              {lockedTurfId ? (
+                <div className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-300">
+                  <MapPin className="w-4 h-4 text-green-400 shrink-0" />
+                  <span className="font-mono">{form.turfName || lockedTurfId}</span>
+                </div>
+              ) : (
+                <select value={form.turfId} onChange={e => handleTurfChange(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-green-500">
+                  {filteredTurfs.map(t => (
+                    <option key={t.id} value={t.id}>{t.name}</option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
@@ -257,12 +288,37 @@ const TournamentFormModal = ({
               className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-green-500 resize-none" />
           </div>
 
-          {/* Banner image path */}
+          {/* Banner image upload */}
           <div>
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1.5">Banner Image Path</label>
+            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wide mb-1.5">Banner Image</label>
+            {/* Preview */}
+            {form.banner && (
+              <div className="relative mb-2 rounded-xl overflow-hidden border border-gray-700 h-36 bg-gray-800">
+                <img src={form.banner} alt="Banner preview" className="w-full h-full object-cover" />
+                <button type="button"
+                  onClick={() => set('banner', '')}
+                  className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+            {/* Upload area */}
+            <label className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl px-4 py-5 cursor-pointer transition-colors ${
+              uploading ? 'border-green-500/50 bg-green-500/5' : 'border-gray-700 hover:border-green-500/50 hover:bg-gray-800/50'
+            }`}>
+              {uploading
+                ? <><div className="w-6 h-6 border-2 border-green-500 border-t-transparent rounded-full animate-spin" /><span className="text-gray-400 text-xs">Uploading...</span></>
+                : <><Upload className="w-5 h-5 text-gray-500" /><span className="text-gray-400 text-xs">Click to upload image <span className="text-gray-600">(JPG, PNG · max 5MB)</span></span></>
+              }
+              <input type="file" accept="image/*" className="hidden" disabled={uploading}
+                onChange={e => { const f = e.target.files?.[0]; if (f) handleBannerUpload(f); e.target.value = ''; }}
+              />
+            </label>
+            {/* Manual URL fallback */}
             <input value={form.banner} onChange={e => set('banner', e.target.value)}
-              placeholder="/images/Turf.jpg"
-              className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-2.5 text-sm outline-none focus:border-green-500" />
+              placeholder="Or paste image URL..."
+              className="mt-2 w-full bg-gray-800 border border-gray-700 text-white rounded-xl px-4 py-2 text-xs outline-none focus:border-green-500 placeholder-gray-600"
+            />
           </div>
 
           {/* Rules */}
@@ -526,6 +582,10 @@ const DeleteConfirm = ({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 const AdminTournaments = () => {
+  const { admin } = useAdminAuth();
+  const isTurfManager = admin?.role === 'turf_manager';
+  const lockedTurfId  = isTurfManager ? (admin?.assignedTurfId ?? '') : undefined;
+
   const [tournaments,   setTournaments]  = useState<Tournament[]>([]);
   const [loading,       setLoading]      = useState(true);
   const [filterSport,   setFilterSport]  = useState('');
@@ -545,7 +605,8 @@ const AdminTournaments = () => {
       if (filterSport)  params.set('sport',  filterSport);
       if (filterStatus) params.set('status', filterStatus);
       const res = await adminApi.get(`/tournaments?${params}`);
-      setTournaments(res.data.tournaments ?? []);
+      const all = res.data.tournaments ?? [];
+      setTournaments(isTurfManager ? all.filter((t: Tournament) => t.turfId === lockedTurfId) : all);
       setPage(1);
     } catch {
       setTournaments([]);
@@ -621,6 +682,11 @@ const AdminTournaments = () => {
             <Trophy className="w-6 h-6 text-yellow-400" /> Tournaments
           </h1>
           <p className="text-gray-500 text-sm mt-1">{stats.total} tournaments · {stats.teams} teams registered</p>
+          {isTurfManager && (
+            <div className="flex items-center gap-1.5 mt-2 text-blue-400 text-xs font-semibold">
+              <MapPin className="w-3.5 h-3.5" /> Branch: <span className="font-mono">{lockedTurfId}</span>
+            </div>
+          )}
         </div>
         <button onClick={() => setCreating(true)}
           className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-colors shrink-0">
@@ -748,16 +814,22 @@ const AdminTournaments = () => {
 
                       {/* Status — inline dropdown */}
                       <td className="px-5 py-4">
-                        <select
-                          value={t.status}
-                          onChange={e => quickStatusUpdate(t, e.target.value)}
-                          className={`text-xs font-bold rounded-lg px-2 py-1 bg-transparent border cursor-pointer outline-none ${STATUS_COLORS[t.status]}`}
-                        >
-                          <option value="upcoming">Upcoming</option>
-                          <option value="ongoing">Ongoing</option>
-                          <option value="completed">Completed</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
+                        {(!isTurfManager || t.turfId === lockedTurfId) ? (
+                          <select
+                            value={t.status}
+                            onChange={e => quickStatusUpdate(t, e.target.value)}
+                            className={`text-xs font-bold rounded-lg px-2 py-1 bg-transparent border cursor-pointer outline-none ${STATUS_COLORS[t.status]}`}
+                          >
+                            <option value="upcoming">Upcoming</option>
+                            <option value="ongoing">Ongoing</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        ) : (
+                          <span className={`text-xs font-bold px-2 py-1 rounded-lg border ${STATUS_COLORS[t.status]}`}>
+                            {t.status}
+                          </span>
+                        )}
                       </td>
 
                       {/* Actions */}
@@ -767,14 +839,16 @@ const AdminTournaments = () => {
                             className="p-1.5 rounded-lg text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button onClick={() => setEditing(t)} title="Edit"
-                            className="p-1.5 rounded-lg text-gray-500 hover:text-green-400 hover:bg-green-500/10 transition-colors">
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button onClick={() => setDeleting(t)} title="Cancel tournament"
-                            className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {(!isTurfManager || t.turfId === lockedTurfId) && (<>
+                            <button onClick={() => setEditing(t)} title="Edit"
+                              className="p-1.5 rounded-lg text-gray-500 hover:text-green-400 hover:bg-green-500/10 transition-colors">
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => setDeleting(t)} title="Delete tournament"
+                              className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>)}
                         </div>
                       </td>
                     </tr>
@@ -805,10 +879,10 @@ const AdminTournaments = () => {
 
       {/* Modals */}
       {creating && (
-        <TournamentFormModal initial={BLANK} onClose={() => setCreating(false)} onSaved={handleSaved} />
+        <TournamentFormModal initial={BLANK} onClose={() => setCreating(false)} onSaved={handleSaved} lockedTurfId={lockedTurfId} />
       )}
       {editing && (
-        <TournamentFormModal initial={editing} onClose={() => setEditing(null)} onSaved={handleSaved} />
+        <TournamentFormModal initial={editing} onClose={() => setEditing(null)} onSaved={handleSaved} lockedTurfId={lockedTurfId} />
       )}
       {viewRegs && (
         <RegistrationsDrawer tournament={viewRegs} onClose={() => setViewRegs(null)} onRemove={handleRegRemove} />

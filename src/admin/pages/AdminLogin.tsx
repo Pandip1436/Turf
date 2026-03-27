@@ -41,12 +41,17 @@ const AdminLogin = () => {
     setLoading(true);
     try {
       const res = await adminApi.post('/auth/login', form);
-      if (res.data.user?.role !== 'admin') {
-        setError('Access denied. Admin credentials required.');
+      const role = res.data.user?.role;
+      if (role !== 'admin' && role !== 'turf_manager') {
+        setError('Access denied. Admin or Branch Manager credentials required.');
         return;
       }
       login(res.data.token, res.data.user);
-      navigate('/admin/dashboard', { replace: true });
+      if (role === 'turf_manager') {
+        navigate('/admin/bookings', { replace: true });
+      } else {
+        navigate('/admin/dashboard', { replace: true });
+      }
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } };
       setError(e.response?.data?.message || 'Login failed. Check your credentials.');
@@ -79,7 +84,7 @@ const AdminLogin = () => {
         {/* Card */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl">
           <h2 className="text-xl font-bold text-white mb-1">Sign In</h2>
-          <p className="text-gray-500 text-sm mb-6">Enter your admin credentials to continue</p>
+          <p className="text-gray-500 text-sm mb-6">Enter your admin or branch manager credentials</p>
 
           {/* Session expired banner */}
           {sessionExpired && !error && (

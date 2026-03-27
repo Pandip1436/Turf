@@ -7,6 +7,7 @@ interface AdminUser {
   name: string;
   email: string;
   role: string;
+  assignedTurfId?: string;
 }
 
 interface AdminAuthContextType {

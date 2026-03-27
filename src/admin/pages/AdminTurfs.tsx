@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, X, Check, AlertTriangle, Upload, ImageIcon, Search } from 'lucide-react';
-import api from '../../utils/api';
 import adminApi from '../utils/adminApi';
 
 interface Turf {
@@ -78,7 +77,7 @@ const AdminTurfs = () => {
   const fetchTurfs = async () => {
     setLoading(true); setError('');
     try {
-      const res = await api.get<{ turfs: Turf[] }>('/turfs');
+      const res = await adminApi.get<{ turfs: Turf[] }>('/turfs');
       setTurfs(res.data.turfs);
     } catch {
       setError('Failed to load turfs.');
@@ -128,9 +127,9 @@ const AdminTurfs = () => {
 
     try {
       if (editTarget) {
-        await api.put(`/turfs/${editTarget.turfId}`, payload);
+        await adminApi.put(`/turfs/${editTarget.turfId}`, payload);
       } else {
-        await api.post('/turfs', payload);
+        await adminApi.post('/turfs', payload);
       }
       setShowModal(false);
       fetchTurfs();
@@ -144,7 +143,7 @@ const AdminTurfs = () => {
 
   const handleToggleActive = async (t: Turf) => {
     try {
-      await api.put(`/turfs/${t.turfId}`, { isActive: !t.isActive });
+      await adminApi.put(`/turfs/${t.turfId}`, { isActive: !t.isActive });
       setTurfs(prev => prev.map(x => x._id === t._id ? { ...x, isActive: !t.isActive } : x));
     } catch {
       setError('Failed to update turf status.');
@@ -155,7 +154,7 @@ const AdminTurfs = () => {
     if (!deleteTarget) return;
     setDeleteConfirming(true);
     try {
-      await api.delete(`/turfs/${deleteTarget.turfId}`);
+      await adminApi.delete(`/turfs/${deleteTarget.turfId}`);
       setDeleteTarget(null);
       fetchTurfs();
     } catch {

@@ -1,6 +1,7 @@
 import  { useEffect, useState, useCallback } from 'react';
 import { Search, Filter, CheckCircle, XCircle, AlertCircle, ChevronLeft, ChevronRight, X, Clock, IndianRupee, User, Phone, Mail, Calendar } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import { useAdminAuth } from '../context/AdminAuthContext';
 
 interface Booking {
   _id:                string;
@@ -171,6 +172,8 @@ const PAY_COLORS: Record<string, string> = {
 const STATUSES = ['', 'pending', 'confirmed', 'cancelled', 'completed', 'no-show'];
 
 const AdminBookings = () => {
+  const { admin } = useAdminAuth();
+  const isTurfManager = admin?.role === 'turf_manager';
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading]   = useState(true);
   const [search, setSearch]     = useState('');
@@ -197,7 +200,11 @@ const AdminBookings = () => {
       if (search)     params.set('search', search);
       if (status)     params.set('status', status);
       if (date)       params.set('date', date);
-      if (turfFilter) params.set('turfId', turfFilter);
+      if (isTurfManager) {
+        params.set('turfId', admin?.assignedTurfId || '');
+      } else if (turfFilter) {
+        params.set('turfId', turfFilter);
+      }
       const res = await adminApi.get(`/admin/bookings?${params}`);
       setBookings(res.data.bookings);
       setTotalPages(res.data.pagination.pages);
@@ -235,7 +242,13 @@ const AdminBookings = () => {
       </div>
 
       {/* Turf-wise booking stats */}
-      {turfStats.length > 0 && (
+      {isTurfManager ? (
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1.5 rounded-xl text-xs font-semibold border bg-green-500/15 text-green-400 border-green-500/30">
+            Your Branch: {admin?.assignedTurfId || 'unassigned'}
+          </span>
+        </div>
+      ) : turfStats.length > 0 && (
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => { setTurfFilter(''); setPage(1); }}
