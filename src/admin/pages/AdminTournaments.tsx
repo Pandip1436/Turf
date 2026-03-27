@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import {
   Trophy, Plus, Users, Calendar, Clock, ChevronLeft, ChevronRight,
   Edit2, Trash2, X, Check, AlertCircle, Eye, ChevronDown, MapPin,
-  Upload, ImageIcon,
+  Upload,
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
 import { useAdminAuth } from '../context/AdminAuthContext';
