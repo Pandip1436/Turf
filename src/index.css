@@ -32,6 +32,11 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
 .slot-available {
   @apply border-2 border-green-400 bg-green-50 text-green-800 cursor-pointer hover:bg-green-500 hover:text-white transition-all;
 }

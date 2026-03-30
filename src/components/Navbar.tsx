@@ -11,7 +11,7 @@ function OfferBanner() {
   if (location.pathname !== "/") return null;
   return (
     <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full text-white text-center px-3 py-3 sm:py-4 text-xs sm:text-sm md:text-base font-bold tracking-wide">
-      <p className="leading-relaxed">💰 Save More! Book consecutive hours for discounts 💰</p>
+      {/* <p className="leading-relaxed">💰 Save More! Book consecutive hours for discounts 💰</p> */}
       <p className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
         <span>🌅 Morning (6AM–6PM):<span className="font-extrabold"> 2+ hours = ₹500/hr</span></span>
         <span className="hidden sm:inline">|</span>
