@@ -5,6 +5,7 @@ import {
   Upload,
 } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import fileupload from '../utils/adminApi';
 import { useAdminAuth } from '../context/AdminAuthContext';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -81,7 +82,7 @@ const TournamentFormModal = ({
     try {
       const fd = new FormData();
       fd.append('image', file);
-      const res = await adminApi.post<{ url: string }>('/tournaments/upload', fd, {
+      const res = await fileupload.post<{ url: string }>('/tournaments/upload', fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       set('banner', res.data.url);

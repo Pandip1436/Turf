@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Pencil, Trash2, ToggleLeft, ToggleRight, X, Check, AlertTriangle, Upload, ImageIcon, Search } from 'lucide-react';
 import adminApi from '../utils/adminApi';
+import fileupload from '../utils/adminApi';
 
 interface Turf {
   _id: string;
@@ -63,7 +64,7 @@ const AdminTurfs = () => {
     try {
       const data = new FormData();
       data.append('image', file);
-      const res = await adminApi.post<{ url: string }>('/turfs/upload', data, {
+      const res = await fileupload.post<{ url: string }>('/turfs/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setForm(f => ({ ...f, image: res.data.url }));
