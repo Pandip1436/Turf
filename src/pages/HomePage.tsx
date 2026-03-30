@@ -164,7 +164,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
       transition={{ duration: 0.5, type: 'spring', bounce: 0.4 }}
       className="text-center"
     >
-      <div className="font-display text-5xl md:text-6xl tracking-wider bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
+      <div className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wider bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
         {count}{suffix}
       </div>
       <div className="text-gray-500 text-md font-bold mt-2">{label}</div>
@@ -233,21 +233,21 @@ function Hero() {
       </div>
 
       {/* content */}
-      <motion.div className="relative max-w-7xl mx-auto px-4 pt-32 pb-28 grid md:grid-cols-2 gap-12 items-center w-full z-10"
+      <motion.div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-24 sm:pb-28 grid md:grid-cols-2 gap-8 lg:gap-12 items-center w-full z-10"
         style={{ opacity: heroOpacity, y: contentY }}
       >
         {/* left */}
         <div className="text-white">
           <motion.div initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} transition={{ duration: 0.6, delay: 0.3 }}>
-            <span className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-green-400 text-sm px-5 py-2 rounded-full font-semibold mb-5 backdrop-blur-md">
+            <span className="inline-flex items-center gap-1.5 sm:gap-2 bg-white/5 border border-white/10 text-green-400 text-xs sm:text-sm px-3 sm:px-5 py-1.5 sm:py-2 rounded-full font-semibold mb-4 sm:mb-5 backdrop-blur-md">
               <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Zap className="w-3.5 h-3.5 text-yellow-400" />
+                <Zap className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-400" />
               </motion.span>
               Multiple Turfs &middot; Multiple Sports &middot; One Destination
             </span>
           </motion.div>
 
-          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl tracking-wider leading-[0.9] mb-6">
+          <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wider leading-[0.9] mb-4 sm:mb-6">
             <span className="block overflow-hidden">
               {title1.split('').map((c, i) => (
                 <motion.span key={i} className="inline-block"
@@ -268,20 +268,21 @@ function Hero() {
             </span>
           </h1>
 
-          <motion.div className="h-1 rounded-full bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-8"
+          <motion.div className="h-1 rounded-full bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-400 mb-5 sm:mb-8"
             initial={{ width: 0 }} animate={{ width: '40%' }} transition={{ duration: 0.8, delay: 1.4 }}
           />
 
-          <motion.p className="text-gray-300/90 text-base sm:text-lg mb-8 max-w-lg leading-relaxed"
+          <motion.p className="text-gray-300/90 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-lg leading-relaxed"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 1.2 }}
           >
             Sivakasi's premier sports destination — <span className="text-green-400 font-semibold">Football, Cricket & Badminton</span> turfs
             with pro floodlights, online booking & exciting tournaments.
           </motion.p>
 
-          <motion.div className="flex flex-wrap gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.5 }}>
+          {/* CTA buttons — stacked on mobile, row on sm+ */}
+          <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.5 }}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/booking" className="group relative bg-gradient-to-r from-green-500 to-emerald-500 text-white px-9 py-4 rounded-2xl font-bold text-lg overflow-hidden flex items-center gap-3 shadow-[0_0_30px_rgba(34,197,94,0.2)] hover:shadow-[0_0_50px_rgba(34,197,94,0.35)] transition-shadow duration-500">
+              <Link to="/booking" className="group relative bg-gradient-to-r from-green-500 to-emerald-500 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg overflow-hidden flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(34,197,94,0.2)] hover:shadow-[0_0_50px_rgba(34,197,94,0.35)] transition-shadow duration-500">
                 <span className="relative z-10">Book a Turf</span>
                 <motion.span className="relative z-10" animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
                   <ChevronRight className="w-5 h-5" />
@@ -289,16 +290,16 @@ function Hero() {
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/tournaments" className="border border-white/20 hover:border-green-400/50 text-white px-9 py-4 rounded-2xl font-bold text-lg backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-500">
-                View Tournaments
+              <Link to="/tournaments" className="border border-white/20 hover:border-green-400/50 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-500 flex items-center justify-center gap-2">
+                <Trophy className="w-5 h-5" /> View Tournaments
               </Link>
             </motion.div>
           </motion.div>
 
-          {/* sport pills */}
-          <motion.div className="flex items-center gap-3 mt-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
+          {/* sport pills — scroll on mobile */}
+          <motion.div className="flex items-center gap-2 sm:gap-3 mt-6 sm:mt-8 overflow-x-auto pb-1 no-scrollbar" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}>
             {games.map((g, i) => (
-              <motion.span key={g.sport} className="flex items-center gap-2 text-sm text-gray-400 bg-white/5 px-4 py-2 rounded-full border border-white/10"
+              <motion.span key={g.sport} className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-400 bg-white/5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/10 whitespace-nowrap shrink-0"
                 initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 2.1 + i * 0.15 }}
               >
                 <span>{g.emoji}</span> {g.sport}
@@ -307,7 +308,7 @@ function Hero() {
           </motion.div>
         </div>
 
-        {/* right — quick stats glass card */}
+        {/* right — quick stats glass card (hidden on mobile) */}
         <motion.div className="hidden md:block"
           initial={{ opacity: 0, y: 40, filter: 'blur(20px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1, delay: 1 }}
@@ -419,15 +420,15 @@ const HomePage = () => {
       <Hero />
 
       {/* ═══ Stats ═══ */}
-      <section className="relative bg-white py-16 overflow-hidden">
+      <section className="relative bg-white py-10 sm:py-16 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.05),transparent_70%)]" />
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-10 relative">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 relative">
           {stats.map(s => <AnimatedStat key={s.label} value={s.value} label={s.label} />)}
         </div>
       </section>
 
       {/* ═══ Games / Sports ═══ */}
-      <section className="py-24 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(34,197,94,0.1),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(59,130,246,0.08),transparent_50%)]" />
 
@@ -435,8 +436,8 @@ const HomePage = () => {
           <Reveal>
             <div className="text-center mb-16">
               <SectionLabel text="Sports We Offer" className="!from-green-400 !to-cyan-400" />
-              <h2 className="font-display text-5xl md:text-6xl tracking-wider mb-3">CHOOSE YOUR GAME</h2>
-              <p className="text-gray-400 text-lg max-w-xl mx-auto">World-class facilities for every sport — pick your arena and start playing</p>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider mb-3">CHOOSE YOUR GAME</h2>
+              <p className="text-gray-400 text-sm sm:text-lg max-w-xl mx-auto">World-class facilities for every sport — pick your arena and start playing</p>
             </div>
           </Reveal>
 
@@ -482,7 +483,7 @@ const HomePage = () => {
 
       {/* ═══ Our Turfs (Dynamic) ═══ */}
       {turfs.length > 0 && (
-        <section className="py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+        <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
           <motion.div className="absolute top-20 left-10 w-[500px] h-[500px] bg-green-400/[0.04] rounded-full blur-3xl"
             animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -491,7 +492,7 @@ const HomePage = () => {
             <Reveal>
               <div className="text-center mb-10">
                 <SectionLabel text="Our Turfs" />
-                <h2 className="font-display text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">EXPLORE OUR TURFS</h2>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">EXPLORE OUR TURFS</h2>
                 <p className="text-gray-500 text-lg max-w-xl mx-auto">Premium sports facilities designed for peak performance</p>
               </div>
             </Reveal>
@@ -598,7 +599,7 @@ const HomePage = () => {
 
       {/* ═══ Tournaments (Dynamic) ═══ */}
       {tournaments.length > 0 && (
-        <section className="py-24 bg-white relative overflow-hidden">
+        <section className="py-14 sm:py-24 bg-white relative overflow-hidden">
           <motion.div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-purple-400/[0.04] rounded-full blur-3xl"
             animate={{ x: [0, -30, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -607,7 +608,7 @@ const HomePage = () => {
             <Reveal>
               <div className="text-center mb-14">
                 <SectionLabel text="Compete & Win" />
-                <h2 className="font-display text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">UPCOMING TOURNAMENTS</h2>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">UPCOMING TOURNAMENTS</h2>
                 <p className="text-gray-500 text-lg max-w-xl mx-auto">Register your team, compete with the best, and win exciting prizes</p>
               </div>
             </Reveal>
@@ -677,12 +678,12 @@ const HomePage = () => {
       )}
 
       {/* ═══ How It Works ═══ */}
-      <section className="py-24 bg-gray-50 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gray-50 relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 relative">
           <Reveal>
             <div className="text-center mb-16">
               <SectionLabel text="Simple Process" />
-              <h2 className="font-display text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">BOOK IN 3 STEPS</h2>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">BOOK IN 3 STEPS</h2>
               <p className="text-gray-500">Quick and hassle-free booking process</p>
             </div>
           </Reveal>
@@ -708,11 +709,11 @@ const HomePage = () => {
       </section>
 
       {/* ═══ Amenities ═══ */}
-      <section className="py-20 bg-white">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <Reveal>
             <SectionLabel text="Facilities" />
-            <h2 className="font-display text-4xl md:text-5xl tracking-wider text-gray-900 mb-2">ESSENTIAL AMENITIES</h2>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wider text-gray-900 mb-2">ESSENTIAL AMENITIES</h2>
             <p className="text-gray-500 mb-12">Everything you need for a complete sports experience</p>
           </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -734,7 +735,7 @@ const HomePage = () => {
       </section>
 
       {/* ═══ Reviews — Twitter-style scrolling marquee ═══ */}
-      <section className="py-24 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
         {/* ambient glows */}
         <div className="absolute top-0 left-[20%] w-[500px] h-[500px] bg-green-500/[0.04] rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-[20%] w-[400px] h-[400px] bg-blue-500/[0.04] rounded-full blur-[100px]" />
@@ -743,13 +744,13 @@ const HomePage = () => {
           <Reveal>
             <div className="text-center mb-14">
               <SectionLabel text="Testimonials" className="!from-green-400 !to-cyan-400" />
-              <h2 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-3">WHAT PLAYERS SAY</h2>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-white mb-3">WHAT PLAYERS SAY</h2>
               <p className="text-gray-500 text-lg max-w-lg mx-auto">Real feedback from real players who love playing at HyperGreen 360</p>
             </div>
           </Reveal>
 
           {/* scrolling columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 h-[520px] overflow-hidden relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 h-[400px] sm:h-[520px] overflow-hidden relative">
             {/* fade edges */}
             <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-gray-950 to-transparent z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-950 to-transparent z-10 pointer-events-none" />
@@ -796,7 +797,7 @@ const HomePage = () => {
       </section>
 
       {/* ═══ CTA ═══ */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-14 sm:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-700 via-emerald-700 to-blue-700" />
         <motion.div className="absolute inset-0"
           animate={{ background: ['radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)', 'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)', 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)'] }}
@@ -804,20 +805,20 @@ const HomePage = () => {
         />
         <div className="max-w-3xl mx-auto px-4 text-center relative">
           <Reveal>
-            <h2 className="font-display text-5xl md:text-7xl tracking-wider text-white mb-5">READY TO PLAY?</h2>
-            <p className="text-green-100 font-bold text-lg mb-10">
+            <h2 className="font-display text-3xl sm:text-5xl md:text-7xl tracking-wider text-white mb-4 sm:mb-5">READY TO PLAY?</h2>
+            <p className="text-green-100 font-bold text-sm sm:text-lg mb-8 sm:mb-10">
               Multiple turfs, multiple sports, one destination.<br />Book your favourite turf today!
             </p>
           </Reveal>
           <Reveal delay={0.2}>
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/booking" className="bg-white text-green-700 hover:bg-green-50 px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center gap-2">
+                <Link to="/booking" className="bg-white text-green-700 hover:bg-green-50 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
                   Book a Turf <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ChevronRight className="w-5 h-5" /></motion.span>
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/tournaments" className="border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center gap-2">
+                <Link to="/tournaments" className="border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
                   <Trophy className="w-5 h-5" /> Tournaments
                 </Link>
               </motion.div>
@@ -844,7 +845,7 @@ const HomePage = () => {
       </section>
 
       {/* ═══ Contact & Location ═══ */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
         <motion.div className="absolute top-20 left-10 w-[500px] h-[500px] bg-green-400/[0.04] rounded-full blur-3xl"
           animate={{ x: [0, 30, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -853,12 +854,12 @@ const HomePage = () => {
           <Reveal>
             <div className="text-center mb-16">
               <SectionLabel text="Visit Us" />
-              <h2 className="font-display text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">FIND US HERE</h2>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">FIND US HERE</h2>
               <p className="text-gray-500 text-lg">Located in the heart of Sivakasi, easily accessible from all major areas</p>
             </div>
           </Reveal>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start">
             {/* map */}
             <Reveal>
               <motion.div className="group relative rounded-3xl" whileHover={{ y: -6 }} transition={{ duration: 0.3 }}>
