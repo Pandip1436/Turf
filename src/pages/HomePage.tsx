@@ -199,13 +199,13 @@ function Review3DCard({ review, index }: { review: typeof reviews[0]; index: num
           {/* quote icon */}
           <motion.div
             className={`absolute top-5 right-5 text-5xl font-serif bg-gradient-to-br ${review.gradient} bg-clip-text text-transparent opacity-10 group-hover:opacity-25 transition-opacity duration-500`}
-            style={{ transformStyle: 'preserve-3d', translateZ: 20 }}
+            style={{ transformStyle: 'preserve-3d', transform: 'translateZ(20px)' }}
           >
             "
           </motion.div>
 
           {/* stars with stagger */}
-          <div className="flex gap-1.5 mb-4" style={{ transformStyle: 'preserve-3d', translateZ: 25 }}>
+          <div className="flex gap-1.5 mb-4" style={{ transformStyle: 'preserve-3d', transform: 'translateZ(25px)' }}>
             {Array.from({ length: review.rating }).map((_, j) => (
               <motion.div
                 key={j}
@@ -219,7 +219,7 @@ function Review3DCard({ review, index }: { review: typeof reviews[0]; index: num
           </div>
 
           {/* review text */}
-          <div style={{ transformStyle: 'preserve-3d', translateZ: 30 }}>
+          <div style={{ transformStyle: 'preserve-3d', transform: 'translateZ(30px)' }}>
             <p className="text-gray-600 text-[15px] mb-6 italic leading-relaxed">
               "{review.text}"
             </p>
@@ -229,7 +229,7 @@ function Review3DCard({ review, index }: { review: typeof reviews[0]; index: num
           <div className="h-px w-full bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-5 group-hover:via-green-300 transition-colors duration-500" />
 
           {/* author */}
-          <div className="flex items-center gap-4" style={{ transformStyle: 'preserve-3d', translateZ: 35 }}>
+          <div className="flex items-center gap-4" style={{ transformStyle: 'preserve-3d', transform: 'translateZ(35px)' }}>
             <motion.div
               className={`relative w-12 h-12 bg-gradient-to-br ${review.gradient} rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg`}
               whileHover={{ scale: 1.1 }}
@@ -318,7 +318,7 @@ function Feature3DCard({ feature, index }: { feature: typeof features[0]; index:
           {/* icon with 3D pop */}
           <motion.div
             className={`relative bg-gradient-to-br ${feature.gradient} w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-5 shadow-lg`}
-            style={{ transformStyle: 'preserve-3d', translateZ: 40 }}
+            style={{ transformStyle: 'preserve-3d', transform: 'translateZ(40px)' }}
             whileHover={{ scale: 1.15, rotate: 8 }}
             transition={{ type: 'spring', stiffness: 300 }}
           >
@@ -328,7 +328,7 @@ function Feature3DCard({ feature, index }: { feature: typeof features[0]; index:
           </motion.div>
 
           {/* text with 3D depth */}
-          <div style={{ transformStyle: 'preserve-3d', translateZ: 30 }}>
+          <div style={{ transformStyle: 'preserve-3d', transform: 'translateZ(30px)' }}>
             <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-green-600 group-hover:to-blue-600 group-hover:bg-clip-text transition-all duration-300">
               {feature.title}
             </h3>
