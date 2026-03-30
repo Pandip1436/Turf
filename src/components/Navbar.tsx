@@ -6,21 +6,6 @@ import { Menu, X, LogOut, User, Calendar, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import logo from "../assets/logo.png";
 
-function OfferBanner() {
-  const location = useLocation();
-  if (location.pathname !== "/") return null;
-  return (
-    <div className="bg-gradient-to-r from-green-600 to-blue-600 w-full text-white text-center px-3 py-3 sm:py-4 text-xs sm:text-sm md:text-base font-bold tracking-wide">
-      {/* <p className="leading-relaxed">💰 Save More! Book consecutive hours for discounts 💰</p> */}
-      <p className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3">
-        <span>🌅 Morning (6AM–6PM):<span className="font-extrabold"> 2+ hours = ₹500/hr</span></span>
-        <span className="hidden sm:inline">|</span>
-        <span>🌙 Evening (6PM–6AM):<span className="font-extrabold"> 2hrs = 10% off</span>,<span className="font-extrabold"> 3hrs = 20% off</span></span>
-      </p>
-    </div>
-  );
-}
-
 const Navbar = () => {
   const [open,          setOpen]          = useState(false);
   const [dropdownOpen,  setDropdownOpen]  = useState(false);   // desktop
@@ -224,7 +209,6 @@ const Navbar = () => {
         </div>
       )}
 
-      <OfferBanner />
     </nav>
   );
 };
