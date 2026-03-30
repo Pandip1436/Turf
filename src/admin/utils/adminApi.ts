@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const adminApi = axios.create({ baseURL: import.meta.env.VITE_API_URL });
-const fileupload = axios.create({ baseURL: import.meta.env.FILE_UPLOAD });
 
 // ── Attach token from localStorage on every request
 adminApi.interceptors.request.use((config) => {
@@ -33,4 +32,3 @@ adminApi.interceptors.response.use(
 );
 
 export default adminApi;
-export { fileupload };
