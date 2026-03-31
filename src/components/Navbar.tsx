@@ -52,7 +52,7 @@ const Navbar = () => {
     { to: '/gallery', label: 'Gallery'  },
     { to: '/booking', label: 'Book Now' },
     { to: '/tournaments', label: 'Tournaments' },
-    { to: '/pricing', label: 'Pricing'  },
+    // { to: '/pricing', label: 'Pricing'  },
     { to: '/contact', label: 'Contact'  },
   ];
 

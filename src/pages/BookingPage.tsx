@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback } from 'react';
 import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar, Lock } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -74,6 +74,7 @@ const BookingPage = () => {
   // ══════════════════════════════════════════════════════════════════════════
   const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [step,         setStep]        = useState(0);
   const [sport,        setSport]       = useState<Sport | null>(null);
@@ -93,6 +94,25 @@ const BookingPage = () => {
   const [payLoading,   setPayLoading]  = useState(false);
   const [bookingError, setBookingError]= useState('');
   const [payError,     setPayError]    = useState('');
+
+  // Auto-select sport (and optionally turf) from URL query params
+  // e.g. ?sport=football&turf=turf-slug-id
+  useEffect(() => {
+    const sp = searchParams.get('sport');
+    if (sp && !sport) {
+      const match = SPORTS.find(s => s.id === sp);
+      if (match) { setSport(match); setStep(1); }
+    }
+  }, [searchParams]);
+
+  // Auto-select turf once turfs are loaded and URL has ?turf= param
+  useEffect(() => {
+    const turfParam = searchParams.get('turf');
+    if (turfParam && turfs.length > 0 && !turf && sport) {
+      const match = turfs.find(t => t.id === turfParam && t.sport === sport.id);
+      if (match) { setTurf(match); setStep(2); }
+    }
+  }, [searchParams, turfs, sport]);
 
   // Sync form name/email once user loads (only runs when user object becomes available)
   useEffect(() => {

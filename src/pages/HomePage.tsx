@@ -445,8 +445,9 @@ const HomePage = () => {
           <div className="grid md:grid-cols-3 gap-6">
             {games.map((g, i) => (
               <Reveal key={g.sport} delay={i * 0.12}>
+                <Link to={`/booking?sport=${g.sport.toLowerCase()}`} className="block">
                 <motion.div
-                  className="group relative rounded-3xl overflow-hidden"
+                  className="group relative rounded-3xl overflow-hidden cursor-pointer"
                   whileHover={{ y: -8 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -471,11 +472,12 @@ const HomePage = () => {
                       ))}
                     </div>
 
-                    <Link to="/booking" className={`inline-flex items-center gap-2 text-sm font-bold bg-gradient-to-r ${g.gradient} bg-clip-text text-transparent group-hover:underline`}>
+                    <span className={`inline-flex items-center gap-2 text-sm font-bold bg-gradient-to-r ${g.gradient} bg-clip-text text-transparent group-hover:underline`}>
                       Book {g.sport} <ArrowRight className="w-4 h-4 text-green-400" />
-                    </Link>
+                    </span>
                   </div>
                 </motion.div>
+                </Link>
               </Reveal>
             ))}
           </div>
@@ -575,7 +577,7 @@ const HomePage = () => {
                           </div>
                         </div>
 
-                        <Link to="/booking"
+                        <Link to={`/booking?sport=${turf.sport}&turf=${turf.turfId}`}
                           className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white rounded-xl py-2.5 font-bold text-sm transition-all duration-300"
                         >
                           Book This Turf <ArrowRight className="w-4 h-4" />
@@ -988,35 +990,29 @@ const HomePage = () => {
             <div className="space-y-4">
               <Reveal><h2 className="font-bold text-xl text-gray-900 dark:text-white mb-2">Visit Our Facility</h2></Reveal>
               {[
-                { icon: <MapPin className="w-5 h-5 text-green-600" />, bg: 'bg-green-50', title: 'Address', content: <><p className="text-gray-600 text-sm leading-relaxed">Housing Board, Near Water Tank,<br />Sivakasi – 626 123, Tamil Nadu, India</p><p className="text-xs text-gray-400 mt-2"><span className="font-semibold">Landmark:</span> Opposite Housing Board Police Station</p></> },
+                { icon: <MapPin className="w-5 h-5 text-green-600" />, bg: 'bg-green-50', title: 'Address', link: 'https://maps.google.com/?q=9.4534,77.8042', content: <><p className="text-gray-600 text-sm leading-relaxed">Housing Board, Near Water Tank,<br />Sivakasi – 626 123, Tamil Nadu, India</p><p className="text-xs text-gray-400 mt-2"><span className="font-semibold">Landmark:</span> Opposite Housing Board Police Station</p><span className="inline-flex items-center gap-1 text-xs text-green-600 font-semibold mt-2"><Navigation className="w-3 h-3" /> Tap for directions</span></> },
                 { icon: <Phone className="w-5 h-5 text-blue-600" />, bg: 'bg-blue-50', title: 'Phone / WhatsApp', content: <><a href="tel:8056564775" className="text-green-600 font-semibold hover:underline text-sm">+91 80565 64775</a><p className="text-gray-400 text-xs mt-1">Available 24/7 for bookings & queries</p></> },
                 { icon: <Mail className="w-5 h-5 text-orange-600" />, bg: 'bg-orange-50', title: 'Email', content: <><a href="mailto:info@hypergreen360.com" className="text-green-600 font-semibold hover:underline text-sm">info@hypergreen360.com</a><p className="text-gray-400 text-xs mt-1">We reply within 24 hours</p></> },
                 { icon: <Clock className="w-5 h-5 text-violet-600" />, bg: 'bg-violet-50', title: 'Operating Hours', content: <><p className="text-gray-600 text-sm font-semibold">Open 24 Hours · 7 Days a Week</p><p className="text-gray-400 text-xs mt-1">Book anytime — we're always ready</p></> },
-              ].map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.1}>
-                  <motion.div className="bg-white dark:bg-gray-800 rounded-2xl p-5 flex gap-4 items-start border border-gray-100 dark:border-gray-700 shadow-sm"
-                    whileHover={{ x: 6 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  >
-                    <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center shrink-0`}>{item.icon}</div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white mb-1">{item.title}</h4>
-                      {item.content}
-                    </div>
-                  </motion.div>
-                </Reveal>
-              ))}
-
-              <Reveal delay={0.4}>
-                <motion.a href="https://maps.google.com/?q=9.4534,77.8042" target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-blue-500 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 hover:shadow-lg w-fit"
-                  whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                >
-                  <Navigation className="w-4 h-4" /> Get Directions
-                  <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                    <ChevronRight className="w-4 h-4" />
-                  </motion.span>
-                </motion.a>
-              </Reveal>
+              ].map((item, i) => {
+                const Wrapper = item.link ? 'a' : 'div';
+                const wrapperProps = item.link ? { href: item.link, target: '_blank', rel: 'noopener noreferrer' } : {};
+                return (
+                  <Reveal key={item.title} delay={i * 0.1}>
+                    <motion.div
+                      whileHover={{ x: 6 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    >
+                      <Wrapper {...wrapperProps} className={`bg-white dark:bg-gray-800 rounded-2xl p-5 flex gap-4 items-start border border-gray-100 dark:border-gray-700 shadow-sm ${item.link ? 'cursor-pointer hover:border-green-300 dark:hover:border-green-600 hover:shadow-md transition-all duration-300' : ''}`}>
+                        <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center shrink-0`}>{item.icon}</div>
+                        <div>
+                          <h4 className="font-bold text-gray-900 dark:text-white mb-1">{item.title}</h4>
+                          {item.content}
+                        </div>
+                      </Wrapper>
+                    </motion.div>
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </div>

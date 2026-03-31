@@ -10,6 +10,7 @@ import AdminRevenue     from './pages/AdminRevenue';
 import AdminTournaments from './pages/AdminTournaments';
 import AdminTurfs       from './pages/AdminTurfs';
 import AdminStaff       from './pages/AdminStaff';
+import AdminGallery     from './pages/AdminGallery';
 
 // Redirects turf_manager away from admin-only pages
 const AdminOnly = ({ children }: { children: React.ReactNode }) => {
@@ -28,6 +29,7 @@ const AdminApp = () => (
         <Route path="/tournaments" element={<AdminTournaments />} />
         <Route path="/revenue"     element={<AdminRevenue />} />
         <Route path="/turfs"       element={<AdminOnly><AdminTurfs /></AdminOnly>} />
+        <Route path="/gallery"     element={<AdminGallery />} />
         <Route path="/users"       element={<AdminOnly><AdminUsers /></AdminOnly>} />
         <Route path="/contacts"    element={<AdminOnly><AdminContacts /></AdminOnly>} />
         <Route path="/staff"       element={<AdminOnly><AdminStaff /></AdminOnly>} />

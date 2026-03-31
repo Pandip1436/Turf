@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CalendarCheck, Users, MessageSquare,
-  TrendingUp, LogOut, Trophy, X, MapPin, ShieldCheck
+  TrendingUp, LogOut, Trophy, X, MapPin, ShieldCheck, Image
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import logo from '../../assets/logo.png';
@@ -10,6 +10,7 @@ const adminNavItems = [
   { to: '/admin/dashboard',   icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'   },
   { to: '/admin/bookings',    icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'    },
   { to: '/admin/turfs',       icon: <MapPin          className="w-5 h-5" />, label: 'Turfs'       },
+  { to: '/admin/gallery',     icon: <Image           className="w-5 h-5" />, label: 'Gallery'     },
   { to: '/admin/tournaments', icon: <Trophy          className="w-5 h-5" />, label: 'Tournaments' },
   { to: '/admin/users',       icon: <Users           className="w-5 h-5" />, label: 'Users'       },
   { to: '/admin/contacts',    icon: <MessageSquare   className="w-5 h-5" />, label: 'Contacts'    },
@@ -20,6 +21,7 @@ const adminNavItems = [
 const managerNavItems = [
   { to: '/admin/dashboard',   icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard'   },
   { to: '/admin/bookings',    icon: <CalendarCheck   className="w-5 h-5" />, label: 'Bookings'    },
+  { to: '/admin/gallery',     icon: <Image           className="w-5 h-5" />, label: 'Gallery'     },
   { to: '/admin/tournaments', icon: <Trophy          className="w-5 h-5" />, label: 'Tournaments' },
   { to: '/admin/revenue',     icon: <TrendingUp      className="w-5 h-5" />, label: 'Revenue'     },
 ];
