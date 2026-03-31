@@ -143,7 +143,7 @@ const BookingPage = () => {
   // Auth: still reading localStorage
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -153,24 +153,24 @@ const BookingPage = () => {
   if (!isAuthenticated) {
     sessionStorage.setItem('hg360_redirect_after_login', '/booking');
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 pb-16 flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-xl p-10 max-w-sm w-full text-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16 flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl dark:shadow-gray-950/50 p-10 max-w-sm w-full text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Lock className="w-10 h-10 text-green-600" />
           </div>
-          <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-2">SIGN IN REQUIRED</h2>
-          <p className="text-gray-500 text-sm mb-8">You need to be signed in to book a slot.</p>
+          <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">SIGN IN REQUIRED</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">You need to be signed in to book a slot.</p>
           <div className="space-y-3">
             <button onClick={() => navigate('/login')}
               className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3.5 font-bold transition-colors">
               Sign In to Book
             </button>
             <Link to="/register"
-              className="block w-full border-2 border-gray-200 hover:border-green-400 text-gray-700 rounded-xl py-3.5 font-bold transition-colors">
+              className="block w-full border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 text-gray-700 dark:text-gray-300 rounded-xl py-3.5 font-bold transition-colors">
               Create Free Account
             </Link>
           </div>
-          <p className="text-xs text-gray-400 mt-6">
+          <p className="text-xs text-gray-400 dark:text-gray-400 mt-6">
             By continuing you agree to our <Link to="/terms" className="underline">Terms & Conditions</Link>
           </p>
         </div>
@@ -190,10 +190,10 @@ const BookingPage = () => {
     setSelected(next);
   };
   const slotClass = (slot: SlotInfo) => {
-    if (!slot.available && !slot.isYours) return 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed opacity-60';
+    if (!slot.available && !slot.isYours) return 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 cursor-not-allowed opacity-60';
     if (slot.isYours)                     return 'bg-blue-100 border-2 border-blue-400 text-blue-700 cursor-default';
     if (selected.has(slot.slot))          return 'bg-green-600 border-2 border-green-700 text-white cursor-pointer';
-    return 'bg-white border border-gray-200 text-gray-700 hover:border-green-400 hover:bg-green-50 cursor-pointer';
+    return 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-400 hover:bg-green-50 dark:hover:bg-gray-700 cursor-pointer';
   };
 
   const handlePay = async () => {
@@ -291,27 +291,27 @@ const BookingPage = () => {
   if (confirmed) {
     const slotList = slots.filter(s => selected.has(s.slot));
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 pb-16 flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-xl p-10 max-w-lg w-full text-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16 flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl dark:shadow-gray-950/50 p-10 max-w-lg w-full text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-green-500" />
           </div>
-          <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">BOOKING CONFIRMED!</h2>
-          <p className="text-gray-500 mb-6">Payment successful. See you on the field! 🏆</p>
+          <h2 className="font-display text-4xl tracking-wider text-gray-900 dark:text-white mb-2">BOOKING CONFIRMED!</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Payment successful. See you on the field! 🏆</p>
           <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-left space-y-2 mb-6">
-            <div className="flex justify-between text-sm"><span className="text-gray-500">Booking ID</span><span className="font-bold text-green-700">{bookingRef}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500">Turf</span><span className="font-semibold">{turf?.name}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500">Name</span><span className="font-semibold">{form.name}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500">Date</span><span className="font-semibold">{fmtDisplay(date)}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Booking ID</span><span className="font-bold text-green-700">{bookingRef}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold">{turf?.name}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold">{form.name}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold">{fmtDisplay(date)}</span></div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Slots</span>
+              <span className="text-gray-500 dark:text-gray-400">Slots</span>
               <span className="font-semibold text-right text-xs max-w-[60%]">{slotList.map(s=>`${s.from} - ${s.to}`).join(', ')}</span>
             </div>
-            {form.teamSize && <div className="flex justify-between text-sm"><span className="text-gray-500">Team Size</span><span className="font-semibold">{form.teamSize}</span></div>}
+            {form.teamSize && <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Team Size</span><span className="font-semibold">{form.teamSize}</span></div>}
             <div className="border-t pt-2 flex justify-between font-bold text-green-700 text-sm"><span>Total Paid</span><span>₹{total}</span></div>
           </div>
-          <p className="text-sm text-gray-400 mb-6">Confirmation sent to <strong>{form.email}</strong></p>
+          <p className="text-sm text-gray-400 dark:text-gray-400 mb-6">Confirmation sent to <strong>{form.email}</strong></p>
           <div className="flex gap-3 justify-center">
             <button onClick={resetAll} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-colors">Book Another</button>
             <button onClick={() => navigate('/my-bookings')} className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-bold transition-colors">My Bookings</button>
@@ -323,9 +323,9 @@ const BookingPage = () => {
 
   // ── Step bar ──────────────────────────────────────────────────────────────
   const StepBar = () => (
-    <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-[56px] z-30 shadow-sm">
+    <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between sticky top-[56px] z-30 shadow-sm">
       <button onClick={() => step > 0 ? setStep(step - 1) : window.history.back()}
-        className="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-semibold text-sm">
+        className="flex items-center gap-1 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-semibold text-sm">
         <ChevronLeft className="w-5 h-5" />
         {step === 0 ? 'Home' : step === 1 ? sport?.label : step === 2 ? turf?.name : 'Back'}
       </button>
@@ -336,12 +336,12 @@ const BookingPage = () => {
             <React.Fragment key={idx}>
               <div className={`flex items-center gap-1 ${idx > 0 ? 'hidden sm:flex' : ''}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all
-                  ${done?'bg-green-600 text-white':active?'bg-green-500 text-white ring-4 ring-green-100':'bg-gray-200 text-gray-500'}`}>
+                  ${done?'bg-green-600 text-white':active?'bg-green-500 text-white ring-4 ring-green-100 dark:ring-green-900':'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
                   {done ? <CheckCircle className="w-3.5 h-3.5" /> : idx + 1}
                 </div>
                 <span className={`text-xs font-semibold hidden md:block ${active?'text-green-600':done?'text-green-500':'text-gray-400'}`}>{lbl}</span>
               </div>
-              {idx < STEP_LABELS.length - 1 && <div className={`h-0.5 w-5 sm:w-8 mx-0.5 ${done?'bg-green-500':'bg-gray-200'}`} />}
+              {idx < STEP_LABELS.length - 1 && <div className={`h-0.5 w-5 sm:w-8 mx-0.5 ${done?'bg-green-500':'bg-gray-200 dark:bg-gray-700'}`} />}
             </React.Fragment>
           );
         })}
@@ -351,7 +351,7 @@ const BookingPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-20 pb-16">
       <StepBar />
       <div className="max-w-5xl mx-auto px-4 pt-6">
 
@@ -359,16 +359,16 @@ const BookingPage = () => {
         {step === 0 && (
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-8">
-              <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">BOOK A SLOT</h2>
-              <p className="text-gray-500">Choose your sport to get started</p>
+              <h2 className="font-display text-4xl tracking-wider text-gray-900 dark:text-white mb-2">BOOK A SLOT</h2>
+              <p className="text-gray-500 dark:text-gray-400">Choose your sport to get started</p>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               {SPORTS.map(s => (
                 <button key={s.id} onClick={() => { setSport(s); setTurf(null); setSelected(new Set()); setSlots([]); setStep(1); }}
-                  className={`bg-white border-2 hover:shadow-lg rounded-2xl p-8 flex flex-col items-center gap-3 transition-all hover:scale-105 active:scale-100 ${s.bg}`}>
+                  className={`bg-white dark:bg-gray-800 border-2 hover:shadow-lg rounded-2xl p-8 flex flex-col items-center gap-3 transition-all hover:scale-105 active:scale-100 ${s.bg}`}>
                   <span className="text-6xl">{s.emoji}</span>
                   <span className={`font-display text-2xl tracking-wider ${s.color}`}>{s.label}</span>
-                  <span className="text-xs text-gray-500">{turfs.filter((t: TurfInfo)=>t.sport===s.id).length} turfs available</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{turfs.filter((t: TurfInfo)=>t.sport===s.id).length} turfs available</span>
                 </button>
               ))}
             </div>
@@ -380,8 +380,8 @@ const BookingPage = () => {
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
               <div className="text-4xl mb-2">{sport.emoji}</div>
-              <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-1">SELECT {sport.label.toUpperCase()} TURF</h2>
-              <p className="text-gray-500 text-sm">{filteredTurfs.length} turfs available in Sivakasi</p>
+              <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-1">SELECT {sport.label.toUpperCase()} TURF</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">{filteredTurfs.length} turfs available in Sivakasi</p>
             </div>
             {turfsLoading && (
               <div className="flex justify-center py-12">
@@ -391,8 +391,8 @@ const BookingPage = () => {
             <div className="grid sm:grid-cols-3 gap-5">
               {!turfsLoading && filteredTurfs.map(t => (
                 <button key={t.id} onClick={() => { setTurf(t); setSelected(new Set()); setSlots([]); setStep(2); }}
-                  className="bg-white border-2 border-gray-200 hover:border-green-400 hover:shadow-xl rounded-2xl overflow-hidden text-left transition-all group active:scale-[0.99]">
-                  <div className="relative h-40 bg-gray-100 overflow-hidden">
+                  className="bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 hover:shadow-xl rounded-2xl overflow-hidden text-left transition-all group active:scale-[0.99]">
+                  <div className="relative h-40 bg-gray-100 dark:bg-gray-800 overflow-hidden">
                     <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -400,15 +400,15 @@ const BookingPage = () => {
                     <div className="absolute top-3 right-3 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">from ₹{t.priceDay}/hr</div>
                   </div>
                   <div className="p-4">
-                    <p className="text-gray-500 text-xs mb-3">{t.description}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mb-3">{t.description}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {t.features.map(f => <span key={f} className="bg-green-50 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">{f}</span>)}
                     </div>
                     <div className="mt-4 flex items-center justify-between">
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
                         {t.priceDay === t.priceNight
-                          ? <><span className="font-semibold text-gray-800">₹{t.priceDay}/hr</span> flat</>
-                          : <><span className="font-semibold text-gray-800">₹{t.priceDay}/hr</span> day · <span className="font-semibold text-gray-800">₹{t.priceNight}/hr</span> night</>}
+                          ? <><span className="font-semibold text-gray-800 dark:text-gray-200">₹{t.priceDay}/hr</span> flat</>
+                          : <><span className="font-semibold text-gray-800 dark:text-gray-200">₹{t.priceDay}/hr</span> day · <span className="font-semibold text-gray-800 dark:text-gray-200">₹{t.priceNight}/hr</span> night</>}
                       </div>
                       <span className="bg-green-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-green-600 transition-colors">Select →</span>
                     </div>
@@ -423,7 +423,7 @@ const BookingPage = () => {
         {step === 2 && turf && (
           <div className="grid lg:grid-cols-[1fr_320px] gap-6">
             <div className="space-y-5">
-              <div className="bg-white border border-gray-200 rounded-2xl p-4 flex items-center gap-4">
+              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 flex items-center gap-4">
                 <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0">
                   <img src={turf.image} alt={turf.name} className="w-full h-full object-cover"
                     onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
@@ -431,9 +431,9 @@ const BookingPage = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="text-lg">{sport?.emoji}</span>
-                    <span className="font-bold text-gray-900">{turf.name}</span>
+                    <span className="font-bold text-gray-900 dark:text-white">{turf.name}</span>
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{turf.description}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{turf.description}</p>
                   <p className="text-xs text-green-700 font-semibold mt-0.5">
                     {turf.priceDay === turf.priceNight ? `₹${turf.priceDay}/hr flat` : `₹${turf.priceDay}/hr day · ₹${turf.priceNight}/hr night`}
                   </p>
@@ -441,29 +441,29 @@ const BookingPage = () => {
                 <button onClick={() => setStep(1)} className="text-xs text-green-600 font-bold hover:underline shrink-0">Change</button>
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm p-5">
-                <h2 className="font-bold text-lg text-gray-900 mb-4">Select Date</h2>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+                <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-4">Select Date</h2>
                 <div className="grid grid-cols-7 gap-1.5 mb-4">
                   {pills.map(p => (
                     <button key={p.iso} onClick={() => { setDate(p.iso); setSelected(new Set()); }}
-                      className={`rounded-xl py-2 px-1 text-center transition-all border-2 ${date===p.iso?'bg-green-600 border-green-600 text-white':'border-gray-200 hover:border-green-400 text-gray-700'}`}>
+                      className={`rounded-xl py-2 px-1 text-center transition-all border-2 ${date===p.iso?'bg-green-600 border-green-600 text-white':'border-gray-200 dark:border-gray-700 hover:border-green-400 text-gray-700 dark:text-gray-300'}`}>
                       <div className="text-xs font-semibold">{p.label}</div>
                       <div className="text-base font-bold leading-tight">{p.date}</div>
                       <div className="text-xs">{p.month}</div>
                     </button>
                   ))}
                 </div>
-                <div className="flex items-center gap-2 mb-1 text-sm text-gray-500 font-medium">
+                <div className="flex items-center gap-2 mb-1 text-sm text-gray-500 dark:text-gray-400 font-medium">
                   <Calendar className="w-4 h-4" /> Or pick a specific date
                 </div>
                 <input type="date" value={date} min={today}
                   max={new Date(Date.now() + 30*86400000).toISOString().split('T')[0]}
                   onChange={e => { setDate(e.target.value); setSelected(new Set()); }}
-                  className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+                  className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm dark:bg-gray-900 dark:text-gray-300" />
               </div>
 
-              <div className="bg-white rounded-2xl shadow-sm p-5">
-                <h2 className="font-bold text-lg text-gray-900 mb-3">Available Time Slots</h2>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+                <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-3">Available Time Slots</h2>
                 <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-4 flex gap-2 items-start">
                   <Lightbulb className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
                   <div className="text-xs text-green-800">
@@ -495,7 +495,7 @@ const BookingPage = () => {
                       ))}
                     </div>
                   )}
-                <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
+                <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> Selected</span>
                   <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white border border-gray-300 inline-block" /> Available</span>
                   <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Booked</span>
@@ -505,12 +505,12 @@ const BookingPage = () => {
             </div>
 
             <div className="lg:sticky lg:top-[120px] self-start space-y-4">
-              <div className="bg-white rounded-2xl shadow-sm p-5">
-                <h3 className="font-bold text-base text-gray-900 mb-4">Booking Summary</h3>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+                <h3 className="font-bold text-base text-gray-900 dark:text-white mb-4">Booking Summary</h3>
                 <div className="space-y-2.5 text-sm mb-4">
-                  <div className="flex justify-between"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Turf</span><span className="font-semibold text-xs text-right max-w-[55%]">{turf.name}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Date</span><span className="font-semibold text-xs">{fmtDisplay(date)}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold text-xs text-right max-w-[55%]">{turf.name}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold text-xs">{fmtDisplay(date)}</span></div>
                   <div className="flex justify-between items-start">
                     <span className="text-gray-500 shrink-0">Slots ({selected.size})</span>
                     <span className="font-semibold text-right text-xs ml-2">
@@ -522,7 +522,7 @@ const BookingPage = () => {
                 </div>
                 <div className="border-t pt-3 space-y-1.5">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Base</span>
+                    <span className="text-gray-500 dark:text-gray-400">Base</span>
                     <span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
                   </div>
                   {selected.size >= 2 && (
@@ -545,25 +545,25 @@ const BookingPage = () => {
         {/* ══ STEP 3: Details ══ */}
         {step === 3 && (
           <div className="max-w-lg mx-auto">
-            <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8">
-              <h2 className="font-bold text-2xl text-gray-900 mb-6">Your Details</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 sm:p-8">
+              <h2 className="font-bold text-2xl text-gray-900 dark:text-white mb-6">Your Details</h2>
               <div className="space-y-4 mb-8">
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                <div><label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
                   <input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your full name"
-                    className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                    className="w-full border border-gray-300 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-900 dark:text-gray-300" /></div>
+                <div><label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
                   <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@example.com"
-                    className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Phone (10 digits) *</label>
+                    className="w-full border border-gray-300 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-900 dark:text-gray-300" /></div>
+                <div><label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Phone (10 digits) *</label>
                   <input type="tel" maxLength={10} value={form.phone} onChange={e=>setForm({...form,phone:e.target.value.replace(/\D/g,'')})}
-                    placeholder="8056564775" className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" />
+                    placeholder="8056564775" className="w-full border border-gray-300 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-900 dark:text-gray-300" />
                   <p className="text-xs text-gray-400 mt-1">Without country code</p></div>
-                <div><label className="block text-sm font-semibold text-gray-700 mb-2">Team Size <span className="text-gray-400 font-normal">(Optional)</span></label>
+                <div><label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Team Size <span className="text-gray-400 font-normal">(Optional)</span></label>
                   <input type="number" min={1} max={22} value={form.teamSize} onChange={e=>setForm({...form,teamSize:e.target.value})}
-                    placeholder="5" className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm" /></div>
+                    placeholder="5" className="w-full border border-gray-300 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-900 dark:text-gray-300" /></div>
               </div>
               <div className="flex gap-3">
-                <button onClick={()=>setStep(2)} className="flex-1 border-2 border-gray-200 text-gray-600 rounded-xl py-3.5 font-bold hover:bg-gray-50 transition-colors">Back</button>
+                <button onClick={()=>setStep(2)} className="flex-1 border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-xl py-3.5 font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Back</button>
                 <button onClick={()=>setStep(4)} disabled={!form.name||!form.email||form.phone.length!==10}
                   className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3.5 font-bold transition-all">
                   Continue to Payment
@@ -576,20 +576,20 @@ const BookingPage = () => {
         {/* ══ STEP 4: Payment ══ */}
         {step === 4 && (
           <div className="max-w-lg mx-auto">
-            <div className="bg-white w-full rounded-2xl shadow-sm p-6 sm:p-8">
-              <h2 className="font-bold text-2xl text-gray-900 mb-6">Complete Payment</h2>
-              <div className="bg-gray-50 rounded-xl p-4 mb-5 space-y-2 text-sm">
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Booking Details</h3>
-                <div className="flex justify-between"><span className="text-gray-500">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Turf</span><span className="font-semibold">{turf?.name}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Date</span>
+            <div className="bg-white dark:bg-gray-800 w-full rounded-2xl shadow-sm p-6 sm:p-8">
+              <h2 className="font-bold text-2xl text-gray-900 dark:text-white mb-6">Complete Payment</h2>
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-5 space-y-2 text-sm">
+                <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Booking Details</h3>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold">{turf?.name}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span>
                   <span className="font-semibold">{new Date(date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Slots</span><span className="font-semibold">{selected.size} slot{selected.size!==1?'s':''}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Name</span><span className="font-semibold">{form.name}</span></div>
-                {form.teamSize && <div className="flex justify-between"><span className="text-gray-500">Team</span><span className="font-semibold">{form.teamSize} players</span></div>}
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Slots</span><span className="font-semibold">{selected.size} slot{selected.size!==1?'s':''}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold">{form.name}</span></div>
+                {form.teamSize && <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Team</span><span className="font-semibold">{form.teamSize} players</span></div>}
               </div>
-              <div className="border border-gray-200 rounded-xl p-4 mb-5 space-y-2 text-sm">
-                <div className="flex justify-between text-gray-600">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-5 space-y-2 text-sm">
+                <div className="flex justify-between text-gray-600 dark:text-gray-300">
                   <span>Base Amount</span><span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
                 </div>
                 {selected.size >= 2 && (
@@ -610,16 +610,16 @@ const BookingPage = () => {
                   ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>{payLoading?'Verifying...':'Opening Razorpay...'}</>
                   : <><CreditCard className="w-5 h-5"/> Pay ₹{total} with Razorpay</>}
               </button>
-              <p className="text-center text-xs text-gray-400 mb-4">🔒 Secured by Razorpay · UPI · Cards · Netbanking · Wallets</p>
+              <p className="text-center text-xs text-gray-400 dark:text-gray-400 mb-4">🔒 Secured by Razorpay · UPI · Cards · Netbanking · Wallets</p>
               <div className="flex justify-center gap-2 mb-4 opacity-50">
                 {['Visa','Mastercard','UPI','RuPay','PhonePe','GPay'].map(m=>(
-                  <span key={m} className="text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded">{m}</span>
+                  <span key={m} className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-1 rounded">{m}</span>
                 ))}
               </div>
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 mb-4">
                 <strong>Note:</strong> Slot reserved once payment succeeds. Failed payments release the slot automatically.
               </div>
-              <button onClick={()=>setStep(3)} className="w-full border border-gray-200 text-gray-600 rounded-xl py-3 font-semibold hover:bg-gray-50 transition-colors">Back to Details</button>
+              <button onClick={()=>setStep(3)} className="w-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-xl py-3 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Back to Details</button>
             </div>
           </div>
         )}

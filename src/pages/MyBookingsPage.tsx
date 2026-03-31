@@ -24,7 +24,7 @@ const STATUS_STYLES: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-700',
   cancelled: 'bg-red-100 text-red-600',
   completed: 'bg-blue-100 text-blue-700',
-  'no-show': 'bg-gray-100 text-gray-600',
+  'no-show': 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
 };
 
 const MyBookingsPage = () => {
@@ -73,11 +73,11 @@ const MyBookingsPage = () => {
   // ── Not logged in
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 pb-16 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16 flex items-center justify-center">
         <div className="text-center">
           <div className="text-5xl mb-4">🔒</div>
-          <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-2">SIGN IN REQUIRED</h2>
-          <p className="text-gray-500 mb-6">Please sign in to view your bookings</p>
+          <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">SIGN IN REQUIRED</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Please sign in to view your bookings</p>
           <Link to="/login" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">
             Sign In
           </Link>
@@ -87,13 +87,13 @@ const MyBookingsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-1">MY BOOKINGS</h1>
-            <p className="text-gray-500">Welcome back, {user?.name}!</p>
+            <h1 className="font-display text-5xl tracking-wider text-gray-900 dark:text-white mb-1">MY BOOKINGS</h1>
+            <p className="text-gray-500 dark:text-gray-400">Welcome back, {user?.name}!</p>
           </div>
           <button onClick={() => fetchBookings(page)}
             className="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Refresh">
@@ -115,10 +115,10 @@ const MyBookingsPage = () => {
             <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : bookings.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-12 text-center">
             <div className="text-5xl mb-4">📅</div>
-            <h3 className="font-bold text-xl text-gray-900 mb-2">No bookings yet</h3>
-            <p className="text-gray-500 mb-6">Book your first slot and start playing!</p>
+            <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-2">No bookings yet</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">Book your first slot and start playing!</p>
             <Link to="/booking" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">
               Book Now
             </Link>
@@ -126,7 +126,7 @@ const MyBookingsPage = () => {
         ) : (
           <div className="space-y-4">
             {bookings.map(b => (
-              <div key={b._id} className="bg-white rounded-2xl shadow-sm p-6">
+              <div key={b._id} className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-6">
                 {/* Top row */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -139,12 +139,12 @@ const MyBookingsPage = () => {
                         {b.sport === 'football' ? '⚽' : b.sport === 'cricket' ? '🏏' : '🏆'} {b.sport}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      🏟️ <span className="font-semibold text-gray-800">{b.turfName}</span>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      🏟️ <span className="font-semibold text-gray-800 dark:text-gray-200">{b.turfName}</span>
                     </div>
 
                     {/* Date & slot */}
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 mt-1">
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {new Date(b.date + 'T00:00:00').toLocaleDateString('en-IN', {
@@ -163,7 +163,7 @@ const MyBookingsPage = () => {
                     {b.timeSlots?.length > 1 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {b.timeSlots.map(s => (
-                          <span key={s} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{s}</span>
+                          <span key={s} className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">{s}</span>
                         ))}
                       </div>
                     )}
@@ -181,10 +181,10 @@ const MyBookingsPage = () => {
                 </div>
 
                 {/* Footer row */}
-                <div className="flex items-center justify-between border-t pt-4 text-sm">
+                <div className="flex items-center justify-between border-t dark:border-gray-700 pt-4 text-sm">
                   <div className="flex items-center gap-3">
-                    <span className="text-gray-500">
-                      {b.duration} hr{b.duration > 1 ? 's' : ''} · <strong className="text-gray-800">₹{b.totalAmount}</strong>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {b.duration} hr{b.duration > 1 ? 's' : ''} · <strong className="text-gray-800 dark:text-gray-200">₹{b.totalAmount}</strong>
                     </span>
                     {/* Payment badge */}
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
@@ -226,12 +226,12 @@ const MyBookingsPage = () => {
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-3 pt-2">
                 <button onClick={() => fetchBookings(page - 1)} disabled={page === 1}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold disabled:opacity-40 hover:bg-gray-50">
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-semibold disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300">
                   ← Previous
                 </button>
-                <span className="text-sm text-gray-500">Page {page} of {totalPages}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">Page {page} of {totalPages}</span>
                 <button onClick={() => fetchBookings(page + 1)} disabled={page === totalPages}
-                  className="px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold disabled:opacity-40 hover:bg-gray-50">
+                  className="px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-semibold disabled:opacity-40 hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-gray-300">
                   Next →
                 </button>
               </div>

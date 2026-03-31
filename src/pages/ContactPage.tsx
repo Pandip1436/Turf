@@ -50,20 +50,20 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="font-display text-5xl tracking-wider text-gray-900 mb-2">CONTACT US</h1>
-          <p className="text-gray-500">We're here to help. Reach out anytime!</p>
+          <h1 className="font-display text-5xl tracking-wider text-gray-900 dark:text-white mb-2">CONTACT US</h1>
+          <p className="text-gray-500 dark:text-gray-400">We're here to help. Reach out anytime!</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
 
           {/* ── LEFT: Info + Map ── */}
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <h2 className="font-bold text-xl text-gray-900 mb-5">Visit Our Facility</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+              <h2 className="font-bold text-xl text-gray-900 dark:text-white mb-5">Visit Our Facility</h2>
               <div className="space-y-4 text-sm">
 
                 {/* Address */}
@@ -72,8 +72,8 @@ const ContactPage = () => {
                     <MapPin className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Address</div>
-                    <div className="text-gray-500 mt-0.5">
+                    <div className="font-semibold text-gray-900 dark:text-white">Address</div>
+                    <div className="text-gray-500 dark:text-gray-400 mt-0.5">
                       Housing Board, Near Water Tank,<br />
                       Sivakasi – 626 123, Tamil Nadu
                     </div>
@@ -86,7 +86,7 @@ const ContactPage = () => {
                     <Phone className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Phone / WhatsApp</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Phone / WhatsApp</div>
                     <a href="tel:8056564775" className="text-green-600 hover:underline mt-0.5 block">
                       +91 80565 64775
                     </a>
@@ -100,7 +100,7 @@ const ContactPage = () => {
                     <Mail className="w-5 h-5 text-orange-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Email</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Email</div>
                     <a href="mailto:info@hypergreen360.com" className="text-green-600 hover:underline mt-0.5 block">
                       info@hypergreen360.com
                     </a>
@@ -114,8 +114,8 @@ const ContactPage = () => {
                     <Clock className="w-5 h-5 text-violet-600" />
                   </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Operating Hours</div>
-                    <div className="text-gray-500 mt-0.5 font-semibold">Open 24 Hours · 7 Days a Week</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Operating Hours</div>
+                    <div className="text-gray-500 dark:text-gray-400 mt-0.5 font-semibold">Open 24 Hours · 7 Days a Week</div>
                     <span className="text-gray-400 text-xs">Book anytime – we never close</span>
                   </div>
                 </div>
@@ -123,7 +123,7 @@ const ContactPage = () => {
             </div>
 
             {/* Map embed */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3942.3!2d77.804!3d9.452!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sSivakasi!5e0!3m2!1sen!2sin!4v1680000000"
                 width="100%"
@@ -134,8 +134,8 @@ const ContactPage = () => {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="HyperGreen 360 Turf Location"
               />
-              <div className="px-4 py-3 flex items-center justify-between border-t border-gray-100">
-                <span className="text-sm text-gray-500 flex items-center gap-1.5">
+              <div className="px-4 py-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700">
+                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-green-500" />
                   Sivakasi, Tamil Nadu · 9.4534, 77.8042
                 </span>
@@ -153,7 +153,7 @@ const ContactPage = () => {
           </div>
 
           {/* ── RIGHT: Form ── */}
-          <div className="bg-white rounded-2xl shadow-sm p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-8">
 
             {/* Success state */}
             {sent ? (
@@ -161,8 +161,8 @@ const ContactPage = () => {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-green-500" />
                 </div>
-                <h3 className="font-display text-3xl tracking-wider text-gray-900 mb-2">MESSAGE SENT!</h3>
-                <p className="text-gray-500 mb-6">We'll get back to you within 24 hours.</p>
+                <h3 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">MESSAGE SENT!</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">We'll get back to you within 24 hours.</p>
                 <button
                   onClick={reset}
                   className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold transition-colors"
@@ -172,7 +172,7 @@ const ContactPage = () => {
               </div>
             ) : (
               <>
-                <h2 className="font-bold text-xl text-gray-900 mb-6">Send Us a Message</h2>
+                <h2 className="font-bold text-xl text-gray-900 dark:text-white mb-6">Send Us a Message</h2>
 
                 {/* API error banner */}
                 {error && (
@@ -184,7 +184,7 @@ const ContactPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Name <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -192,13 +192,13 @@ const ContactPage = () => {
                       value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
                       placeholder="Your name"
-                      className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors dark:bg-gray-900 dark:text-white"
                     />
                   </div>
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Email <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -207,13 +207,13 @@ const ContactPage = () => {
                       value={form.email}
                       onChange={e => setForm({ ...form, email: e.target.value })}
                       placeholder="your@email.com"
-                      className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors dark:bg-gray-900 dark:text-white"
                     />
                   </div>
 
                   {/* Phone */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Phone <span className="text-gray-400 font-normal">(Optional)</span>
                     </label>
                     <input
@@ -222,19 +222,19 @@ const ContactPage = () => {
                       value={form.phone}
                       onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })}
                       placeholder="10-digit mobile number"
-                      className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors dark:bg-gray-900 dark:text-white"
                     />
                   </div>
 
                   {/* Subject */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Subject <span className="text-gray-400 font-normal">(Optional)</span>
                     </label>
                     <select
                       value={form.subject}
                       onChange={e => setForm({ ...form, subject: e.target.value })}
-                      className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors bg-white text-gray-700"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none transition-colors bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300"
                     >
                       <option value="">Select a subject...</option>
                       <option value="Booking Enquiry">Booking Enquiry</option>
@@ -249,7 +249,7 @@ const ContactPage = () => {
 
                   {/* Message */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Message <span className="text-red-400">*</span>
                     </label>
                     <textarea
@@ -259,7 +259,7 @@ const ContactPage = () => {
                       value={form.message}
                       onChange={e => setForm({ ...form, message: e.target.value })}
                       placeholder="How can we help you?"
-                      className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none resize-none transition-colors"
+                      className="w-full border-2 border-gray-200 dark:border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none resize-none transition-colors dark:bg-gray-900 dark:text-white"
                     />
                     <p className="text-xs text-gray-400 mt-1 text-right">
                       {form.message.length} / 2000

@@ -93,12 +93,12 @@ const tweetColumns = [
 ];
 
 const amenities = [
-  { icon: '🚗', label: 'Parking', desc: 'Spacious parking area' },
-  { icon: '👕', label: 'Changing Room', desc: 'Clean facilities' },
-  { icon: '🏥', label: 'First Aid', desc: 'Emergency medical kit' },
-  { icon: '💧', label: 'Drinking Water', desc: 'Pure drinking water' },
-  { icon: '🚻', label: 'Washrooms', desc: 'Clean & hygienic' },
-  { icon: '🏏', label: 'Equipment', desc: 'Rental available' },
+  { icon: '🚗', label: 'Parking', desc: 'Spacious parking area for hassle-free visits', gradient: 'from-blue-500 to-cyan-400', glow: 'bg-blue-500/20' },
+  { icon: '👕', label: 'Changing Room', desc: 'Private, clean & well-maintained facilities', gradient: 'from-violet-500 to-purple-400', glow: 'bg-violet-500/20' },
+  { icon: '🏥', label: 'First Aid', desc: 'Fully stocked emergency medical kit on-site', gradient: 'from-rose-500 to-pink-400', glow: 'bg-rose-500/20' },
+  { icon: '💧', label: 'Drinking Water', desc: 'Purified RO drinking water available 24/7', gradient: 'from-sky-500 to-blue-400', glow: 'bg-sky-500/20' },
+  { icon: '🚻', label: 'Washrooms', desc: 'Spotless & hygienic restrooms always ready', gradient: 'from-emerald-500 to-green-400', glow: 'bg-emerald-500/20' },
+  { icon: '🏏', label: 'Equipment', desc: 'Premium sports gear available for rental', gradient: 'from-amber-500 to-orange-400', glow: 'bg-amber-500/20' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -167,7 +167,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
       <div className="font-display text-4xl sm:text-5xl md:text-6xl tracking-wider bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
         {count}{suffix}
       </div>
-      <div className="text-gray-500 text-md font-bold mt-2">{label}</div>
+      <div className="text-gray-500 dark:text-gray-400 text-md font-bold mt-2">{label}</div>
     </motion.div>
   );
 }
@@ -404,6 +404,7 @@ const HomePage = () => {
   const [turfs, setTurfs] = useState<Turf[]>([]);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [sportFilter, setSportFilter] = useState<string>('all');
+  const [mobileReviewIdx, setMobileReviewIdx] = useState(0);
 
   useEffect(() => {
     api.get('/turfs?active=true').then(r => setTurfs(r.data.turfs || [])).catch(() => {});
@@ -420,7 +421,7 @@ const HomePage = () => {
       <Hero />
 
       {/* ═══ Stats ═══ */}
-      <section className="relative bg-white py-10 sm:py-16 overflow-hidden">
+      <section className="relative bg-white dark:bg-gray-950 py-10 sm:py-16 overflow-hidden transition-colors duration-300">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.05),transparent_70%)]" />
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 relative">
           {stats.map(s => <AnimatedStat key={s.label} value={s.value} label={s.label} />)}
@@ -483,7 +484,7 @@ const HomePage = () => {
 
       {/* ═══ Our Turfs (Dynamic) ═══ */}
       {turfs.length > 0 && (
-        <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+        <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden transition-colors duration-300">
           <motion.div className="absolute top-20 left-10 w-[500px] h-[500px] bg-green-400/[0.04] rounded-full blur-3xl"
             animate={{ x: [0, 40, 0], y: [0, -30, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -492,8 +493,8 @@ const HomePage = () => {
             <Reveal>
               <div className="text-center mb-10">
                 <SectionLabel text="Our Turfs" />
-                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">EXPLORE OUR TURFS</h2>
-                <p className="text-gray-500 text-lg max-w-xl mx-auto">Premium sports facilities designed for peak performance</p>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 dark:text-white mb-3">EXPLORE OUR TURFS</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Premium sports facilities designed for peak performance</p>
               </div>
             </Reveal>
 
@@ -505,7 +506,7 @@ const HomePage = () => {
                     className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
                       sportFilter === s
                         ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                     }`}
                     whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                   >
@@ -525,7 +526,7 @@ const HomePage = () => {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.4, delay: i * 0.05 }}
                   >
-                    <motion.div className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm h-full"
+                    <motion.div className="group relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm h-full"
                       whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
                       transition={{ duration: 0.3 }}
                     >
@@ -537,7 +538,7 @@ const HomePage = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
                         {/* sport badge */}
-                        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                        <span className="absolute top-3 left-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur text-xs font-bold dark:text-white px-3 py-1 rounded-full flex items-center gap-1">
                           {sportEmoji[turf.sport]} {turf.sport.charAt(0).toUpperCase() + turf.sport.slice(1)}
                         </span>
 
@@ -549,14 +550,14 @@ const HomePage = () => {
 
                       {/* content */}
                       <div className="p-6">
-                        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-green-600 transition-colors">{turf.name}</h3>
-                        <p className="text-gray-500 text-sm mb-4 line-clamp-2">{turf.description || 'Premium sports facility with professional equipment.'}</p>
+                        <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">{turf.name}</h3>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4 line-clamp-2">{turf.description || 'Premium sports facility with professional equipment.'}</p>
 
                         {/* features */}
                         {turf.features.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mb-4">
                             {turf.features.slice(0, 3).map(f => (
-                              <span key={f} className="text-[11px] font-semibold bg-green-50 text-green-700 px-2 py-0.5 rounded-md">{f}</span>
+                              <span key={f} className="text-[11px] font-semibold bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-md">{f}</span>
                             ))}
                             {turf.features.length > 3 && (
                               <span className="text-[11px] text-gray-400">+{turf.features.length - 3} more</span>
@@ -566,10 +567,10 @@ const HomePage = () => {
 
                         {/* pricing row */}
                         <div className="flex items-center gap-4 mb-4 text-sm">
-                          <div className="flex items-center gap-1.5 text-gray-600">
+                          <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
                             <Sun className="w-4 h-4 text-yellow-500" /> ₹{turf.priceDay}
                           </div>
-                          <div className="flex items-center gap-1.5 text-gray-600">
+                          <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
                             <Moon className="w-4 h-4 text-indigo-500" /> ₹{turf.priceNight}
                           </div>
                         </div>
@@ -588,7 +589,7 @@ const HomePage = () => {
 
             {turfs.length > 6 && (
               <div className="text-center mt-10">
-                <Link to="/booking" className="inline-flex items-center gap-2 text-green-600 font-bold hover:underline text-lg">
+                <Link to="/booking" className="inline-flex items-center gap-2 text-green-600 dark:text-green-400 font-bold hover:underline text-lg">
                   View All Turfs <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
@@ -599,7 +600,7 @@ const HomePage = () => {
 
       {/* ═══ Tournaments (Dynamic) ═══ */}
       {tournaments.length > 0 && (
-        <section className="py-14 sm:py-24 bg-white relative overflow-hidden">
+        <section className="py-14 sm:py-24 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
           <motion.div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-purple-400/[0.04] rounded-full blur-3xl"
             animate={{ x: [0, -30, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -608,15 +609,15 @@ const HomePage = () => {
             <Reveal>
               <div className="text-center mb-14">
                 <SectionLabel text="Compete & Win" />
-                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">UPCOMING TOURNAMENTS</h2>
-                <p className="text-gray-500 text-lg max-w-xl mx-auto">Register your team, compete with the best, and win exciting prizes</p>
+                <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 dark:text-white mb-3">UPCOMING TOURNAMENTS</h2>
+                <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Register your team, compete with the best, and win exciting prizes</p>
               </div>
             </Reveal>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {tournaments.map((t, i) => (
                 <Reveal key={t._id} delay={i * 0.1}>
-                  <motion.div className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm h-full"
+                  <motion.div className="group relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700 shadow-sm h-full"
                     whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} transition={{ duration: 0.3 }}
                   >
                     <div className="relative h-44 overflow-hidden">
@@ -631,7 +632,7 @@ const HomePage = () => {
                       </span>
 
                       {/* sport */}
-                      <span className="absolute top-3 right-3 bg-white/90 backdrop-blur text-xs font-bold px-2 py-1 rounded-full">
+                      <span className="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur text-xs font-bold dark:text-white px-2 py-1 rounded-full">
                         {sportEmoji[t.sport]}
                       </span>
 
@@ -644,10 +645,10 @@ const HomePage = () => {
                     </div>
 
                     <div className="p-5">
-                      <h3 className="font-bold text-gray-900 mb-1 group-hover:text-green-600 transition-colors line-clamp-1">{t.title}</h3>
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors line-clamp-1">{t.title}</h3>
                       <p className="text-gray-400 text-xs mb-3">{t.turfName} · {t.format}</p>
 
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                      <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mb-3">
                         <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> {new Date(t.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                         <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {t.time}</span>
                       </div>
@@ -669,7 +670,7 @@ const HomePage = () => {
             </div>
 
             <div className="text-center mt-10">
-              <Link to="/tournaments" className="inline-flex items-center gap-2 text-purple-600 font-bold hover:underline text-lg">
+              <Link to="/tournaments" className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-bold hover:underline text-lg">
                 View All Tournaments <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -678,13 +679,13 @@ const HomePage = () => {
       )}
 
       {/* ═══ How It Works ═══ */}
-      <section className="py-14 sm:py-24 bg-gray-50 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
         <div className="max-w-5xl mx-auto px-4 relative">
           <Reveal>
             <div className="text-center mb-16">
               <SectionLabel text="Simple Process" />
-              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">BOOK IN 3 STEPS</h2>
-              <p className="text-gray-500">Quick and hassle-free booking process</p>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 dark:text-white mb-3">BOOK IN 3 STEPS</h2>
+              <p className="text-gray-500 dark:text-gray-400">Quick and hassle-free booking process</p>
             </div>
           </Reveal>
 
@@ -699,8 +700,8 @@ const HomePage = () => {
                     {step.icon}
                   </motion.div>
                   <span className="text-xs font-bold text-green-500 tracking-widest uppercase mb-1 block">Step {i + 1}</span>
-                  <h3 className="font-bold text-gray-900 text-lg mb-2">{step.title}</h3>
-                  <p className="text-gray-500 text-sm">{step.desc}</p>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2">{step.title}</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">{step.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -708,25 +709,58 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══ Amenities ═══ */}
-      <section className="py-14 sm:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 text-center">
+      {/* ═══ Amenities — Premium ═══ */}
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-gray-950 via-[#0a1628] to-gray-950 relative overflow-hidden">
+        {/* ambient background glows */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-green-500/[0.03] rounded-full blur-[150px]" />
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/[0.04] rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/[0.04] rounded-full blur-[120px]" />
+
+        <div className="max-w-7xl mx-auto px-4 relative">
           <Reveal>
-            <SectionLabel text="Facilities" />
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl tracking-wider text-gray-900 mb-2">ESSENTIAL AMENITIES</h2>
-            <p className="text-gray-500 mb-12">Everything you need for a complete sports experience</p>
+            <div className="text-center mb-14 sm:mb-16">
+              <SectionLabel text="Facilities" className="!from-green-400 !to-emerald-300" />
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-white mb-3">PREMIUM AMENITIES</h2>
+              <p className="text-gray-400 text-lg max-w-lg mx-auto">World-class facilities designed for an unmatched sports experience</p>
+            </div>
           </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {amenities.map((a, i) => (
               <Reveal key={a.label} delay={i * 0.08}>
-                <motion.div className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-gray-50 border border-gray-100"
-                  whileHover={{ scale: 1.05, backgroundColor: 'rgb(240 253 244)' }} transition={{ duration: 0.2 }}
+                <motion.div
+                  className="group relative rounded-2xl sm:rounded-3xl p-[1px] cursor-default"
+                  whileHover={{ scale: 1.03, y: -4 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                 >
-                  <motion.div className="text-4xl" whileHover={{ scale: 1.3, rotate: [0, -10, 10, 0] }} transition={{ duration: 0.4 }}>
-                    {a.icon}
-                  </motion.div>
-                  <span className="text-sm font-bold text-gray-900">{a.label}</span>
-                  <div className="text-xs text-gray-500">{a.desc}</div>
+                  {/* gradient border */}
+                  <div className={`absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${a.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
+
+                  {/* card body */}
+                  <div className="relative bg-white/[0.04] backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-white/[0.06] group-hover:border-white/[0.12] group-hover:bg-white/[0.07] transition-all duration-500 h-full">
+                    {/* glow orb behind icon */}
+                    <div className={`absolute top-4 left-1/2 -translate-x-1/2 w-16 h-16 ${a.glow} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                    {/* icon container */}
+                    <div className="relative flex justify-center mb-4 sm:mb-5">
+                      <motion.div
+                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${a.gradient} flex items-center justify-center shadow-lg`}
+                        whileHover={{ rotate: [0, -8, 8, 0] }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <span className="text-2xl sm:text-3xl drop-shadow-md">{a.icon}</span>
+                      </motion.div>
+                    </div>
+
+                    {/* text */}
+                    <div className="text-center">
+                      <h3 className="text-white font-bold text-sm sm:text-base mb-1.5 tracking-wide">{a.label}</h3>
+                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">{a.desc}</p>
+                    </div>
+
+                    {/* bottom accent line */}
+                    <div className={`mt-4 sm:mt-5 h-0.5 rounded-full bg-gradient-to-r ${a.gradient} opacity-0 group-hover:opacity-60 transition-opacity duration-500 mx-4`} />
+                  </div>
                 </motion.div>
               </Reveal>
             ))}
@@ -734,7 +768,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* ═══ Reviews — Twitter-style scrolling marquee ═══ */}
+      {/* ═══ Reviews — Twitter-style scrolling marquee / Mobile slide ═══ */}
       <section className="py-14 sm:py-24 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden">
         {/* ambient glows */}
         <div className="absolute top-0 left-[20%] w-[500px] h-[500px] bg-green-500/[0.04] rounded-full blur-[120px]" />
@@ -749,8 +783,73 @@ const HomePage = () => {
             </div>
           </Reveal>
 
-          {/* scrolling columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 h-[400px] sm:h-[520px] overflow-hidden relative">
+          {/* ── Mobile: swipeable card slider ── */}
+          <div className="md:hidden">
+            {(() => {
+              const allTweets = tweetColumns.flat();
+              return (
+                <div className="relative">
+                  <div className="overflow-hidden">
+                    <motion.div
+                      className="flex"
+                      animate={{ x: `-${mobileReviewIdx * 100}%` }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      dragElastic={0.2}
+                      onDragEnd={(_e, { offset, velocity }) => {
+                        const swipe = Math.abs(offset.x) * velocity.x;
+                        if (swipe < -5000 || offset.x < -50) {
+                          setMobileReviewIdx(i => Math.min(i + 1, allTweets.length - 1));
+                        } else if (swipe > 5000 || offset.x > 50) {
+                          setMobileReviewIdx(i => Math.max(i - 1, 0));
+                        }
+                      }}
+                    >
+                      {allTweets.map((tweet, i) => (
+                        <div key={i} className="w-full shrink-0 px-2">
+                          <div className="bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-5">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className={`w-10 h-10 bg-gradient-to-br ${tweet.gradient} rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md shrink-0`}>
+                                {tweet.avatar}
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-bold text-white text-sm block truncate">{tweet.name}</span>
+                                <span className="text-gray-500 text-xs">{tweet.handle}</span>
+                              </div>
+                            </div>
+                            <p className="text-gray-300 text-sm leading-relaxed">
+                              {tweet.text.split(/(@HyperGreen360)/g).map((part, pi) =>
+                                part === '@HyperGreen360'
+                                  ? <span key={pi} className="text-green-400 font-semibold">{part}</span>
+                                  : part
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </motion.div>
+                  </div>
+
+                  {/* dots */}
+                  <div className="flex justify-center gap-1.5 mt-5">
+                    {allTweets.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setMobileReviewIdx(i)}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          i === mobileReviewIdx ? 'bg-green-400 w-6' : 'bg-white/20'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* ── Desktop: scrolling columns ── */}
+          <div className="hidden md:grid grid-cols-3 gap-5 h-[520px] overflow-hidden relative">
             {/* fade edges */}
             <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-gray-950 to-transparent z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-950 to-transparent z-10 pointer-events-none" />
@@ -845,7 +944,7 @@ const HomePage = () => {
       </section>
 
       {/* ═══ Contact & Location ═══ */}
-      <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 relative overflow-hidden">
+      <section className="py-14 sm:py-24 bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 relative overflow-hidden transition-colors duration-300">
         <motion.div className="absolute top-20 left-10 w-[500px] h-[500px] bg-green-400/[0.04] rounded-full blur-3xl"
           animate={{ x: [0, 30, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
         />
@@ -854,8 +953,8 @@ const HomePage = () => {
           <Reveal>
             <div className="text-center mb-16">
               <SectionLabel text="Visit Us" />
-              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 mb-3">FIND US HERE</h2>
-              <p className="text-gray-500 text-lg">Located in the heart of Sivakasi, easily accessible from all major areas</p>
+              <h2 className="font-display text-3xl sm:text-5xl md:text-6xl tracking-wider text-gray-900 dark:text-white mb-3">FIND US HERE</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-lg">Located in the heart of Sivakasi, easily accessible from all major areas</p>
             </div>
           </Reveal>
 
@@ -864,15 +963,15 @@ const HomePage = () => {
             <Reveal>
               <motion.div className="group relative rounded-3xl" whileHover={{ y: -6 }} transition={{ duration: 0.3 }}>
                 <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-green-400/30 via-blue-400/20 to-purple-400/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-[2px]" />
-                <div className="relative bg-white rounded-3xl overflow-hidden border border-gray-100 group-hover:border-transparent transition-all duration-500 shadow-sm group-hover:shadow-2xl">
+                <div className="relative bg-white dark:bg-gray-800 rounded-3xl overflow-hidden border border-gray-100 dark:border-gray-700 group-hover:border-transparent transition-all duration-500 shadow-sm group-hover:shadow-2xl">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3942.485!2d77.8042!3d9.4534!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b06cf5b3f6a1f9d%3A0x4a1f2e3b4c5d6e7f!2sSivakasi%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                     width="100%" height="380" style={{ border: 0, display: 'block' }}
                     allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                     title="HyperGreen 360 Turf Location"
                   />
-                  <div className="px-6 py-4 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white">
-                    <span className="text-sm text-gray-500 flex items-center gap-2">
+                  <div className="px-6 py-4 flex items-center justify-between bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-800">
+                    <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-green-500" /> Housing Board, Sivakasi
                     </span>
                     <a href="https://maps.google.com/?q=9.4534,77.8042" target="_blank" rel="noopener noreferrer"
@@ -887,7 +986,7 @@ const HomePage = () => {
 
             {/* contact cards */}
             <div className="space-y-4">
-              <Reveal><h2 className="font-bold text-xl text-gray-900 mb-2">Visit Our Facility</h2></Reveal>
+              <Reveal><h2 className="font-bold text-xl text-gray-900 dark:text-white mb-2">Visit Our Facility</h2></Reveal>
               {[
                 { icon: <MapPin className="w-5 h-5 text-green-600" />, bg: 'bg-green-50', title: 'Address', content: <><p className="text-gray-600 text-sm leading-relaxed">Housing Board, Near Water Tank,<br />Sivakasi – 626 123, Tamil Nadu, India</p><p className="text-xs text-gray-400 mt-2"><span className="font-semibold">Landmark:</span> Opposite Housing Board Police Station</p></> },
                 { icon: <Phone className="w-5 h-5 text-blue-600" />, bg: 'bg-blue-50', title: 'Phone / WhatsApp', content: <><a href="tel:8056564775" className="text-green-600 font-semibold hover:underline text-sm">+91 80565 64775</a><p className="text-gray-400 text-xs mt-1">Available 24/7 for bookings & queries</p></> },
@@ -895,12 +994,12 @@ const HomePage = () => {
                 { icon: <Clock className="w-5 h-5 text-violet-600" />, bg: 'bg-violet-50', title: 'Operating Hours', content: <><p className="text-gray-600 text-sm font-semibold">Open 24 Hours · 7 Days a Week</p><p className="text-gray-400 text-xs mt-1">Book anytime — we're always ready</p></> },
               ].map((item, i) => (
                 <Reveal key={item.title} delay={i * 0.1}>
-                  <motion.div className="bg-white rounded-2xl p-5 flex gap-4 items-start border border-gray-100 shadow-sm"
+                  <motion.div className="bg-white dark:bg-gray-800 rounded-2xl p-5 flex gap-4 items-start border border-gray-100 dark:border-gray-700 shadow-sm"
                     whileHover={{ x: 6 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   >
                     <div className={`w-12 h-12 ${item.bg} rounded-xl flex items-center justify-center shrink-0`}>{item.icon}</div>
                     <div>
-                      <h4 className="font-bold text-gray-900 mb-1">{item.title}</h4>
+                      <h4 className="font-bold text-gray-900 dark:text-white mb-1">{item.title}</h4>
                       {item.content}
                     </div>
                   </motion.div>

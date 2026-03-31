@@ -126,31 +126,31 @@ const GalleryPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20" onKeyDown={handleKeyDown} tabIndex={0}>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-20" onKeyDown={handleKeyDown} tabIndex={0}>
 
       {/* ── TOP BAR ── */}
-      <div className="bg-white border-b border-gray-200 sticky top-[56px] z-30 shadow-sm">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-[56px] z-30 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
           <button
             onClick={() => window.history.back()}
-            className="text-gray-500 hover:text-gray-800"
+            className="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <Camera className="w-5 h-5 text-green-600" />
-          <h1 className="font-bold text-xl text-gray-900">Photo Gallery</h1>
+          <h1 className="font-bold text-xl text-gray-900 dark:text-white">Photo Gallery</h1>
           <div className="flex gap-2 ml-auto">
             <button
               onClick={() => setViewMode('list')}
               title="List view"
-              className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`p-2 rounded-lg transition-colors ${viewMode === 'list' ? 'bg-green-100 text-green-700' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
             >
               <List className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewMode('grid')}
               title="Grid view"
-              className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-green-100 text-green-700' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-green-100 text-green-700' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'}`}
             >
               <Grid3X3 className="w-5 h-5" />
             </button>
@@ -167,7 +167,7 @@ const GalleryPage = () => {
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
                   filter === cat.key
                     ? 'bg-green-500 text-white shadow-sm'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                 }`}
               >
                 {cat.label}
@@ -180,25 +180,25 @@ const GalleryPage = () => {
             <select
               value={month}
               onChange={e => setMonth(e.target.value)}
-              className="appearance-none border border-gray-200 rounded-xl pl-4 pr-9 py-2 text-sm font-semibold text-gray-700 bg-white focus:border-green-500 outline-none cursor-pointer"
+              className="appearance-none border border-gray-200 dark:border-gray-700 rounded-xl pl-4 pr-9 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 focus:border-green-500 outline-none cursor-pointer"
             >
               {ALL_MONTHS.map(m => (
                 <option key={m.value} value={m.value}>{m.label}</option>
               ))}
             </select>
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs">▾</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none text-xs">▾</span>
           </div>
         </div>
       </div>
 
       {/* ── BODY ── */}
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
           Showing <strong>{filtered.length}</strong> photo{filtered.length !== 1 ? 's' : ''}
         </p>
 
         {filtered.length === 0 ? (
-          <div className="text-center py-24 text-gray-400">
+          <div className="text-center py-24 text-gray-400 dark:text-gray-500">
             <div className="text-5xl mb-4">📷</div>
             <p className="font-semibold text-lg">No photos found</p>
             <p className="text-sm mt-1">Try a different category or date</p>
@@ -210,8 +210,8 @@ const GalleryPage = () => {
                 {/* Date group header */}
                 <div className="flex items-center gap-2 mb-4">
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  <h2 className="font-bold text-lg text-gray-900">{fmtGroupDate(date)}</h2>
-                  <span className="text-sm text-gray-400">
+                  <h2 className="font-bold text-lg text-gray-900 dark:text-white">{fmtGroupDate(date)}</h2>
+                  <span className="text-sm text-gray-400 dark:text-gray-500">
                     ({items.length} photo{items.length !== 1 ? 's' : ''})
                   </span>
                 </div>
@@ -264,7 +264,7 @@ const GalleryPage = () => {
                       <div
                         key={item.id}
                         onClick={() => setLightbox(item)}
-                        className="flex gap-4 bg-white rounded-xl p-3 cursor-pointer hover:shadow-md transition-shadow items-center"
+                        className="flex gap-4 bg-white dark:bg-gray-800 rounded-xl p-3 cursor-pointer hover:shadow-md transition-shadow items-center"
                       >
                         <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0">
                           {imgErrors.has(item.id) ? (
@@ -286,10 +286,10 @@ const GalleryPage = () => {
                               {BADGE_ICONS[item.category]} <span className="capitalize">{item.category}</span>
                             </span>
                           </div>
-                          <p className="font-bold text-gray-900 text-sm truncate">{item.title}</p>
-                          <p className="text-gray-500 text-xs mt-0.5">{item.desc}</p>
+                          <p className="font-bold text-gray-900 dark:text-white text-sm truncate">{item.title}</p>
+                          <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{item.desc}</p>
                         </div>
-                        <span className="text-gray-300 text-xl shrink-0">›</span>
+                        <span className="text-gray-300 dark:text-gray-600 text-xl shrink-0">›</span>
                       </div>
                     ))}
                   </div>

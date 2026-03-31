@@ -71,15 +71,15 @@ const RegisterPage = () => {
 
       {/* ── MODAL ── */}
       <div
-        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md mx-auto z-10"
+        className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md mx-auto z-10"
         style={{ maxHeight: 'calc(100vh - 80px)', overflowY: 'auto' }}
       >
         {/* Close */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
         >
-          <X className="w-5 h-5 text-gray-600" />
+          <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         <div className="p-8 ">
@@ -96,10 +96,10 @@ const RegisterPage = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-2xl font-bold text-gray-900 text-center mb-1">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-1">
             Create Your Account
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-6">
+          <p className="text-gray-500 dark:text-gray-400 text-center text-sm mb-6">
             Join HyperGreen 360 and start booking today
           </p>
 
@@ -114,7 +114,7 @@ const RegisterPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4 mb-5">
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name *</label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -122,14 +122,14 @@ const RegisterPage = () => {
                   value={form.name}
                   onChange={e => setForm({ ...form, name: e.target.value })}
                   placeholder="Your full name"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors"
+                  className="w-full border border-gray-300 dark:border-gray-600 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors dark:bg-gray-800 dark:text-white"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address *</label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -138,14 +138,14 @@ const RegisterPage = () => {
                   value={form.email}
                   onChange={e => setForm({ ...form, email: e.target.value })}
                   placeholder="you@example.com"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors"
+                  className="w-full border border-gray-300 dark:border-gray-600 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors dark:bg-gray-800 dark:text-white"
                 />
               </div>
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Phone Number <span className="text-gray-400 font-normal">(Optional)</span>
               </label>
               <div className="relative">
@@ -156,14 +156,14 @@ const RegisterPage = () => {
                   value={form.phone}
                   onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })}
                   placeholder="10-digit mobile number"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors"
+                  className="w-full border border-gray-300 dark:border-gray-600 focus:border-green-500 rounded-xl pl-10 pr-4 py-3 outline-none text-sm transition-colors dark:bg-gray-800 dark:text-white"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Password *</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password *</label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -172,12 +172,12 @@ const RegisterPage = () => {
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}
                   placeholder="Min. 6 characters"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl pl-10 pr-11 py-3 outline-none text-sm transition-colors"
+                  className="w-full border border-gray-300 dark:border-gray-600 focus:border-green-500 rounded-xl pl-10 pr-11 py-3 outline-none text-sm transition-colors dark:bg-gray-800 dark:text-white"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -185,7 +185,7 @@ const RegisterPage = () => {
               {/* Strength bar */}
               {pwStrength && (
                 <div className="mt-2">
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ${pwStrength.color}`}
                       style={{ width: pwStrength.width }}
@@ -204,7 +204,7 @@ const RegisterPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Confirm Password *</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm Password *</label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -213,18 +213,18 @@ const RegisterPage = () => {
                   value={form.confirm}
                   onChange={e => setForm({ ...form, confirm: e.target.value })}
                   placeholder="Repeat your password"
-                  className={`w-full border rounded-xl pl-10 pr-11 py-3 outline-none text-sm transition-colors ${
+                  className={`w-full border rounded-xl pl-10 pr-11 py-3 outline-none text-sm transition-colors dark:bg-gray-800 dark:text-white ${
                     form.confirm && form.confirm !== form.password
                       ? 'border-red-400 focus:border-red-500'
                       : form.confirm && form.confirm === form.password
                       ? 'border-green-400 focus:border-green-500'
-                      : 'border-gray-300 focus:border-green-500'
+                      : 'border-gray-300 dark:border-gray-600 focus:border-green-500'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -260,14 +260,14 @@ const RegisterPage = () => {
 
           {/* Or divider + Google */}
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400">or sign up with</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+            <span className="text-xs text-gray-400 dark:text-gray-400">or sign up with</span>
+            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
           </div>
 
           <button
             type="button"
-            className="w-full border border-gray-200 hover:bg-gray-50 rounded-xl py-3 text-sm font-semibold text-gray-700 flex items-center justify-center gap-3 transition-colors mb-5"
+            className="w-full border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center justify-center gap-3 transition-colors mb-5"
             onClick={() => navigate('/login')}
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
@@ -282,27 +282,27 @@ const RegisterPage = () => {
           {/* Benefits mini grid */}
           <div className="grid grid-cols-4 gap-2 mb-5">
             {benefits.map(b => (
-              <div key={b.label} className="flex flex-col items-center gap-1.5 bg-gray-50 rounded-xl p-2.5">
+              <div key={b.label} className="flex flex-col items-center gap-1.5 bg-gray-50 dark:bg-gray-800 rounded-xl p-2.5">
                 <span className="text-xl">{b.icon}</span>
-                <span className="text-xs font-semibold text-gray-600 text-center leading-tight">{b.label}</span>
+                <span className="text-xs font-semibold text-gray-600 dark:text-gray-300 text-center leading-tight">{b.label}</span>
               </div>
             ))}
           </div>
 
           {/* Sign in link */}
-          <p className="text-center text-sm text-gray-500 mb-4">
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mb-4">
             Already have an account?{' '}
             <Link to="/login" className="text-green-600 font-semibold hover:underline">Sign in</Link>
           </p>
 
           {/* Footer */}
-          <p className="text-center text-xs text-gray-400 leading-relaxed">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-400 leading-relaxed">
             By creating an account, you agree to our{' '}
-            <Link to="/terms" className="underline hover:text-gray-600">Terms of Service</Link>{' '}
+            <Link to="/terms" className="underline hover:text-gray-600 dark:hover:text-gray-300">Terms of Service</Link>{' '}
             and{' '}
-            <Link to="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>
+            <Link to="/privacy" className="underline hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</Link>
           </p>
-          <p className="text-center text-xs text-gray-400 mt-1">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-400 mt-1">
             Need help? Contact{' '}
             <a href="mailto:info@hypergreen360.com" className="text-green-600 hover:underline">
               info@hypergreen360.com

@@ -76,8 +76,8 @@ function initGoogleId(clientId: string, callback: (res: GoogleCredentialResponse
 
 const features = [
   { icon: <Zap      className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Instant Booking', color: 'text-yellow-500' },
-  { icon: <Lock     className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Secure Payment',  color: 'text-gray-700'   },
-  { icon: <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Flexible Slots',  color: 'text-gray-700'   },
+  { icon: <Lock     className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Secure Payment',  color: 'text-gray-700 dark:text-gray-300'   },
+  { icon: <Calendar className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Flexible Slots',  color: 'text-gray-700 dark:text-gray-300'   },
   { icon: <Trophy   className="w-5 h-5 sm:w-6 sm:h-6" />, label: 'Premium Turf',    color: 'text-yellow-500' },
 ];
 
@@ -209,7 +209,7 @@ const LoginPage = () => {
       <div
         ref={modalRef}
         className="
-          relative bg-white z-10 w-full
+          relative bg-white dark:bg-gray-900 z-10 w-full
           rounded-t-3xl sm:rounded-3xl
           shadow-2xl
           max-h-[92dvh] sm:max-h-[90vh]
@@ -220,15 +220,15 @@ const LoginPage = () => {
       >
         {/* Drag handle — mobile only */}
         <div className="flex justify-center pt-3 pb-1 sm:hidden">
-          <div className="w-10 h-1 rounded-full bg-gray-300" />
+          <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
         </div>
 
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors z-10"
         >
-          <X className="w-5 h-5 text-gray-600" />
+          <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
         </button>
 
         <div className="px-5 pt-3 pb-8 sm:px-8 sm:pt-6 sm:pb-8">
@@ -241,10 +241,10 @@ const LoginPage = () => {
             />
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white text-center mb-1">
             Welcome to HyperGreen 360
           </h2>
-          <p className="text-gray-500 text-center text-sm mb-4">
+          <p className="text-gray-500 dark:text-gray-400 text-center text-sm mb-4">
             {GOOGLE_CLIENT_ID
               ? 'Sign in with Google to book your turf'
               : 'Sign in to book your turf'}
@@ -252,7 +252,7 @@ const LoginPage = () => {
 
           {/* Error banner */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4 flex items-start gap-2">
+            <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl px-4 py-3 text-sm mb-4 flex items-start gap-2">
               <span className="shrink-0 mt-0.5">⚠️</span>
               <span>{error}</span>
             </div>
@@ -261,16 +261,16 @@ const LoginPage = () => {
           {!showEmailForm ? (
             <>
               {/* Google sign-in section */}
-              <div className="border border-gray-200 rounded-2xl p-4 sm:p-5 mb-4 bg-gray-50">
+              <div className="border border-gray-200 dark:border-gray-700 rounded-2xl p-4 sm:p-5 mb-4 bg-gray-50 dark:bg-gray-950">
                 <p className="text-xs font-bold text-green-600 text-center mb-2 flex items-center justify-center gap-1.5">
                   <span className="text-base">✨</span> Quick & Secure Sign In
                 </p>
-                <p className="text-sm text-gray-600 text-center mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-300 text-center mb-4">
                   Use your Google account to access all features
                 </p>
 
                 {loading ? (
-                  <div className="w-full flex items-center justify-center py-3 gap-2 text-gray-600 text-sm font-semibold">
+                  <div className="w-full flex items-center justify-center py-3 gap-2 text-gray-600 dark:text-gray-300 text-sm font-semibold">
                     <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
@@ -308,10 +308,10 @@ const LoginPage = () => {
                 {features.map(f => (
                   <div
                     key={f.label}
-                    className="border border-gray-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-1.5 bg-gray-50"
+                    className="border border-gray-100 dark:border-gray-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col items-center gap-1.5 bg-gray-50 dark:bg-gray-950"
                   >
                     <span className={f.color}>{f.icon}</span>
-                    <span className="text-xs sm:text-sm font-semibold text-gray-700 text-center leading-tight">
+                    <span className="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 text-center leading-tight">
                       {f.label}
                     </span>
                   </div>
@@ -320,13 +320,13 @@ const LoginPage = () => {
 
               {/* Divider + email fallback */}
               <div className="flex items-center gap-3 mb-3">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400">or</span>
-                <div className="flex-1 h-px bg-gray-200" />
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                <span className="text-xs text-gray-400 dark:text-gray-500">or</span>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
               </div>
               <button
                 onClick={() => { setShowEmailForm(true); setError(''); }}
-                className="w-full border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl py-3 text-sm font-semibold transition-colors mb-4"
+                className="w-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl py-3 text-sm font-semibold transition-colors mb-4"
               >
                 Sign in with Email & Password
               </button>
@@ -345,23 +345,23 @@ const LoginPage = () => {
 
               <form onSubmit={handleEmailLogin} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Email</label>
                   <input
                     type="email" required
                     value={form.email}
                     onChange={e => setForm({ ...form, email: e.target.value })}
                     placeholder="you@example.com"
-                    className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm"
+                    className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Password</label>
                   <input
                     type="password" required
                     value={form.password}
                     onChange={e => setForm({ ...form, password: e.target.value })}
                     placeholder="Enter password"
-                    className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm"
+                    className="w-full border-2 border-gray-200 focus:border-green-500 rounded-xl px-4 py-3 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600"
                   />
                 </div>
                 <button
@@ -380,7 +380,7 @@ const LoginPage = () => {
                 </button>
               </form>
 
-              <p className="text-center text-sm text-gray-500 mt-4">
+              <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-green-600 font-semibold hover:underline">
                   Register
@@ -390,13 +390,13 @@ const LoginPage = () => {
           )}
 
           {/* Footer */}
-          <p className="text-center text-xs text-gray-400 leading-relaxed">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
             By signing in, you agree to our{' '}
-            <Link to="/terms" className="underline hover:text-gray-600">Terms of Service</Link>{' '}
+            <Link to="/terms" className="underline hover:text-gray-600 dark:hover:text-gray-300">Terms of Service</Link>{' '}
             and{' '}
-            <Link to="/privacy" className="underline hover:text-gray-600">Privacy Policy</Link>
+            <Link to="/privacy" className="underline hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</Link>
           </p>
-          <p className="text-center text-xs text-gray-400 mt-1">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-1">
             Need help?{' '}
             <a href="mailto:info@hypergreen360.com" className="text-green-600 hover:underline">
               info@hypergreen360.com

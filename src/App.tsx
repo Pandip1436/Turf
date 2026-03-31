@@ -1,6 +1,7 @@
 // import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -17,6 +18,7 @@ import AdminApp from './admin/AdminApp';
 
 function App() {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
@@ -45,8 +47,8 @@ function App() {
                   <Route path="*" element={
                     <div className="min-h-screen flex flex-col items-center justify-center pt-24 text-center">
                       <div className="text-6xl mb-4">🏟️</div>
-                      <h2 className="font-display text-4xl tracking-wider text-gray-900 mb-2">PAGE NOT FOUND</h2>
-                      <p className="text-gray-500 mb-6">The page you're looking for doesn't exist.</p>
+                      <h2 className="font-display text-4xl tracking-wider text-gray-900 dark:text-white mb-2">PAGE NOT FOUND</h2>
+                      <p className="text-gray-500 dark:text-gray-400 mb-6">The page you're looking for doesn't exist.</p>
                       <a href="/" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Go Home</a>
                     </div>
                   } />
@@ -58,6 +60,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

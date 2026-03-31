@@ -114,15 +114,15 @@ const RegisterModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-3xl z-10">
+        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-3xl z-10">
           <div>
-            <h2 className="font-bold text-xl text-gray-900">Register Your Team</h2>
-            <p className="text-sm text-gray-500">{tournament.title}</p>
+            <h2 className="font-bold text-xl text-gray-900 dark:text-white">Register Your Team</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{tournament.title}</p>
           </div>
-          <button onClick={onClose} className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-            <X className="w-5 h-5 text-gray-600" />
+          <button onClick={onClose} className="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition-colors">
+            <X className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </button>
         </div>
 
@@ -140,34 +140,34 @@ const RegisterModal = ({
 
           {/* Team info */}
           <div className="space-y-4">
-            <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">Team Information</h3>
+            <h3 className="font-bold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">Team Information</h3>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">Team Name *</label>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Team Name *</label>
               <input value={teamName} onChange={e => setTeamName(e.target.value)} placeholder="e.g. Sivakasi Warriors"
-                className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+                className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600" />
             </div>
           </div>
 
           {/* Captain info */}
           <div className="space-y-4">
-            <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">Captain Details</h3>
+            <h3 className="font-bold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">Captain Details</h3>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Captain Name *</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Captain Name *</label>
                 <input value={captainName} onChange={e => setCaptainName(e.target.value)} placeholder="Full name"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600" />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone (10 digits) *</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Phone (10 digits) *</label>
                 <input type="tel" maxLength={10} value={captainPhone}
                   onChange={e => setCaptainPhone(e.target.value.replace(/\D/g, ''))}
                   placeholder="8056564775"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600" />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email *</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Email *</label>
                 <input type="email" value={captainEmail} onChange={e => setCaptainEmail(e.target.value)} placeholder="captain@email.com"
-                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm" />
+                  className="w-full border border-gray-300 focus:border-green-500 rounded-xl px-4 py-2.5 outline-none text-sm dark:bg-gray-800 dark:text-white dark:border-gray-600" />
               </div>
             </div>
           </div>
@@ -175,7 +175,7 @@ const RegisterModal = ({
           {/* Players */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-gray-800 text-sm uppercase tracking-wide">
+              <h3 className="font-bold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">
                 Players ({players.length}/{tournament.maxPlayers})
               </h3>
               {players.length < tournament.maxPlayers && (
@@ -187,9 +187,9 @@ const RegisterModal = ({
             </div>
             <div className="space-y-3">
               {players.map((p, i) => (
-                <div key={i} className="bg-gray-50 rounded-xl p-3 space-y-2">
+                <div key={i} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 space-y-2">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-gray-500 uppercase">Player {i + 1}</span>
+                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Player {i + 1}</span>
                     {players.length > tournament.minPlayers && (
                       <button onClick={() => removePlayer(i)} className="text-red-400 hover:text-red-600 transition-colors">
                         <Trash2 className="w-4 h-4" />
@@ -200,17 +200,17 @@ const RegisterModal = ({
                     <div className="col-span-3 sm:col-span-1">
                       <input value={p.name} onChange={e => updatePlayer(i, 'name', e.target.value)}
                         placeholder="Name *"
-                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white" />
+                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" />
                     </div>
                     <div>
                       <input value={p.age} onChange={e => updatePlayer(i, 'age', e.target.value)}
                         type="number" min={5} max={80} placeholder="Age"
-                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white" />
+                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" />
                     </div>
                     <div>
                       <input value={p.position} onChange={e => updatePlayer(i, 'position', e.target.value)}
                         placeholder="Position"
-                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white" />
+                        className="w-full border border-gray-200 focus:border-green-400 rounded-lg px-3 py-2 text-sm outline-none bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" />
                     </div>
                   </div>
                 </div>
@@ -240,12 +240,12 @@ const RegisterModal = ({
 // ── Success modal ─────────────────────────────────────────────────────────────
 const SuccessModal = ({ reg, onClose }: { reg: Registration; onClose: () => void }) => (
   <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-    <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
       <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
         <CheckCircle className="w-10 h-10 text-green-500" />
       </div>
-      <h2 className="font-display text-3xl tracking-wider text-gray-900 mb-2">REGISTERED!</h2>
-      <p className="text-gray-500 text-sm mb-6">Your team has been successfully registered.</p>
+      <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">REGISTERED!</h2>
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Your team has been successfully registered.</p>
       <div className="bg-green-50 border border-green-200 rounded-2xl p-4 text-left space-y-2 mb-6 text-sm">
         <div className="flex justify-between"><span className="text-gray-500">Tournament</span><span className="font-semibold text-right max-w-[55%]">{reg.tournament}</span></div>
         <div className="flex justify-between"><span className="text-gray-500">Team</span><span className="font-bold text-green-700">{reg.teamName}</span></div>
@@ -279,9 +279,9 @@ const TournamentCard = ({
   const pct   = Math.round((t.registeredTeams / t.maxTeams) * 100);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all group">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden hover:shadow-xl transition-all group">
       {/* Banner */}
-      <div className="relative h-44 bg-gray-100 overflow-hidden">
+      <div className="relative h-44 bg-gray-100 dark:bg-gray-800 overflow-hidden">
         <img src={t.banner} alt={t.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
@@ -303,33 +303,33 @@ const TournamentCard = ({
       {/* Body */}
       <div className="p-5">
         <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <Calendar className="w-4 h-4 text-green-500 shrink-0" />
             <span className="truncate">{fmtDate(t.date)}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <Clock className="w-4 h-4 text-green-500 shrink-0" />
             <span>{t.time}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <MapPin className="w-4 h-4 text-green-500 shrink-0" />
             <span className="truncate">{t.turfName}</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
             <Trophy className="w-4 h-4 text-yellow-500 shrink-0" />
-            <span className="truncate font-semibold text-gray-800">{t.prize}</span>
+            <span className="truncate font-semibold text-gray-800 dark:text-gray-200">{t.prize}</span>
           </div>
         </div>
 
         {/* Teams fill bar */}
         <div className="mb-4">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
             <span className="flex items-center gap-1"><Users className="w-3 h-3" />{t.registeredTeams}/{t.maxTeams} teams</span>
             <span className={full ? 'text-red-500 font-bold' : 'text-green-600 font-semibold'}>
               {full ? 'Full' : `${t.spotsLeft} spots left`}
             </span>
           </div>
-          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
             <div className={`h-full rounded-full transition-all ${full ? 'bg-red-400' : pct > 70 ? 'bg-yellow-400' : 'bg-green-500'}`}
               style={{ width: `${pct}%` }} />
           </div>
@@ -337,21 +337,21 @@ const TournamentCard = ({
 
         <div className="flex items-center justify-between mb-4">
           <div>
-            <span className="text-xs text-gray-400">Entry fee</span>
-            <div className="font-bold text-gray-900 text-lg">
+            <span className="text-xs text-gray-400 dark:text-gray-500">Entry fee</span>
+            <div className="font-bold text-gray-900 dark:text-white text-lg">
               {t.entryFee === 0 ? <span className="text-green-600">FREE</span> : `₹${t.entryFee}`}
-              {t.entryFee > 0 && <span className="text-xs text-gray-400 font-normal ml-1">/team</span>}
+              {t.entryFee > 0 && <span className="text-xs text-gray-400 dark:text-gray-500 font-normal ml-1">/team</span>}
             </div>
           </div>
           <div className="text-right">
-            <span className="text-xs text-gray-400">Players</span>
-            <div className="text-sm font-semibold text-gray-700">{t.minPlayers}–{t.maxPlayers} per team</div>
+            <span className="text-xs text-gray-400 dark:text-gray-500">Players</span>
+            <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">{t.minPlayers}–{t.maxPlayers} per team</div>
           </div>
         </div>
 
         <div className="flex gap-2">
           <button onClick={onView}
-            className="flex-1 border-2 border-gray-200 hover:border-green-400 text-gray-700 rounded-xl py-2.5 font-semibold text-sm transition-colors flex items-center justify-center gap-1">
+            className="flex-1 border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 text-gray-700 dark:text-gray-300 rounded-xl py-2.5 font-semibold text-sm transition-colors flex items-center justify-center gap-1">
             View Details <ChevronRight className="w-4 h-4" />
           </button>
           {t.status === 'upcoming' && !full && (
@@ -362,7 +362,7 @@ const TournamentCard = ({
           )}
           {(full || t.status !== 'upcoming') && (
             <button disabled
-              className="flex-1 bg-gray-100 text-gray-400 rounded-xl py-2.5 font-bold text-sm cursor-not-allowed">
+              className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-xl py-2.5 font-bold text-sm cursor-not-allowed">
               {full ? 'Full' : t.status.charAt(0).toUpperCase() + t.status.slice(1)}
             </button>
           )}
@@ -380,8 +380,8 @@ const DetailDrawer = ({
   return (
     <div className="fixed inset-0 bg-black/60 z-40 mt-10 flex items-end sm:items-center justify-center p-0 sm:p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="relative h-52 bg-gray-100 overflow-hidden rounded-t-3xl">
+      <div className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="relative h-52 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-t-3xl">
           <img src={t.banner} alt={t.title} className="w-full h-full object-cover"
             onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -399,7 +399,7 @@ const DetailDrawer = ({
         </div>
 
         <div className="p-6 space-y-5">
-          <p className="text-gray-600 text-sm leading-relaxed">{t.description}</p>
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{t.description}</p>
 
           {/* Info grid */}
           <div className="grid grid-cols-2 gap-3">
@@ -411,9 +411,9 @@ const DetailDrawer = ({
               { icon: <Users className="w-4 h-4 text-blue-500" />,     label: 'Teams', value: `${t.registeredTeams}/${t.maxTeams} registered` },
               { icon: <Users className="w-4 h-4 text-purple-500" />,   label: 'Squad size', value: `${t.minPlayers}–${t.maxPlayers} players` },
             ].map(({ icon, label, value }) => (
-              <div key={label} className="bg-gray-50 rounded-xl p-3 flex items-start gap-2">
+              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 flex items-start gap-2">
                 <div className="mt-0.5 shrink-0">{icon}</div>
-                <div><div className="text-xs text-gray-400">{label}</div><div className="text-sm font-semibold text-gray-800">{value}</div></div>
+                <div><div className="text-xs text-gray-400 dark:text-gray-500">{label}</div><div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</div></div>
               </div>
             ))}
           </div>
@@ -421,10 +421,10 @@ const DetailDrawer = ({
           {/* Rules */}
           {t.rules.length > 0 && (
             <div>
-              <h3 className="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Rules</h3>
+              <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2 text-sm uppercase tracking-wide">Rules</h3>
               <ul className="space-y-1.5">
                 {t.rules.map((r, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-gray-600">
+                  <li key={i} className="flex gap-2 text-sm text-gray-600 dark:text-gray-300">
                     <span className="w-5 h-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                     {r}
                   </li>
@@ -434,10 +434,10 @@ const DetailDrawer = ({
           )}
 
           {/* Entry */}
-          <div className="border-t pt-4 flex items-center justify-between">
+          <div className="border-t dark:border-gray-700 pt-4 flex items-center justify-between">
             <div>
-              <div className="text-xs text-gray-400">Entry fee per team</div>
-              <div className="text-2xl font-black text-gray-900">
+              <div className="text-xs text-gray-400 dark:text-gray-500">Entry fee per team</div>
+              <div className="text-2xl font-black text-gray-900 dark:text-white">
                 {t.entryFee === 0 ? <span className="text-green-600">FREE</span> : `₹${t.entryFee}`}
               </div>
             </div>
@@ -487,7 +487,7 @@ const TournamentsPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16">
 
       {/* Hero */}
       <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white py-14 px-4 mb-10">
@@ -520,7 +520,7 @@ const TournamentsPage = () => {
             {['all','football','cricket','badminton'].map(s => (
               <button key={s} onClick={() => setFilterSport(s)}
                 className={`px-4 py-2 rounded-xl font-semibold text-sm border-2 transition-all ${
-                  filterSport === s ? 'bg-green-600 border-green-600 text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-green-400'
+                  filterSport === s ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-green-400'
                 }`}>
                 {s === 'all' ? 'All Sports' : `${SPORT_EMOJI[s]} ${s.charAt(0).toUpperCase()+s.slice(1)}`}
               </button>
@@ -530,7 +530,7 @@ const TournamentsPage = () => {
             {['upcoming','ongoing','completed','all'].map(s => (
               <button key={s} onClick={() => setFilterStatus(s)}
                 className={`px-4 py-2 rounded-xl font-semibold text-sm border-2 transition-all ${
-                  filterStatus === s ? 'bg-gray-800 border-gray-800 text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
+                  filterStatus === s ? 'bg-gray-800 border-gray-800 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400'
                 }`}>
                 {s.charAt(0).toUpperCase()+s.slice(1)}
               </button>
