@@ -57,7 +57,6 @@ const BookingCard = ({
   b, onCancel, cancelling,
 }: { b: Booking; onCancel: (id: string) => void; cancelling: string | null }) => {
   const [expanded, setExpanded] = useState(false);
-  const billRef = useRef<HTMLDivElement>(null);
   const status = STATUS_CONFIG[b.status] || STATUS_CONFIG.pending;
   const StatusIcon = status.icon;
   const pricePerSlot = b.totalAmount / (b.timeSlots?.length || 1);
