@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useCallback } from 'react';
-import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar, Lock } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { CheckCircle, ChevronLeft, CreditCard, Lightbulb, Calendar, Lock, Clock, Timer } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
+import ReservationBanner from '../components/ReservationBanner';
 
 declare global { interface Window { Razorpay: new (o: RazorpayOptions) => RazorpayInstance; } }
 interface RazorpayOptions {
@@ -94,6 +95,11 @@ const BookingPage = () => {
   const [payLoading,   setPayLoading]  = useState(false);
   const [bookingError, setBookingError]= useState('');
   const [payError,     setPayError]    = useState('');
+  const [reserved,     setReserved]    = useState(false);
+  const [reserveLoading, setReserveLoading] = useState(false);
+  const [reservedUntil, setReservedUntil]   = useState<Date | null>(null);
+  const [countdown,    setCountdown]   = useState('');
+  const countdownRef = useRef<ReturnType<typeof setInterval>>(null);
 
   // Auto-select sport (and optionally turf) from URL query params
   // e.g. ?sport=football&turf=turf-slug-id
@@ -113,6 +119,34 @@ const BookingPage = () => {
       if (match) { setTurf(match); setStep(2); }
     }
   }, [searchParams, turfs, sport]);
+
+  // Resume a reserved booking from ?resume=bookingId
+  useEffect(() => {
+    const resumeId = searchParams.get('resume');
+    if (!resumeId || bookingId) return;
+    api.get<{ booking: { _id: string; bookingRef: string; sport: string; turfId: string; turfName: string; date: string; timeSlots: string[]; totalAmount: number; status: string; reservedUntil: string; userName: string; userEmail: string; userPhone: string; teamSize?: number } }>(`/bookings/${resumeId}`)
+      .then(res => {
+        const b = res.data.booking;
+        if (!b || b.status !== 'reserved' || new Date(b.reservedUntil).getTime() <= Date.now()) return;
+        // Restore all state
+        const matchSport = SPORTS.find(s => s.id === b.sport);
+        if (matchSport) setSport(matchSport);
+        setDate(b.date);
+        setSelected(new Set(b.timeSlots));
+        setForm({ name: b.userName || '', email: b.userEmail || '', phone: b.userPhone || '', teamSize: b.teamSize?.toString() || '' });
+        setBookingId(b._id);
+        setBookingRef(b.bookingRef);
+        setReserved(true);
+        setReservedUntil(new Date(b.reservedUntil));
+        setStep(4); // Jump to payment
+        // Set turf after turfs load
+        if (b.turfId) {
+          const matchTurf = turfs.find(t => t.id === b.turfId);
+          if (matchTurf) setTurf(matchTurf);
+        }
+      })
+      .catch(() => {});
+  }, [searchParams, turfs]);
 
   // Sync form name/email once user loads (only runs when user object becomes available)
   useEffect(() => {
@@ -156,6 +190,32 @@ const BookingPage = () => {
   useEffect(() => { if (step === 2 && turf) fetchSlots(date, turf.id); }, [date, step, turf]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, confirmed]);
   useEffect(() => { if (step === 4) loadRazorpayScript(); }, [step]);
+
+  // Countdown timer for reservation
+  useEffect(() => {
+    if (!reservedUntil) { setCountdown(''); return; }
+    const tick = () => {
+      const diff = reservedUntil.getTime() - Date.now();
+      if (diff <= 0) {
+        setCountdown('00:00');
+        setReserved(false);
+        setReservedUntil(null);
+        setBookingId('');
+        setBookingRef('');
+        setBookingError('Reservation expired. Slots released. Please try again.');
+        if (countdownRef.current) clearInterval(countdownRef.current);
+        if (turf) fetchSlots(date, turf.id);
+        return;
+      }
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setCountdown(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
+    };
+    tick();
+    countdownRef.current = setInterval(tick, 1000);
+    return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
+  }, [reservedUntil]);
+
   // ══════════════════════════════════════════════════════════════════════════
   // END OF HOOKS — safe to return early from here onwards
   // ══════════════════════════════════════════════════════════════════════════
@@ -300,11 +360,47 @@ const BookingPage = () => {
     } finally { setLoading(false); }
   };
 
+  const handleReserve = async () => {
+    setBookingError(''); setReserveLoading(true);
+    try {
+      const res = await api.post<{
+        success: boolean; booking: { _id: string; bookingRef: string }; reservedUntil: string; message: string;
+      }>('/bookings/reserve', {
+        userName:  form.name,
+        userEmail: form.email,
+        userPhone: form.phone,
+        teamSize:  form.teamSize ? parseInt(form.teamSize) : undefined,
+        sport:     sport?.id ?? 'football',
+        turfId:    turf?.id ?? null,
+        turfName:  turf?.name ?? null,
+        date,
+        timeSlots: Array.from(selected),
+      });
+      if (res.data.success) {
+        setBookingId(res.data.booking._id);
+        setBookingRef(res.data.booking.bookingRef);
+        setReserved(true);
+        setReservedUntil(new Date(res.data.reservedUntil));
+      } else {
+        setBookingError(res.data.message || 'Failed to reserve.');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string; takenSlots?: string[] } } };
+      setBookingError(e.response?.data?.message || 'Failed to reserve. Please try again.');
+      if (e.response?.data?.takenSlots) {
+        setSelected(new Set());
+        if (turf) fetchSlots(date, turf.id);
+        setStep(2);
+      }
+    } finally { setReserveLoading(false); }
+  };
+
   const resetAll = () => {
     setConfirmed(false); setStep(0); setSport(null); setTurf(null);
     setSelected(new Set()); setSlots([]);
     setForm({ name: user?.name||'', email: user?.email||'', phone: '', teamSize: '' });
     setBookingError(''); setPayError(''); setBookingId(''); setBookingRef('');
+    setReserved(false); setReservedUntil(null);
   };
 
   // ── CONFIRMED ─────────────────────────────────────────────────────────────
@@ -373,6 +469,11 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-20 pb-16">
       <StepBar />
+      {step < 4 && (
+        <div className="max-w-5xl mx-auto px-4 pt-4">
+          <ReservationBanner />
+        </div>
+      )}
       <div className="max-w-5xl mx-auto px-4 pt-6">
 
         {/* ══ STEP 0: Sport ══ */}
@@ -624,21 +725,75 @@ const BookingPage = () => {
               </div>
               {bookingError && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4">⚠️ {bookingError}</div>}
               {payError     && <div className="bg-orange-50 border border-orange-200 text-orange-700 rounded-xl px-4 py-3 text-sm mb-4"><strong>Payment:</strong> {payError}</div>}
-              <button onClick={handlePay} disabled={loading||payLoading}
-                className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:opacity-90 text-white rounded-xl py-4 font-bold text-lg disabled:opacity-70 flex items-center justify-center gap-3 mb-3">
-                {loading||payLoading
-                  ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>{payLoading?'Verifying...':'Opening Razorpay...'}</>
-                  : <><CreditCard className="w-5 h-5"/> Pay ₹{total} with Razorpay</>}
-              </button>
+
+              {/* Reservation countdown banner */}
+              {reserved && reservedUntil && countdown && (
+                <div className={`rounded-xl p-4 mb-4 flex items-center gap-3 ${
+                  countdown === '00:00' ? 'bg-red-50 border border-red-200' : 'bg-amber-50 border border-amber-200'
+                }`}>
+                  <Timer className={`w-5 h-5 shrink-0 ${countdown === '00:00' ? 'text-red-500' : 'text-amber-600'}`} />
+                  <div className="flex-1">
+                    <p className={`text-sm font-bold ${countdown === '00:00' ? 'text-red-700' : 'text-amber-800'}`}>
+                      {countdown === '00:00' ? 'Reservation expired!' : 'Slots reserved for you'}
+                    </p>
+                    <p className={`text-xs ${countdown === '00:00' ? 'text-red-600' : 'text-amber-700'}`}>
+                      {countdown === '00:00' ? 'Please select slots again and try once more.' : 'Complete payment before the timer runs out.'}
+                    </p>
+                  </div>
+                  {countdown !== '00:00' && (
+                    <div className="text-right shrink-0">
+                      <div className="font-mono font-black text-2xl text-amber-800">{countdown}</div>
+                      <div className="text-[10px] text-amber-600">remaining</div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* ── Two payment options ── */}
+              <div className="space-y-3 mb-4">
+                {/* Option 1: Pay Now with Razorpay */}
+                <button onClick={handlePay} disabled={loading||payLoading||(reserved && countdown==='00:00')}
+                  className="w-full btn-primary py-4 text-lg disabled:opacity-70 flex items-center justify-center gap-3">
+                  {loading||payLoading
+                    ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>{payLoading?'Verifying...':'Opening Razorpay...'}</>
+                    : <><CreditCard className="w-5 h-5"/> Pay ₹{total} Now</>}
+                </button>
+
+                {/* Divider */}
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                  <span className="text-xs text-gray-400 dark:text-gray-500 font-semibold">OR</span>
+                  <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+                </div>
+
+                {/* Option 2: Reserve Now (pay later within 30 mins) */}
+                {!reserved ? (
+                  <button onClick={handleReserve} disabled={reserveLoading||(reserved && countdown!=='00:00')}
+                    className="w-full border-2 border-amber-400 dark:border-amber-500 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-xl py-4 font-bold text-lg disabled:opacity-70 flex items-center justify-center gap-3 transition-all">
+                    {reserveLoading
+                      ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Reserving...</>
+                      : <><Clock className="w-5 h-5"/> Reserve Now · Pay Within 30 Mins</>}
+                  </button>
+                ) : countdown !== '00:00' ? (
+                  <div className="border-2 border-green-400 bg-green-50 dark:bg-green-900/20 rounded-xl py-3 px-4 flex items-center justify-center gap-2 text-green-700 dark:text-green-400 font-bold text-sm">
+                    <CheckCircle className="w-4 h-4" /> Slots reserved — complete payment above
+                  </div>
+                ) : null}
+              </div>
+
               <p className="text-center text-xs text-gray-400 dark:text-gray-400 mb-4">🔒 Secured by Razorpay · UPI · Cards · Netbanking · Wallets</p>
               <div className="flex justify-center gap-2 mb-4 opacity-50">
                 {['Visa','Mastercard','UPI','RuPay','PhonePe','GPay'].map(m=>(
                   <span key={m} className="text-xs font-bold bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 px-2 py-1 rounded">{m}</span>
                 ))}
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 mb-4">
-                <strong>Note:</strong> Slot reserved once payment succeeds. Failed payments release the slot automatically.
-              </div>
+
+              {!reserved && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 mb-4">
+                  <strong>Reserve Now:</strong> Hold your slots for 30 minutes while you arrange payment. Auto-cancelled if not paid within the deadline.
+                </div>
+              )}
+
               <button onClick={()=>setStep(3)} className="w-full border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-xl py-3 font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">Back to Details</button>
             </div>
           </div>

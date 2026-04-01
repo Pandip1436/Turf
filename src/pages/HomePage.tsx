@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import ReservationBanner from '../components/ReservationBanner';
 import {
   Zap, Shield, Sun, Moon,  Trophy, ChevronRight, Phone,
   MapPin, Mail, Clock, Navigation,ArrowRight,
@@ -417,6 +418,11 @@ const HomePage = () => {
   return (
     <div>
       <Hero />
+
+      {/* ═══ Reservation Banner ═══ */}
+      <div className="px-4 -mt-6 mb-6 relative z-20">
+        <ReservationBanner />
+      </div>
 
       {/* ═══ Stats ═══ */}
       <section className="relative bg-white dark:bg-gray-950 py-10 sm:py-16 overflow-hidden transition-colors duration-300">

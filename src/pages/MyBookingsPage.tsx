@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import ReservationBanner from '../components/ReservationBanner';
 import {
   Calendar, Clock, CheckCircle, XCircle, AlertCircle, RefreshCw,
-  MapPin, Receipt, ChevronDown, ChevronUp, CreditCard, Tag, Timer, Users,
+  MapPin, Receipt, ChevronDown, ChevronUp, CreditCard, Tag, Timer, Users, Download,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../utils/api';
@@ -56,9 +57,102 @@ const BookingCard = ({
   b, onCancel, cancelling,
 }: { b: Booking; onCancel: (id: string) => void; cancelling: string | null }) => {
   const [expanded, setExpanded] = useState(false);
+  const billRef = useRef<HTMLDivElement>(null);
   const status = STATUS_CONFIG[b.status] || STATUS_CONFIG.pending;
   const StatusIcon = status.icon;
   const pricePerSlot = b.totalAmount / (b.timeSlots?.length || 1);
+
+  const downloadBill = () => {
+    const slots = b.timeSlots || [];
+    const discount = slots.length >= 3 ? '20%' : slots.length === 2 ? '10%' : '';
+    const html = `
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"/>
+<title>Booking Receipt - ${b.bookingRef}</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background:#fff; color:#1a1a1a; padding:40px; max-width:600px; margin:0 auto; }
+  .header { text-align:center; border-bottom:2px dashed #e5e7eb; padding-bottom:20px; margin-bottom:20px; }
+  .header h1 { font-size:22px; letter-spacing:3px; font-weight:800; color:#111; }
+  .header p { font-size:11px; color:#9ca3af; margin-top:4px; }
+  .badge { display:inline-block; background:#f0fdf4; color:#16a34a; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid #bbf7d0; margin-top:10px; }
+  .section { margin-bottom:16px; }
+  .row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; }
+  .row .label { color:#6b7280; }
+  .row .value { font-weight:600; color:#111; text-align:right; max-width:55%; }
+  .divider { border-top:1px dashed #e5e7eb; margin:12px 0; }
+  .divider-bold { border-top:2px solid #111; margin:12px 0; }
+  .slot { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; }
+  .slot-num { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; background:#f0fdf4; color:#16a34a; border-radius:4px; font-size:10px; font-weight:700; margin-right:8px; }
+  .discount { color:#16a34a; font-size:12px; display:flex; justify-content:space-between; padding:4px 0; }
+  .total { display:flex; justify-content:space-between; align-items:center; padding:10px 0; }
+  .total .label { font-size:15px; font-weight:700; }
+  .total .amount { font-size:24px; font-weight:900; }
+  .footer { text-align:center; border-top:2px dashed #e5e7eb; padding-top:16px; margin-top:16px; }
+  .footer p { font-size:10px; color:#9ca3af; }
+  .footer .thanks { font-size:12px; color:#6b7280; margin-bottom:4px; }
+  @media print { body { padding:20px; } }
+</style>
+</head><body>
+<div class="header">
+  <h1>HYPERGREEN 360 TURF</h1>
+  <p>Housing Board, Sivakasi – 626 123, Tamil Nadu</p>
+  <p>Phone: +91 80565 64775</p>
+  <div class="badge">${b.status.toUpperCase()}</div>
+</div>
+
+<div class="section">
+  <div class="row"><span class="label">Booking Ref</span><span class="value" style="font-family:monospace">${b.bookingRef}</span></div>
+  <div class="row"><span class="label">Date</span><span class="value">${fmtDateLong(b.date)}</span></div>
+  <div class="row"><span class="label">Turf</span><span class="value">${b.turfName}</span></div>
+  <div class="row"><span class="label">Sport</span><span class="value">${b.sport?.charAt(0).toUpperCase() + b.sport?.slice(1)}</span></div>
+  <div class="row"><span class="label">Duration</span><span class="value">${b.duration} hour${b.duration > 1 ? 's' : ''}</span></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  ${slots.map((s, i) => `<div class="slot"><span><span class="slot-num">${i + 1}</span>${s}</span><span style="font-weight:600">₹${Math.round(pricePerSlot)}</span></div>`).join('')}
+</div>
+
+${discount ? `<div class="discount"><span>Multi-slot discount (${discount})</span><span style="font-weight:600">Applied</span></div>` : ''}
+
+<div class="divider-bold"></div>
+
+<div class="total">
+  <span class="label">Total Paid</span>
+  <span class="amount">₹${b.totalAmount}</span>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="row"><span class="label">Payment Method</span><span class="value">Razorpay</span></div>
+  <div class="row"><span class="label">Payment Status</span><span class="value" style="color:${b.paymentStatus === 'paid' ? '#16a34a' : '#ef4444'}">${b.paymentStatus?.toUpperCase()}</span></div>
+</div>
+
+<div class="footer">
+  <p class="thanks">Thank you for booking with HyperGreen 360!</p>
+  <p>Generated on ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+</div>
+</body></html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(html);
+      printWindow.document.close();
+      setTimeout(() => { printWindow.print(); }, 300);
+    } else {
+      // Fallback: download as HTML file
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `HG360-Receipt-${b.bookingRef}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -140,16 +234,25 @@ const BookingCard = ({
           </div>
         )}
 
-        {/* ── Expand for bill ── */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center justify-between w-full text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors py-2 border-t dark:border-gray-800"
-        >
-          <span className="flex items-center gap-2">
-            <Receipt className="w-4 h-4" /> Booking Summary
-          </span>
-          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
+        {/* ── Expand for bill + Download ── */}
+        <div className="flex items-center gap-2 border-t dark:border-gray-800 pt-1">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center justify-between flex-1 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors py-2"
+          >
+            <span className="flex items-center gap-2">
+              <Receipt className="w-4 h-4" /> Booking Summary
+            </span>
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={downloadBill}
+            className="flex items-center gap-1.5 text-xs font-semibold text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 px-3 py-1.5 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors shrink-0"
+            title="Download Receipt"
+          >
+            <Download className="w-3.5 h-3.5" /> Download
+          </button>
+        </div>
 
         {/* ── Bill breakdown ── */}
         {expanded && (
@@ -322,6 +425,11 @@ const MyBookingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-24 pb-16">
       <div className="max-w-3xl mx-auto px-4">
+
+        {/* ── Reservation Banner ── */}
+        <div className="mb-6">
+          <ReservationBanner />
+        </div>
 
         {/* ── Header ── */}
         <div className="flex items-center justify-between mb-8">
