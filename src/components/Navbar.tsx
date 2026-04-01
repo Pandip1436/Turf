@@ -163,7 +163,7 @@ const Navbar = () => {
                 Sign In
               </Link>
             )}
-            <Link to="/booking" className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 px-6 py-2 rounded-lg text-sm font-semibold transition-colors">
+            <Link to="/booking" className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-colors">
               Book Now
             </Link>
           </div>
