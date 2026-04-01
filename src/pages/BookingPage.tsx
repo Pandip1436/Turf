@@ -182,7 +182,7 @@ const BookingPage = () => {
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">You need to be signed in to book a slot.</p>
           <div className="space-y-3">
             <button onClick={() => navigate('/login')}
-              className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3.5 font-bold transition-colors">
+              className="w-full btn-primary rounded-xl py-3.5 font-bold transition-colors">
               Sign In to Book
             </button>
             <Link to="/register"
@@ -333,7 +333,7 @@ const BookingPage = () => {
           </div>
           <p className="text-sm text-gray-400 dark:text-gray-400 mb-6">Confirmation sent to <strong>{form.email}</strong></p>
           <div className="flex gap-3 justify-center">
-            <button onClick={resetAll} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-colors">Book Another</button>
+            <button onClick={resetAll} className="btn-primary px-6 py-3 rounded-xl font-bold transition-colors">Book Another</button>
             <button onClick={() => navigate('/my-bookings')} className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-bold transition-colors">My Bookings</button>
           </div>
         </div>

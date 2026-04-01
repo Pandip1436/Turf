@@ -282,7 +282,7 @@ function Hero() {
           {/* CTA buttons — stacked on mobile, row on sm+ */}
           <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.5 }}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/booking" className="group relative bg-green-500 hover:bg-green-600 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg overflow-hidden flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all duration-300">
+              <Link to="/booking" className="group relative btn-primary-lg px-7 sm:px-9 py-3.5 sm:py-4 text-base sm:text-lg overflow-hidden flex items-center justify-center gap-2">
                 <span className="relative z-10">Book a Turf</span>
                 <motion.span className="relative z-10" animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
                   <ChevronRight className="w-5 h-5" />
@@ -290,7 +290,7 @@ function Hero() {
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/tournaments" className="border border-white/20 hover:border-white/50 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
+              <Link to="/tournaments" className="btn-outline px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl text-base sm:text-lg flex items-center justify-center gap-2">
                 <Trophy className="w-5 h-5" /> View Tournaments
               </Link>
             </motion.div>
@@ -358,7 +358,7 @@ function Hero() {
               </div>
 
               <Link to="/booking"
-                className="mt-4 block text-center bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+                className="mt-4 block text-center btn-primary py-3 text-sm shadow-md hover:shadow-lg"
               >
                 <span className="flex items-center justify-center gap-2">
                   Book Now <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>→</motion.span>
@@ -558,7 +558,7 @@ const HomePage = () => {
                         </div>
 
                         <Link to={`/booking?sport=${turf.sport}&turf=${turf.turfId}`}
-                          className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-2.5 font-bold text-sm transition-all duration-300"
+                          className="flex items-center justify-center gap-2 w-full btn-primary py-2.5 text-sm"
                         >
                           Book This Turf <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -641,7 +641,7 @@ const HomePage = () => {
                       </div>
 
                       <Link to="/tournaments"
-                        className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-2 font-bold text-sm transition-all duration-300"
+                        className="flex items-center justify-center gap-2 w-full btn-primary py-2 text-sm"
                       >
                         Register <ArrowRight className="w-4 h-4" />
                       </Link>
@@ -883,12 +883,12 @@ const HomePage = () => {
           <Reveal delay={0.2}>
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/booking" className="bg-green-500 hover:bg-green-600 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
+                <Link to="/booking" className="btn-primary-lg px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2">
                   Book a Turf <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ChevronRight className="w-5 h-5" /></motion.span>
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/tournaments" className="border-2 border-white/30 hover:border-white/60 hover:bg-white/10 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
+                <Link to="/tournaments" className="btn-outline px-8 sm:px-10 py-3.5 sm:py-4 text-base sm:text-lg flex items-center justify-center gap-2">
                   <Trophy className="w-5 h-5" /> Tournaments
                 </Link>
               </motion.div>

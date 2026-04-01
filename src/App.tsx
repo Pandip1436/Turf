@@ -49,7 +49,7 @@ function App() {
                       <div className="text-6xl mb-4">🏟️</div>
                       <h2 className="font-display text-4xl tracking-wider text-gray-900 dark:text-white mb-2">PAGE NOT FOUND</h2>
                       <p className="text-gray-500 dark:text-gray-400 mb-6">The page you're looking for doesn't exist.</p>
-                      <a href="/" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">Go Home</a>
+                      <a href="/" className="btn-primary px-8 py-3 rounded-xl font-bold">Go Home</a>
                     </div>
                   } />
                 </Routes>

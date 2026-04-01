@@ -295,7 +295,7 @@ const LoginPage = () => {
                     </p>
                     <button
                       onClick={() => setShowEmailForm(true)}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold text-sm transition-colors"
+                      className="w-full btn-primary rounded-xl py-3 font-bold text-sm transition-colors"
                     >
                       Continue with Email
                     </button>
@@ -366,7 +366,7 @@ const LoginPage = () => {
                 </div>
                 <button
                   type="submit" disabled={loading}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+                  className="w-full btn-primary rounded-xl py-3 font-bold transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <>
