@@ -99,6 +99,7 @@ const BookingPage = () => {
   const [reserveLoading, setReserveLoading] = useState(false);
   const [reservedUntil, setReservedUntil]   = useState<Date | null>(null);
   const [countdown,    setCountdown]   = useState('');
+  const [resumeTotal,  setResumeTotal] = useState(0);
   const countdownRef = useRef<ReturnType<typeof setInterval>>(null);
 
   // Auto-select sport (and optionally turf) from URL query params
@@ -138,6 +139,7 @@ const BookingPage = () => {
         setBookingRef(b.bookingRef);
         setReserved(true);
         setReservedUntil(new Date(b.reservedUntil));
+        setResumeTotal(b.totalAmount);
         setStep(4); // Jump to payment
         // Set turf after turfs load
         if (b.turfId) {
@@ -260,7 +262,8 @@ const BookingPage = () => {
 
   // ── Derived values (authenticated only) ────────────────────────────────────
   const pills = getDatePills();
-  const total = calcTotal(slots, selected);
+  const calcedTotal = calcTotal(slots, selected);
+  const total = calcedTotal > 0 ? calcedTotal : resumeTotal;
   const filteredTurfs = sport ? turfs.filter((t: TurfInfo) => t.sport === sport.id) : [];
 
   const toggleSlot = (slot: SlotInfo) => {
@@ -400,7 +403,7 @@ const BookingPage = () => {
     setSelected(new Set()); setSlots([]);
     setForm({ name: user?.name||'', email: user?.email||'', phone: '', teamSize: '' });
     setBookingError(''); setPayError(''); setBookingId(''); setBookingRef('');
-    setReserved(false); setReservedUntil(null);
+    setReserved(false); setReservedUntil(null); setResumeTotal(0);
   };
 
   // ── CONFIRMED ─────────────────────────────────────────────────────────────

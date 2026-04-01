@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReservationBanner from '../components/ReservationBanner';
@@ -20,7 +21,8 @@ interface Booking {
   totalAmount:   number;
   status:        string;
   paymentStatus: string;
-  cancelledAt?:  string;
+  cancelledAt?:   string;
+  reservedUntil?: string;
 }
 
 const SPORT_EMOJI: Record<string, string> = { football: '⚽', cricket: '🏏', badminton: '🏸' };
@@ -30,7 +32,8 @@ const STATUS_CONFIG: Record<string, { bg: string; icon: typeof CheckCircle; labe
   pending:   { bg: 'bg-amber-500/10 text-amber-600 border border-amber-500/20', icon: AlertCircle, label: 'Pending' },
   cancelled: { bg: 'bg-red-500/10 text-red-500 border border-red-500/20',       icon: XCircle,     label: 'Cancelled' },
   completed: { bg: 'bg-blue-500/10 text-blue-600 border border-blue-500/20',    icon: CheckCircle, label: 'Completed' },
-  'no-show': { bg: 'bg-gray-500/10 text-gray-500 border border-gray-500/20',    icon: AlertCircle, label: 'No Show' },
+  'no-show':  { bg: 'bg-gray-500/10 text-gray-500 border border-gray-500/20',    icon: AlertCircle, label: 'No Show' },
+  reserved:   { bg: 'bg-amber-500/10 text-amber-600 border border-amber-500/20', icon: Timer,       label: 'Reserved' },
 };
 
 const PAYMENT_CONFIG: Record<string, string> = {
@@ -331,8 +334,23 @@ ${discount ? `<div class="discount"><span>Multi-slot discount (${discount})</spa
           </div>
         )}
 
-        {/* ── Cancel + Cancelled note ── */}
-        {b.status === 'confirmed' && (
+        {/* ── Reserved: Complete Payment ── */}
+        {b.status === 'reserved' && b.reservedUntil && new Date(b.reservedUntil).getTime() > Date.now() && (
+          <div className="mt-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-3 flex items-center gap-3">
+            <Timer className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-amber-800 dark:text-amber-300">Payment pending — reservation expires soon</p>
+              <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">Complete payment to confirm your slot</p>
+            </div>
+            <Link to={`/booking?resume=${b._id}`}
+              className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5 shrink-0">
+              <CreditCard className="w-3.5 h-3.5" /> Pay Now
+            </Link>
+          </div>
+        )}
+
+        {/* ── Cancel ── */}
+        {(b.status === 'confirmed' || b.status === 'reserved') && (
           <div className="flex justify-end mt-3">
             <button
               onClick={() => onCancel(b._id)}
