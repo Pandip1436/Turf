@@ -403,7 +403,6 @@ function Hero() {
 const HomePage = () => {
   const [turfs, setTurfs] = useState<Turf[]>([]);
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
-  const [sportFilter, setSportFilter] = useState<string>('all');
   const [mobileReviewIdx, setMobileReviewIdx] = useState(0);
 
   useEffect(() => {
@@ -414,7 +413,6 @@ const HomePage = () => {
     }).catch(() => {});
   }, []);
 
-  const filteredTurfs = sportFilter === 'all' ? turfs : turfs.filter(t => t.sport === sportFilter);
 
   return (
     <div>
@@ -500,27 +498,9 @@ const HomePage = () => {
               </div>
             </Reveal>
 
-            {/* sport filter */}
-            <Reveal>
-              <div className="flex justify-center gap-3 mb-12 flex-wrap">
-                {['all', 'football', 'cricket', 'badminton'].map(s => (
-                  <motion.button key={s} onClick={() => setSportFilter(s)}
-                    className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
-                      sportFilter === s
-                        ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                    }`}
-                    whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                  >
-                    {s === 'all' ? '🏟️ All Turfs' : `${sportEmoji[s]} ${s.charAt(0).toUpperCase() + s.slice(1)}`}
-                  </motion.button>
-                ))}
-              </div>
-            </Reveal>
-
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <AnimatePresence mode="popLayout">
-                {filteredTurfs.map((turf, i) => (
+                {turfs.map((turf, i) => (
                   <motion.div key={turf._id}
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}

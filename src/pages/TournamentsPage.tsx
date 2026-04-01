@@ -356,7 +356,7 @@ const TournamentCard = ({
           </button>
           {t.status === 'upcoming' && !full && (
             <button onClick={onRegister}
-              className="flex-1 bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 text-white rounded-xl py-2.5 font-bold text-sm transition-all">
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-xl py-2.5 font-bold text-sm transition-all">
               Register
             </button>
           )}
@@ -378,10 +378,10 @@ const DetailDrawer = ({
 }: { t: Tournament; onClose: () => void; onRegister: () => void }) => {
   const full = t.spotsLeft === 0;
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 mt-10 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-end sm:items-center justify-center p-0 sm:p-6 lg:p-8"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="bg-white dark:bg-gray-900 w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="relative h-52 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-t-3xl">
+      <div className="bg-white dark:bg-gray-900 w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="relative h-48 sm:h-64 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-t-3xl">
           <img src={t.banner} alt={t.title} className="w-full h-full object-cover"
             onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -389,20 +389,20 @@ const DetailDrawer = ({
             className="absolute top-4 right-4 w-9 h-9 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors">
             <X className="w-5 h-5 text-white" />
           </button>
-          <div className="absolute bottom-4 left-5 right-5">
+          <div className="absolute bottom-4 sm:bottom-6 left-5 sm:left-8 right-5 sm:right-8">
             <div className={`inline-flex items-center gap-1 border rounded-full px-2.5 py-0.5 text-xs font-bold mb-2 ${SPORT_COLOR[t.sport]}`}>
               {SPORT_EMOJI[t.sport]} {t.sport}
             </div>
-            <h2 className="text-white font-display text-2xl tracking-wider leading-tight">{t.title}</h2>
+            <h2 className="text-white font-display text-2xl sm:text-3xl tracking-wider leading-tight">{t.title}</h2>
             <p className="text-green-300 text-sm mt-0.5">{t.format}</p>
           </div>
         </div>
 
-        <div className="p-6 space-y-5">
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{t.description}</p>
+        <div className="p-5 sm:p-8 space-y-5 sm:space-y-6">
+          <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">{t.description}</p>
 
           {/* Info grid */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
               { icon: <Calendar className="w-4 h-4 text-green-500" />, label: 'Date', value: fmtDate(t.date) },
               { icon: <Clock className="w-4 h-4 text-green-500" />,    label: 'Time', value: t.time },
@@ -411,7 +411,7 @@ const DetailDrawer = ({
               { icon: <Users className="w-4 h-4 text-blue-500" />,     label: 'Teams', value: `${t.registeredTeams}/${t.maxTeams} registered` },
               { icon: <Users className="w-4 h-4 text-purple-500" />,   label: 'Squad size', value: `${t.minPlayers}–${t.maxPlayers} players` },
             ].map(({ icon, label, value }) => (
-              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 flex items-start gap-2">
+              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4 flex items-start gap-2.5">
                 <div className="mt-0.5 shrink-0">{icon}</div>
                 <div><div className="text-xs text-gray-400 dark:text-gray-500">{label}</div><div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</div></div>
               </div>
@@ -421,10 +421,10 @@ const DetailDrawer = ({
           {/* Rules */}
           {t.rules.length > 0 && (
             <div>
-              <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2 text-sm uppercase tracking-wide">Rules</h3>
-              <ul className="space-y-1.5">
+              <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-3 text-sm uppercase tracking-wide">Rules</h3>
+              <ul className="space-y-2">
                 {t.rules.map((r, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-gray-600 dark:text-gray-300">
+                  <li key={i} className="flex gap-2.5 text-sm text-gray-600 dark:text-gray-300">
                     <span className="w-5 h-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                     {r}
                   </li>
@@ -434,16 +434,16 @@ const DetailDrawer = ({
           )}
 
           {/* Entry */}
-          <div className="border-t dark:border-gray-700 pt-4 flex items-center justify-between">
+          <div className="border-t dark:border-gray-700 pt-5 flex items-center justify-between">
             <div>
               <div className="text-xs text-gray-400 dark:text-gray-500">Entry fee per team</div>
-              <div className="text-2xl font-black text-gray-900 dark:text-white">
+              <div className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
                 {t.entryFee === 0 ? <span className="text-green-600">FREE</span> : `₹${t.entryFee}`}
               </div>
             </div>
             {t.status === 'upcoming' && !full
               ? <button onClick={onRegister}
-                  className="bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 text-white px-8 py-3 rounded-xl font-bold transition-all">
+                  className="bg-green-500 hover:bg-green-600 text-white px-8 sm:px-10 py-3 sm:py-3.5 rounded-xl font-bold transition-all text-sm sm:text-base">
                   Register Team
                 </button>
               : <span className={`px-5 py-2 rounded-xl font-bold text-sm ${full?'bg-red-100 text-red-600':'bg-gray-100 text-gray-500'}`}>
@@ -515,26 +515,26 @@ const TournamentsPage = () => {
       <div className="max-w-6xl mx-auto px-4">
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <div className="flex gap-2 flex-wrap">
-            {['all','football','cricket','badminton'].map(s => (
-              <button key={s} onClick={() => setFilterSport(s)}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm border-2 transition-all ${
-                  filterSport === s ? 'bg-green-600 border-green-600 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-green-400'
-                }`}>
-                {s === 'all' ? 'All Sports' : `${SPORT_EMOJI[s]} ${s.charAt(0).toUpperCase()+s.slice(1)}`}
-              </button>
-            ))}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="relative">
+            <select value={filterSport} onChange={e => setFilterSport(e.target.value)}
+              className="appearance-none border border-gray-200 dark:border-gray-700 rounded-xl pl-4 pr-9 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 focus:border-green-500 outline-none cursor-pointer">
+              <option value="all">All Sports</option>
+              {['football','cricket','badminton'].map(s => (
+                <option key={s} value={s}>{SPORT_EMOJI[s]} {s.charAt(0).toUpperCase()+s.slice(1)}</option>
+              ))}
+            </select>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none text-xs">▾</span>
           </div>
-          <div className="flex gap-2 flex-wrap ml-auto">
-            {['upcoming','ongoing','completed','all'].map(s => (
-              <button key={s} onClick={() => setFilterStatus(s)}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm border-2 transition-all ${
-                  filterStatus === s ? 'bg-gray-800 border-gray-800 text-white' : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-gray-400'
-                }`}>
-                {s.charAt(0).toUpperCase()+s.slice(1)}
-              </button>
-            ))}
+          <div className="relative">
+            <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
+              className="appearance-none border border-gray-200 dark:border-gray-700 rounded-xl pl-4 pr-9 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 focus:border-green-500 outline-none cursor-pointer">
+              <option value="upcoming">Upcoming</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+              <option value="all">All Status</option>
+            </select>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none text-xs">▾</span>
           </div>
         </div>
 
