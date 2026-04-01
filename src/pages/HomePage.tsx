@@ -282,7 +282,7 @@ function Hero() {
           {/* CTA buttons — stacked on mobile, row on sm+ */}
           <motion.div className="flex flex-col sm:flex-row gap-3 sm:gap-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.5 }}>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/booking" className="group relative bg-gradient-to-r from-green-500 to-emerald-500 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg overflow-hidden flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(34,197,94,0.2)] hover:shadow-[0_0_50px_rgba(34,197,94,0.35)] transition-shadow duration-500">
+              <Link to="/booking" className="group relative bg-white text-gray-900 px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg overflow-hidden flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:bg-gray-100 transition-all duration-300">
                 <span className="relative z-10">Book a Turf</span>
                 <motion.span className="relative z-10" animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
                   <ChevronRight className="w-5 h-5" />
@@ -290,7 +290,7 @@ function Hero() {
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Link to="/tournaments" className="border border-white/20 hover:border-green-400/50 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-500 flex items-center justify-center gap-2">
+              <Link to="/tournaments" className="border border-white/20 hover:border-white/50 text-white px-7 sm:px-9 py-3.5 sm:py-4 rounded-2xl font-bold text-base sm:text-lg backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
                 <Trophy className="w-5 h-5" /> View Tournaments
               </Link>
             </motion.div>
@@ -358,7 +358,7 @@ function Hero() {
               </div>
 
               <Link to="/booking"
-                className="mt-4 block text-center bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white rounded-xl py-3 font-bold text-sm transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.15)]"
+                className="mt-4 block text-center bg-white text-gray-900 hover:bg-gray-100 rounded-xl py-3 font-bold text-sm transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 <span className="flex items-center justify-center gap-2">
                   Book Now <motion.span animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>→</motion.span>
@@ -472,8 +472,8 @@ const HomePage = () => {
                       ))}
                     </div>
 
-                    <span className={`inline-flex items-center gap-2 text-sm font-bold bg-gradient-to-r ${g.gradient} bg-clip-text text-transparent group-hover:underline`}>
-                      Book {g.sport} <ArrowRight className="w-4 h-4 text-green-400" />
+                    <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:underline">
+                      Book {g.sport} <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
                 </motion.div>
@@ -578,7 +578,7 @@ const HomePage = () => {
                         </div>
 
                         <Link to={`/booking?sport=${turf.sport}&turf=${turf.turfId}`}
-                          className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white rounded-xl py-2.5 font-bold text-sm transition-all duration-300"
+                          className="flex items-center justify-center gap-2 w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 rounded-xl py-2.5 font-bold text-sm transition-all duration-300"
                         >
                           Book This Turf <ArrowRight className="w-4 h-4" />
                         </Link>
@@ -591,7 +591,7 @@ const HomePage = () => {
 
             {turfs.length > 6 && (
               <div className="text-center mt-10">
-                <Link to="/booking" className="inline-flex items-center gap-2 text-green-600 dark:text-green-400 font-bold hover:underline text-lg">
+                <Link to="/booking" className="inline-flex items-center gap-2 text-gray-900 dark:text-white font-bold hover:underline text-lg">
                   View All Turfs <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
@@ -661,7 +661,7 @@ const HomePage = () => {
                       </div>
 
                       <Link to="/tournaments"
-                        className="flex items-center justify-center gap-2 w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white rounded-xl py-2 font-bold text-sm transition-all duration-300"
+                        className="flex items-center justify-center gap-2 w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 rounded-xl py-2 font-bold text-sm transition-all duration-300"
                       >
                         Register <ArrowRight className="w-4 h-4" />
                       </Link>
@@ -672,7 +672,7 @@ const HomePage = () => {
             </div>
 
             <div className="text-center mt-10">
-              <Link to="/tournaments" className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400 font-bold hover:underline text-lg">
+              <Link to="/tournaments" className="inline-flex items-center gap-2 text-gray-900 dark:text-white font-bold hover:underline text-lg">
                 View All Tournaments <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
@@ -727,42 +727,31 @@ const HomePage = () => {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
             {amenities.map((a, i) => (
               <Reveal key={a.label} delay={i * 0.08}>
                 <motion.div
-                  className="group relative rounded-2xl sm:rounded-3xl p-[1px] cursor-default"
-                  whileHover={{ scale: 1.03, y: -4 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  className="group relative bg-white/[0.03] backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-gray-600/80 p-6 sm:p-7 transition-all duration-500 cursor-default h-full"
+                  whileHover={{ y: -4 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
-                  {/* gradient border */}
-                  <div className={`absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${a.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-
-                  {/* card body */}
-                  <div className="relative bg-white/[0.04] backdrop-blur-xl rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-white/[0.06] group-hover:border-white/[0.12] group-hover:bg-white/[0.07] transition-all duration-500 h-full">
-                    {/* glow orb behind icon */}
-                    <div className={`absolute top-4 left-1/2 -translate-x-1/2 w-16 h-16 ${a.glow} rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-
-                    {/* icon container */}
-                    <div className="relative flex justify-center mb-4 sm:mb-5">
-                      <motion.div
-                        className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${a.gradient} flex items-center justify-center shadow-lg`}
-                        whileHover={{ rotate: [0, -8, 8, 0] }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <span className="text-2xl sm:text-3xl drop-shadow-md">{a.icon}</span>
-                      </motion.div>
-                    </div>
-
-                    {/* text */}
-                    <div className="text-center">
-                      <h3 className="text-white font-bold text-sm sm:text-base mb-1.5 tracking-wide">{a.label}</h3>
-                      <p className="text-gray-400 text-xs sm:text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">{a.desc}</p>
-                    </div>
-
-                    {/* bottom accent line */}
-                    <div className={`mt-4 sm:mt-5 h-0.5 rounded-full bg-gradient-to-r ${a.gradient} opacity-0 group-hover:opacity-60 transition-opacity duration-500 mx-4`} />
+                  {/* top row: icon left, number right */}
+                  <div className="flex items-start justify-between mb-5">
+                    <motion.div
+                      className={`w-11 h-11 rounded-xl bg-gradient-to-br ${a.gradient} flex items-center justify-center shadow-lg`}
+                      whileHover={{ rotate: [0, -8, 8, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <span className="text-xl">{a.icon}</span>
+                    </motion.div>
+                    <span className="text-gray-600 font-display text-lg tracking-wider">{String(i + 1).padStart(2, '0')}</span>
                   </div>
+
+                  {/* title */}
+                  <h3 className="font-display text-white text-base sm:text-lg tracking-wider mb-2.5 uppercase">{a.label}</h3>
+
+                  {/* description */}
+                  <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">{a.desc}</p>
                 </motion.div>
               </Reveal>
             ))}
@@ -914,12 +903,12 @@ const HomePage = () => {
           <Reveal delay={0.2}>
             <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/booking" className="bg-white text-green-700 hover:bg-green-50 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
+                <Link to="/booking" className="bg-white text-gray-900 hover:bg-gray-100 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg">
                   Book a Turf <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}><ChevronRight className="w-5 h-5" /></motion.span>
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/tournaments" className="border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
+                <Link to="/tournaments" className="border-2 border-white/30 hover:border-white/60 hover:bg-white/10 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2">
                   <Trophy className="w-5 h-5" /> Tournaments
                 </Link>
               </motion.div>
