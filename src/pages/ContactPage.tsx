@@ -165,7 +165,7 @@ const ContactPage = () => {
                 <p className="text-gray-500 dark:text-gray-400 mb-6">We'll get back to you within 24 hours.</p>
                 <button
                   onClick={reset}
-                  className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold transition-colors"
+                  className="btn-primary px-8 py-3"
                 >
                   Send Another Message
                 </button>
@@ -270,7 +270,7 @@ const ContactPage = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 text-white rounded-xl py-3 font-bold text-lg transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                    className="w-full btn-primary py-3 text-lg disabled:opacity-60 flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>

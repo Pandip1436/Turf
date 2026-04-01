@@ -378,27 +378,29 @@ const DetailDrawer = ({
 }: { t: Tournament; onClose: () => void; onRegister: () => void }) => {
   const full = t.spotsLeft === 0;
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-end sm:items-center justify-center p-0 sm:p-6 lg:p-8"
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center p-0 sm:p-8 lg:p-12"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="bg-white dark:bg-gray-900 w-full sm:max-w-2xl rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="relative h-48 sm:h-64 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-t-3xl">
+      <div className="bg-white dark:bg-gray-900 w-full sm:max-w-2xl lg:max-w-3xl rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] sm:max-h-[88vh] overflow-y-auto">
+        {/* Banner */}
+        <div className="relative h-48 sm:h-56 lg:h-72 bg-gray-100 dark:bg-gray-800 overflow-hidden rounded-t-3xl">
           <img src={t.banner} alt={t.title} className="w-full h-full object-cover"
             onError={e => { (e.target as HTMLImageElement).src = '/images/Turf.jpg'; }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
           <button onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors">
+            className="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center transition-colors">
             <X className="w-5 h-5 text-white" />
           </button>
-          <div className="absolute bottom-4 sm:bottom-6 left-5 sm:left-8 right-5 sm:right-8">
+          <div className="absolute bottom-4 left-5 right-5 sm:bottom-6 sm:left-8 sm:right-8 lg:bottom-8 lg:left-10 lg:right-10">
             <div className={`inline-flex items-center gap-1 border rounded-full px-2.5 py-0.5 text-xs font-bold mb-2 ${SPORT_COLOR[t.sport]}`}>
               {SPORT_EMOJI[t.sport]} {t.sport}
             </div>
-            <h2 className="text-white font-display text-2xl sm:text-3xl tracking-wider leading-tight">{t.title}</h2>
-            <p className="text-green-300 text-sm mt-0.5">{t.format}</p>
+            <h2 className="text-white font-display text-2xl sm:text-3xl lg:text-4xl tracking-wider leading-tight">{t.title}</h2>
+            <p className="text-green-300 text-sm sm:text-base mt-1">{t.format}</p>
           </div>
         </div>
 
-        <div className="p-5 sm:p-8 space-y-5 sm:space-y-6">
+        {/* Content */}
+        <div className="p-5 sm:p-8 lg:p-10 space-y-5 sm:space-y-7">
           <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">{t.description}</p>
 
           {/* Info grid */}
@@ -411,9 +413,12 @@ const DetailDrawer = ({
               { icon: <Users className="w-4 h-4 text-blue-500" />,     label: 'Teams', value: `${t.registeredTeams}/${t.maxTeams} registered` },
               { icon: <Users className="w-4 h-4 text-purple-500" />,   label: 'Squad size', value: `${t.minPlayers}–${t.maxPlayers} players` },
             ].map(({ icon, label, value }) => (
-              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3 sm:p-4 flex items-start gap-2.5">
+              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-3.5 sm:p-4 flex items-start gap-3">
                 <div className="mt-0.5 shrink-0">{icon}</div>
-                <div><div className="text-xs text-gray-400 dark:text-gray-500">{label}</div><div className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</div></div>
+                <div>
+                  <div className="text-[11px] sm:text-xs text-gray-400 dark:text-gray-500">{label}</div>
+                  <div className="text-sm sm:text-[15px] font-semibold text-gray-800 dark:text-gray-200 mt-0.5">{value}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -422,10 +427,10 @@ const DetailDrawer = ({
           {t.rules.length > 0 && (
             <div>
               <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-3 text-sm uppercase tracking-wide">Rules</h3>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {t.rules.map((r, i) => (
-                  <li key={i} className="flex gap-2.5 text-sm text-gray-600 dark:text-gray-300">
-                    <span className="w-5 h-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+                  <li key={i} className="flex gap-3 text-sm sm:text-[15px] text-gray-600 dark:text-gray-300">
+                    <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
                     {r}
                   </li>
                 ))}
@@ -433,20 +438,20 @@ const DetailDrawer = ({
             </div>
           )}
 
-          {/* Entry */}
-          <div className="border-t dark:border-gray-700 pt-5 flex items-center justify-between">
+          {/* Entry fee + Register */}
+          <div className="border-t dark:border-gray-700 pt-5 sm:pt-6 flex items-center justify-between">
             <div>
-              <div className="text-xs text-gray-400 dark:text-gray-500">Entry fee per team</div>
-              <div className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
+              <div className="text-xs sm:text-sm text-gray-400 dark:text-gray-500">Entry fee per team</div>
+              <div className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mt-0.5">
                 {t.entryFee === 0 ? <span className="text-green-600">FREE</span> : `₹${t.entryFee}`}
               </div>
             </div>
             {t.status === 'upcoming' && !full
               ? <button onClick={onRegister}
-                  className="bg-green-500 hover:bg-green-600 text-white px-8 sm:px-10 py-3 sm:py-3.5 rounded-xl font-bold transition-all text-sm sm:text-base">
+                  className="btn-primary px-8 sm:px-10 py-3 sm:py-3.5 text-sm sm:text-base">
                   Register Team
                 </button>
-              : <span className={`px-5 py-2 rounded-xl font-bold text-sm ${full?'bg-red-100 text-red-600':'bg-gray-100 text-gray-500'}`}>
+              : <span className={`px-5 py-2.5 rounded-xl font-bold text-sm ${full?'bg-red-100 text-red-600':'bg-gray-100 text-gray-500'}`}>
                   {full ? 'Tournament Full' : t.status.charAt(0).toUpperCase() + t.status.slice(1)}
                 </span>}
           </div>
