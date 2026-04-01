@@ -20,23 +20,6 @@
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
-/* ── Global Button Styles ── */
-/* Change these colors once to update all buttons across the app */
-@layer components {
-  .btn-primary {
-    @apply bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl transition-all duration-300;
-  }
-  .btn-primary-lg {
-    @apply btn-primary px-8 py-3.5 text-base rounded-2xl shadow-lg hover:shadow-xl;
-  }
-  .btn-outline {
-    @apply border border-white/20 hover:border-white/50 text-white font-bold rounded-xl backdrop-blur-md bg-white/5 hover:bg-white/10 transition-all duration-300;
-  }
-  .btn-outline-dark {
-    @apply border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 text-gray-700 dark:text-gray-300 font-semibold rounded-xl transition-all duration-300;
-  }
-}
-
 .hero-gradient {
   background: linear-gradient(135deg, #0f2027 0%, #1a3a1a 50%, #0d1f0d 100%);
 }

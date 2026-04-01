@@ -78,7 +78,7 @@ const MyBookingsPage = () => {
           <div className="text-5xl mb-4">🔒</div>
           <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">SIGN IN REQUIRED</h2>
           <p className="text-gray-500 dark:text-gray-400 mb-6">Please sign in to view your bookings</p>
-          <Link to="/login" className="btn-primary px-8 py-3 rounded-xl font-bold">
+          <Link to="/login" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">
             Sign In
           </Link>
         </div>
@@ -119,7 +119,7 @@ const MyBookingsPage = () => {
             <div className="text-5xl mb-4">📅</div>
             <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-2">No bookings yet</h3>
             <p className="text-gray-500 dark:text-gray-400 mb-6">Book your first slot and start playing!</p>
-            <Link to="/booking" className="btn-primary px-8 py-3 rounded-xl font-bold">
+            <Link to="/booking" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold">
               Book Now
             </Link>
           </div>
@@ -238,7 +238,7 @@ const MyBookingsPage = () => {
             )}
 
             <div className="text-center pt-2">
-              <Link to="/booking" className="btn-primary px-8 py-3 rounded-xl font-bold inline-block">
+              <Link to="/booking" className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold inline-block">
                 + Book New Slot
               </Link>
             </div>

@@ -264,7 +264,7 @@ const SuccessModal = ({ reg, onClose }: { reg: Registration; onClose: () => void
         )}
       </div>
       <p className="text-xs text-gray-400 mb-6">See you on the field! Arrive 30 minutes before your match.</p>
-      <button onClick={onClose} className="w-full btn-primary py-3">
+      <button onClick={onClose} className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 font-bold transition-colors">
         Done
       </button>
     </div>
@@ -351,12 +351,12 @@ const TournamentCard = ({
 
         <div className="flex gap-2">
           <button onClick={onView}
-            className="flex-1 btn-outline-dark py-2.5 text-sm flex items-center justify-center gap-1">
+            className="flex-1 border-2 border-gray-200 dark:border-gray-700 hover:border-green-400 text-gray-700 dark:text-gray-300 rounded-xl py-2.5 font-semibold text-sm transition-colors flex items-center justify-center gap-1">
             View Details <ChevronRight className="w-4 h-4" />
           </button>
           {t.status === 'upcoming' && !full && (
             <button onClick={onRegister}
-              className="flex-1 btn-primary py-2.5 text-sm">
+              className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-xl py-2.5 font-bold text-sm transition-all">
               Register
             </button>
           )}
@@ -443,7 +443,7 @@ const DetailDrawer = ({
             </div>
             {t.status === 'upcoming' && !full
               ? <button onClick={onRegister}
-                  className="btn-primary px-8 sm:px-10 py-3 sm:py-3.5 text-sm sm:text-base">
+                  className="bg-green-500 hover:bg-green-600 text-white px-8 sm:px-10 py-3 sm:py-3.5 rounded-xl font-bold transition-all text-sm sm:text-base">
                   Register Team
                 </button>
               : <span className={`px-5 py-2 rounded-xl font-bold text-sm ${full?'bg-red-100 text-red-600':'bg-gray-100 text-gray-500'}`}>

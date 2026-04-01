@@ -165,7 +165,7 @@ const ContactPage = () => {
                 <p className="text-gray-500 dark:text-gray-400 mb-6">We'll get back to you within 24 hours.</p>
                 <button
                   onClick={reset}
-                  className="btn-primary px-8 py-3 rounded-xl font-bold transition-colors"
+                  className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold transition-colors"
                 >
                   Send Another Message
                 </button>

@@ -183,7 +183,7 @@ const AdminTurfs = () => {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 btn-primary px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors"
+          className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors"
         >
           <Plus className="w-4 h-4" /> Add Turf
         </button>
@@ -472,7 +472,7 @@ const AdminTurfs = () => {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex-1 py-2.5 btn-primary disabled:opacity-60 text-sm flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors"
               >
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

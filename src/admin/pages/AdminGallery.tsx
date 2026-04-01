@@ -170,7 +170,7 @@ const AdminGallery = () => {
           <p className="text-gray-400 text-xs sm:text-sm mt-1">{items.length} photos across {turfs.length} turfs</p>
         </div>
         <button onClick={openCreate}
-          className="flex items-center justify-center gap-2 btn-primary px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors w-full sm:w-auto">
+          className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors w-full sm:w-auto">
           <Plus className="w-4 h-4" /> Add Photo
         </button>
       </div>
@@ -339,7 +339,7 @@ const AdminGallery = () => {
                   Cancel
                 </button>
                 <button onClick={handleSave} disabled={saving}
-                  className="flex-1 btn-primary py-2.5 rounded-xl font-semibold text-sm transition-colors disabled:opacity-50">
+                  className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2.5 rounded-xl font-semibold text-sm transition-colors disabled:opacity-50">
                   {saving ? 'Saving...' : editing ? 'Update' : 'Add Photo'}
                 </button>
               </div>
