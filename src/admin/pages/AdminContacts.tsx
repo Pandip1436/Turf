@@ -64,18 +64,18 @@ const AdminContacts = () => {
         <p className="text-gray-500 text-sm mt-1">{contacts.length} messages</p>
       </div>
 
-      {/* Filter pills */}
-      <div className="flex gap-2 flex-wrap">
-        {filterBtns.map(b => (
-          <button key={b.val} onClick={() => setFilter(b.val)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-              filter === b.val
-                ? 'bg-green-500 text-white'
-                : 'bg-gray-900 border border-gray-700 text-gray-400 hover:text-white hover:border-gray-600'
-            }`}>
-            {b.label}
-          </button>
-        ))}
+      {/* Filter */}
+      <div className="relative w-fit">
+        <select
+          value={filter}
+          onChange={e => setFilter(e.target.value)}
+          className="appearance-none bg-gray-900 border border-gray-700 rounded-xl pl-4 pr-9 py-2 text-sm text-white focus:border-green-500 outline-none cursor-pointer"
+        >
+          {filterBtns.map(b => (
+            <option key={b.val} value={b.val}>{b.label}</option>
+          ))}
+        </select>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs">▾</span>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

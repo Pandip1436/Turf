@@ -754,7 +754,7 @@ const AdminTournaments = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-800">
-                  {['Tournament', 'Sport / Turf', 'Date', 'Teams', 'Entry', 'Status', 'Actions'].map(h => (
+                  {['#', 'Tournament', 'Sport / Turf', 'Date', 'Teams', 'Entry', 'Status', 'Actions'].map(h => (
                     <th key={h} className="text-left px-5 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                       {h}
                     </th>
@@ -762,10 +762,13 @@ const AdminTournaments = () => {
                 </tr>
               </thead>
               <tbody>
-                {pageData.map(t => {
+                {pageData.map((t, i) => {
                   const pct = Math.round((t.registrations.length / t.maxTeams) * 100);
                   return (
                     <tr key={t._id} className="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
+
+                      {/* S.No */}
+                      <td className="px-5 py-4 text-gray-500 text-xs font-semibold">{(page - 1) * PER_PAGE + i + 1}</td>
 
                       {/* Tournament */}
                       <td className="px-5 py-4 max-w-[200px]">

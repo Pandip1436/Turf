@@ -200,19 +200,19 @@ const AdminTurfs = () => {
             className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-green-500 placeholder-gray-600"
           />
         </div>
-        {(['all', 'football', 'cricket', 'badminton'] as const).map(s => (
-          <button
-            key={s}
-            onClick={() => setSportFilter(s)}
-            className={`px-4 py-2.5 rounded-xl text-sm font-semibold border transition-colors ${
-              sportFilter === s
-                ? 'bg-green-500/15 text-green-400 border-green-500/30'
-                : 'bg-gray-900 text-gray-400 border-gray-700 hover:border-gray-500 hover:text-white'
-            }`}
+        <div className="relative">
+          <select
+            value={sportFilter}
+            onChange={e => setSportFilter(e.target.value as 'all' | 'football' | 'cricket' | 'badminton')}
+            className="appearance-none bg-gray-900 border border-gray-700 rounded-xl pl-4 pr-9 py-2.5 text-sm text-white focus:border-green-500 outline-none cursor-pointer"
           >
-            {s === 'all' ? 'All' : `${SPORT_EMOJIS[s]} ${s.charAt(0).toUpperCase() + s.slice(1)}`}
-          </button>
-        ))}
+            <option value="all">All Sports</option>
+            {(['football', 'cricket', 'badminton'] as const).map(s => (
+              <option key={s} value={s}>{SPORT_EMOJIS[s]} {s.charAt(0).toUpperCase() + s.slice(1)}</option>
+            ))}
+          </select>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs">▾</span>
+        </div>
       </div>
 
       {error && (
@@ -237,6 +237,7 @@ const AdminTurfs = () => {
           <table className="w-full text-sm min-w-[600px]">
             <thead>
               <tr className="border-b border-gray-800 text-gray-400 text-xs uppercase tracking-wider">
+                <th className="px-5 py-3.5 text-left font-medium">#</th>
                 <th className="px-5 py-3.5 text-left font-medium">Turf</th>
                 <th className="px-5 py-3.5 text-left font-medium">Sport</th>
                 <th className="px-5 py-3.5 text-left font-medium">Day Price</th>
@@ -246,8 +247,9 @@ const AdminTurfs = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {visibleTurfs.map(t => (
+              {visibleTurfs.map((t, i) => (
                 <tr key={t._id} className="hover:bg-gray-800/50 transition-colors">
+                  <td className="px-5 py-4 text-gray-500 text-xs font-semibold">{i + 1}</td>
                   <td className="px-5 py-4">
                     <div className="font-semibold text-white">{t.name}</div>
                     <div className="text-gray-500 text-xs font-mono mt-0.5">{t.turfId}</div>

@@ -70,7 +70,7 @@ const AdminUsers = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-800">
-                  {['User', 'Phone', 'Bookings', 'Total Spent', 'Joined'].map(h => (
+                  {['#', 'User', 'Phone', 'Bookings', 'Total Spent', 'Joined'].map(h => (
                     <th key={h} className="text-left px-5 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide">
                       {h}
                     </th>
@@ -78,8 +78,9 @@ const AdminUsers = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((u) => (
+                {users.map((u, i) => (
                   <tr key={u.id} className="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
+                    <td className="px-5 py-4 text-gray-500 text-xs font-semibold">{i + 1}</td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 bg-green-500/20 border border-green-500/20 rounded-full flex items-center justify-center text-green-400 font-bold text-sm shrink-0">

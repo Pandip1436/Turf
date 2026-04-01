@@ -100,6 +100,7 @@ const BookingPage = () => {
   const [reservedUntil, setReservedUntil]   = useState<Date | null>(null);
   const [countdown,    setCountdown]   = useState('');
   const [resumeTotal,  setResumeTotal] = useState(0);
+  const [resumeBase,   setResumeBase]  = useState(0);
   const countdownRef = useRef<ReturnType<typeof setInterval>>(null);
 
   // Auto-select sport (and optionally turf) from URL query params
@@ -125,7 +126,7 @@ const BookingPage = () => {
   useEffect(() => {
     const resumeId = searchParams.get('resume');
     if (!resumeId || bookingId) return;
-    api.get<{ booking: { _id: string; bookingRef: string; sport: string; turfId: string; turfName: string; date: string; timeSlots: string[]; totalAmount: number; status: string; reservedUntil: string; userName: string; userEmail: string; userPhone: string; teamSize?: number } }>(`/bookings/${resumeId}`)
+    api.get<{ booking: { _id: string; bookingRef: string; sport: string; turfId: string; turfName: string; date: string; timeSlots: string[]; baseAmount: number; totalAmount: number; status: string; reservedUntil: string; userName: string; userEmail: string; userPhone: string; teamSize?: number } }>(`/bookings/${resumeId}`)
       .then(res => {
         const b = res.data.booking;
         if (!b || b.status !== 'reserved' || new Date(b.reservedUntil).getTime() <= Date.now()) return;
@@ -140,6 +141,7 @@ const BookingPage = () => {
         setReserved(true);
         setReservedUntil(new Date(b.reservedUntil));
         setResumeTotal(b.totalAmount);
+        setResumeBase(b.baseAmount);
         setStep(4); // Jump to payment
         // Set turf after turfs load
         if (b.turfId) {
@@ -403,7 +405,7 @@ const BookingPage = () => {
     setSelected(new Set()); setSlots([]);
     setForm({ name: user?.name||'', email: user?.email||'', phone: '', teamSize: '' });
     setBookingError(''); setPayError(''); setBookingId(''); setBookingRef('');
-    setReserved(false); setReservedUntil(null); setResumeTotal(0);
+    setReserved(false); setReservedUntil(null); setResumeTotal(0); setResumeBase(0);
   };
 
   // ── CONFIRMED ─────────────────────────────────────────────────────────────
@@ -417,23 +419,23 @@ const BookingPage = () => {
           </div>
           <h2 className="font-display text-4xl tracking-wider text-gray-900 dark:text-white mb-2">BOOKING CONFIRMED!</h2>
           <p className="text-gray-500 dark:text-gray-400 mb-6">Payment successful. See you on the field! 🏆</p>
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-5 text-left space-y-2 mb-6">
-            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Booking ID</span><span className="font-bold text-green-700">{bookingRef}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold">{turf?.name}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold">{form.name}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold">{fmtDisplay(date)}</span></div>
+          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40 rounded-2xl p-5 text-left space-y-2 mb-6">
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Booking ID</span><span className="font-bold text-green-700 dark:text-green-400">{bookingRef}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold text-gray-900 dark:text-white">{sport?.emoji} {sport?.label}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold text-gray-900 dark:text-white">{turf?.name}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold text-gray-900 dark:text-white">{form.name}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold text-gray-900 dark:text-white">{fmtDisplay(date)}</span></div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-500 dark:text-gray-400">Slots</span>
-              <span className="font-semibold text-right text-xs max-w-[60%]">{slotList.map(s=>`${s.from} - ${s.to}`).join(', ')}</span>
+              <span className="font-semibold text-gray-900 dark:text-white text-right text-xs max-w-[60%]">{slotList.map(s=>`${s.from} - ${s.to}`).join(', ')}</span>
             </div>
-            {form.teamSize && <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Team Size</span><span className="font-semibold">{form.teamSize}</span></div>}
-            <div className="border-t pt-2 flex justify-between font-bold text-green-700 text-sm"><span>Total Paid</span><span>₹{total}</span></div>
+            {form.teamSize && <div className="flex justify-between text-sm"><span className="text-gray-500 dark:text-gray-400">Team Size</span><span className="font-semibold text-gray-900 dark:text-white">{form.teamSize}</span></div>}
+            <div className="border-t border-green-200 dark:border-green-800/40 pt-2 flex justify-between font-bold text-green-700 dark:text-green-400 text-sm"><span>Total Paid</span><span>₹{total}</span></div>
           </div>
-          <p className="text-sm text-gray-400 dark:text-gray-400 mb-6">Confirmation sent to <strong>{form.email}</strong></p>
+          <p className="text-sm text-gray-400 mb-6">Confirmation sent to <strong className="text-gray-600 dark:text-gray-300">{form.email}</strong></p>
           <div className="flex gap-3 justify-center">
-            <button onClick={resetAll} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-colors">Book Another</button>
-            <button onClick={() => navigate('/my-bookings')} className="border-2 border-green-500 text-green-600 hover:bg-green-50 px-6 py-3 rounded-xl font-bold transition-colors">My Bookings</button>
+            <button onClick={resetAll} className="btn-primary px-6 py-3">Book Another</button>
+            <button onClick={() => navigate('/my-bookings')} className="border-2 border-green-500 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 px-6 py-3 rounded-xl font-bold transition-colors">My Bookings</button>
           </div>
         </div>
       </div>
@@ -713,18 +715,24 @@ const BookingPage = () => {
                 {form.teamSize && <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Team</span><span className="font-semibold">{form.teamSize} players</span></div>}
               </div>
               <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-5 space-y-2 text-sm">
-                <div className="flex justify-between text-gray-600 dark:text-gray-300">
-                  <span>Base Amount</span><span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
-                </div>
-                {selected.size >= 2 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount ({selected.size >= 3 ? '20%' : '10%'})</span>
-                    <span>-₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)-total}</span>
-                  </div>
-                )}
-                <div className="border-t pt-2 flex justify-between font-bold text-base">
-                  <span>Total</span><span className="text-green-600 text-xl">₹{total}</span>
-                </div>
+                {(() => {
+                  const base = slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0) || resumeBase;
+                  const discount = base - total;
+                  return (<>
+                    <div className="flex justify-between text-gray-600 dark:text-gray-300">
+                      <span>Base Amount</span><span>₹{base}</span>
+                    </div>
+                    {discount > 0 && (
+                      <div className="flex justify-between text-green-600">
+                        <span>Discount ({selected.size >= 3 ? '20%' : '10%'})</span>
+                        <span>-₹{discount}</span>
+                      </div>
+                    )}
+                    <div className="border-t pt-2 flex justify-between font-bold text-base">
+                      <span>Total</span><span className="text-green-600 text-xl">₹{total}</span>
+                    </div>
+                  </>);
+                })()}
               </div>
               {bookingError && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4">⚠️ {bookingError}</div>}
               {payError     && <div className="bg-orange-50 border border-orange-200 text-orange-700 rounded-xl px-4 py-3 text-sm mb-4"><strong>Payment:</strong> {payError}</div>}

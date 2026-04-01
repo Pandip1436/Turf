@@ -249,35 +249,18 @@ const AdminBookings = () => {
           </span>
         </div>
       ) : turfStats.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => { setTurfFilter(''); setPage(1); }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
-              !turfFilter
-                ? 'bg-green-500/15 text-green-400 border-green-500/30'
-                : 'bg-gray-900 text-gray-400 border-gray-700 hover:border-gray-500'
-            }`}
+        <div className="relative">
+          <select
+            value={turfFilter}
+            onChange={e => { setTurfFilter(e.target.value); setPage(1); }}
+            className="appearance-none bg-gray-800 border border-gray-700 rounded-xl pl-4 pr-9 py-2 text-sm text-white focus:border-green-500 outline-none cursor-pointer"
           >
-            All Turfs
-          </button>
-          {turfStats.map(s => (
-            <button
-              key={s._id}
-              onClick={() => { setTurfFilter(s._id === turfFilter ? '' : s._id); setPage(1); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
-                turfFilter === s._id
-                  ? 'bg-green-500/15 text-green-400 border-green-500/30'
-                  : 'bg-gray-900 text-gray-400 border-gray-700 hover:border-gray-500 hover:text-white'
-              }`}
-            >
-              <span className="capitalize font-mono">{s._id || 'unknown'}</span>
-              <span className={`px-1.5 py-0.5 rounded-md text-xs font-bold ${
-                turfFilter === s._id ? 'bg-green-500/20 text-green-300' : 'bg-gray-800 text-gray-300'
-              }`}>
-                {s.count}
-              </span>
-            </button>
-          ))}
+            <option value="">All Turfs</option>
+            {turfStats.map(s => (
+              <option key={s._id} value={s._id}>{s._id || 'unknown'} ({s.count})</option>
+            ))}
+          </select>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-xs">▾</span>
         </div>
       )}
 
@@ -330,7 +313,7 @@ const AdminBookings = () => {
             <table className="w-full text-sm min-w-[700px]">
               <thead>
                 <tr className="border-b border-gray-800">
-                  {['Ref', 'Customer', 'Turf', 'Date', 'Slots', 'Sport', 'Amount', 'Payment', 'Status', 'Action'].map(h => (
+                  {['#', 'Ref', 'Customer', 'Turf', 'Date', 'Slots', 'Sport', 'Amount', 'Payment', 'Status', 'Action'].map(h => (
                     <th key={h} className="text-left px-4 py-3 text-gray-500 font-semibold text-xs uppercase tracking-wide whitespace-nowrap">
                       {h}
                     </th>
@@ -338,8 +321,9 @@ const AdminBookings = () => {
                 </tr>
               </thead>
               <tbody>
-                {bookings.map((b) => (
+                {bookings.map((b, i) => (
                   <tr key={b._id} onClick={() => setSelected(b)} className="border-b border-gray-800/50 hover:bg-gray-800/40 transition-colors cursor-pointer">
+                    <td className="px-4 py-4 text-gray-500 text-xs font-semibold">{(page - 1) * 15 + i + 1}</td>
                     <td className="px-4 py-4 font-mono text-green-400 text-xs font-bold">{b.bookingRef}</td>
                     <td className="px-4 py-4">
                       <div className="text-white font-semibold text-xs">{b.userName}</div>
