@@ -14,7 +14,8 @@ interface RazorpayOptions {
   notes: Record<string, string>;
   theme: { color: string };
   handler: (r: RazorpayResponse) => void;
-  modal: { ondismiss: () => void };
+  modal: { ondismiss: () => void; confirm_close?: boolean; animation?: boolean };
+  config?: { display: { blocks?: Record<string, { instruments: Array<{ method: string }> }>; sequence?: string[]; preferences?: { show_default_blocks?: boolean } } };
 }
 interface RazorpayInstance { open: () => void; on: (e: string, h: (r: unknown) => void) => void; }
 interface RazorpayResponse { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string; }
@@ -23,9 +24,9 @@ interface Sport    { id: string; label: string; emoji: string; color: string; bg
 interface TurfInfo { id: string; name: string; sport: string; description: string; features: string[]; priceDay: number; priceNight: number; image: string; }
 
 const SPORTS: Sport[] = [
-  { id: 'football',  label: 'Football',  emoji: '⚽', color: 'text-green-700',  bg: 'bg-green-50  border-green-400'  },
-  { id: 'cricket',   label: 'Cricket',   emoji: '🏏', color: 'text-blue-700',   bg: 'bg-blue-50   border-blue-400'   },
-  { id: 'badminton', label: 'Badminton', emoji: '🏸', color: 'text-purple-700', bg: 'bg-purple-50 border-purple-400' },
+  { id: 'football',  label: 'Football',  emoji: '⚽', color: 'text-green-700 dark:text-green-400',  bg: 'bg-green-50 dark:bg-green-900/20 border-green-400 dark:border-green-700'  },
+  { id: 'cricket',   label: 'Cricket',   emoji: '🏏', color: 'text-blue-700 dark:text-blue-400',   bg: 'bg-blue-50 dark:bg-blue-900/20 border-blue-400 dark:border-blue-700'   },
+  { id: 'badminton', label: 'Badminton', emoji: '🏸', color: 'text-purple-700 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-900/20 border-purple-400 dark:border-purple-700' },
 ];
 
 // Turfs are now loaded dynamically from the API (managed by admin).
@@ -318,6 +319,7 @@ const BookingPage = () => {
       const loaded = await loadRazorpayScript();
       if (!loaded) { setPayError('Razorpay SDK failed to load. Check your internet.'); return; }
 
+      const isMobile = window.innerWidth < 768;
       const rzp = new window.Razorpay({
         key: razorpayKey, amount: paise, currency: 'INR',
         name: import.meta.env.VITE_APP_NAME || 'HyperGreen 360 Turf',
@@ -326,6 +328,17 @@ const BookingPage = () => {
         prefill: { name: form.name, email: form.email, contact: `+91${form.phone}` },
         notes: { bookingId: bkId, turfId: turf?.id||'', turfName: turf?.name||'', date, slots: Array.from(selected).join(', ') },
         theme: { color: '#22c55e' },
+        modal: { ondismiss: () => setPayError('Payment cancelled. Slot held for 10 mins — click Pay to retry.'), confirm_close: true, animation: !isMobile },
+        config: isMobile ? {
+          display: {
+            blocks: {
+              utib: { instruments: [{ method: 'upi' }] },
+              other: { instruments: [{ method: 'card' }, { method: 'netbanking' }, { method: 'wallet' }] },
+            },
+            sequence: ['block.utib', 'block.other'],
+            preferences: { show_default_blocks: false },
+          },
+        } : undefined,
         handler: async (response: RazorpayResponse) => {
           setPayLoading(true);
           try {
@@ -347,7 +360,6 @@ const BookingPage = () => {
             setPayError(`Verification failed. Payment ID: ${response.razorpay_payment_id}. Contact support.`);
           } finally { setPayLoading(false); }
         },
-        modal: { ondismiss: () => setPayError('Payment cancelled. Slot held for 10 mins — click Pay to retry.') },
       });
       rzp.on('payment.failed', (r: unknown) => {
         const errDesc = (r as { error?: { description?: string } }).error?.description;
@@ -528,7 +540,7 @@ const BookingPage = () => {
                   <div className="p-4">
                     <p className="text-gray-500 dark:text-gray-400 text-xs mb-3">{t.description}</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {t.features.map(f => <span key={f} className="bg-green-50 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">{f}</span>)}
+                      {t.features.map(f => <span key={f} className="bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold px-2 py-0.5 rounded-full">{f}</span>)}
                     </div>
                     <div className="mt-4 flex items-center justify-between">
                       <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -590,17 +602,17 @@ const BookingPage = () => {
 
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
                 <h2 className="font-bold text-lg text-gray-900 dark:text-white mb-3">Available Time Slots</h2>
-                <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-4 flex gap-2 items-start">
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl px-4 py-3 mb-4 flex gap-2 items-start">
                   <Lightbulb className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
-                  <div className="text-xs text-green-800">
+                  <div className="text-xs text-green-800 dark:text-green-300">
                     <strong>Save more!</strong> 2 slots = 10% off · 3+ slots = 20% off
                     {turf.priceDay !== turf.priceNight
-                      ? <span className="block mt-0.5 text-green-700">Day (6AM–6PM): ₹{turf.priceDay}/hr · Night (6PM–6AM): ₹{turf.priceNight}/hr</span>
-                      : <span className="block mt-0.5 text-green-700">Flat rate: ₹{turf.priceDay}/hr all hours</span>}
+                      ? <span className="block mt-0.5 text-green-700 dark:text-green-400">Day (6AM–6PM): ₹{turf.priceDay}/hr · Night (6PM–6AM): ₹{turf.priceNight}/hr</span>
+                      : <span className="block mt-0.5 text-green-700 dark:text-green-400">Flat rate: ₹{turf.priceDay}/hr all hours</span>}
                   </div>
                 </div>
                 {slotsError && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-3 flex justify-between">
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl px-4 py-3 text-sm mb-3 flex justify-between">
                     {slotsError}<button onClick={() => fetchSlots(date, turf.id)} className="font-bold underline ml-2">Retry</button>
                   </div>
                 )}
@@ -623,9 +635,9 @@ const BookingPage = () => {
                   )}
                 <div className="flex flex-wrap gap-3 pt-3 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-green-600 inline-block" /> Selected</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white border border-gray-300 inline-block" /> Available</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 inline-block" /> Booked</span>
-                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-200 inline-block" /> Yours</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 inline-block" /> Available</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-gray-200 dark:bg-gray-700 inline-block" /> Booked</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-blue-200 dark:bg-blue-800 inline-block" /> Yours</span>
                 </div>
               </div>
             </div>
@@ -634,12 +646,12 @@ const BookingPage = () => {
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
                 <h3 className="font-bold text-base text-gray-900 dark:text-white mb-4">Booking Summary</h3>
                 <div className="space-y-2.5 text-sm mb-4">
-                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold text-xs text-right max-w-[55%]">{turf.name}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold text-xs">{fmtDisplay(date)}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold text-gray-900 dark:text-white">{sport?.emoji} {sport?.label}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold text-gray-900 dark:text-white text-xs text-right max-w-[55%]">{turf.name}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold text-gray-900 dark:text-white text-xs">{fmtDisplay(date)}</span></div>
                   <div className="flex justify-between items-start">
-                    <span className="text-gray-500 shrink-0">Slots ({selected.size})</span>
-                    <span className="font-semibold text-right text-xs ml-2">
+                    <span className="text-gray-500 dark:text-gray-400 shrink-0">Slots ({selected.size})</span>
+                    <span className="font-semibold text-gray-900 dark:text-white text-right text-xs ml-2">
                       {selected.size === 0
                         ? <span className="text-gray-400 italic">None</span>
                         : slots.filter(s=>selected.has(s.slot)).map(s=>`${s.from}-${s.to}`).join(', ')}
@@ -649,7 +661,7 @@ const BookingPage = () => {
                 <div className="border-t pt-3 space-y-1.5">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500 dark:text-gray-400">Base</span>
-                    <span>₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
+                    <span className="text-gray-900 dark:text-white">₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)}</span>
                   </div>
                   {selected.size >= 2 && (
                     <div className="flex justify-between text-sm text-green-600">
@@ -657,7 +669,7 @@ const BookingPage = () => {
                       <span>-₹{slots.filter(s=>selected.has(s.slot)).reduce((a,s)=>a+s.price,0)-total}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-bold text-green-700 pt-1"><span>Total</span><span>₹{total}</span></div>
+                  <div className="flex justify-between font-bold text-green-700 dark:text-green-400 pt-1"><span>Total</span><span>₹{total}</span></div>
                 </div>
                 <button disabled={selected.size === 0 || slotsLoading} onClick={() => setStep(3)}
                   className="mt-4 w-full bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl py-3 font-bold transition-all text-sm">
@@ -706,13 +718,13 @@ const BookingPage = () => {
               <h2 className="font-bold text-2xl text-gray-900 dark:text-white mb-6">Complete Payment</h2>
               <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-4 mb-5 space-y-2 text-sm">
                 <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Booking Details</h3>
-                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold">{sport?.emoji} {sport?.label}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold">{turf?.name}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Sport</span><span className="font-semibold text-gray-900 dark:text-white">{sport?.emoji} {sport?.label}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Turf</span><span className="font-semibold text-gray-900 dark:text-white">{turf?.name}</span></div>
                 <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span>
-                  <span className="font-semibold">{new Date(date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Slots</span><span className="font-semibold">{selected.size} slot{selected.size!==1?'s':''}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold">{form.name}</span></div>
-                {form.teamSize && <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Team</span><span className="font-semibold">{form.teamSize} players</span></div>}
+                  <span className="font-semibold text-gray-900 dark:text-white">{new Date(date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Slots</span><span className="font-semibold text-gray-900 dark:text-white">{selected.size} slot{selected.size!==1?'s':''}</span></div>
+                <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold text-gray-900 dark:text-white">{form.name}</span></div>
+                {form.teamSize && <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Team</span><span className="font-semibold text-gray-900 dark:text-white">{form.teamSize} players</span></div>}
               </div>
               <div className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-5 space-y-2 text-sm">
                 {(() => {
@@ -723,38 +735,38 @@ const BookingPage = () => {
                       <span>Base Amount</span><span>₹{base}</span>
                     </div>
                     {discount > 0 && (
-                      <div className="flex justify-between text-green-600">
+                      <div className="flex justify-between text-green-600 dark:text-green-400">
                         <span>Discount ({selected.size >= 3 ? '20%' : '10%'})</span>
                         <span>-₹{discount}</span>
                       </div>
                     )}
-                    <div className="border-t pt-2 flex justify-between font-bold text-base">
-                      <span>Total</span><span className="text-green-600 text-xl">₹{total}</span>
+                    <div className="border-t dark:border-gray-600 pt-2 flex justify-between font-bold text-base text-gray-900 dark:text-white">
+                      <span>Total</span><span className="text-green-600 dark:text-green-400 text-xl">₹{total}</span>
                     </div>
                   </>);
                 })()}
               </div>
-              {bookingError && <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm mb-4">⚠️ {bookingError}</div>}
-              {payError     && <div className="bg-orange-50 border border-orange-200 text-orange-700 rounded-xl px-4 py-3 text-sm mb-4"><strong>Payment:</strong> {payError}</div>}
+              {bookingError && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl px-4 py-3 text-sm mb-4">⚠️ {bookingError}</div>}
+              {payError     && <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 rounded-xl px-4 py-3 text-sm mb-4"><strong>Payment:</strong> {payError}</div>}
 
               {/* Reservation countdown banner */}
               {reserved && reservedUntil && countdown && (
                 <div className={`rounded-xl p-4 mb-4 flex items-center gap-3 ${
-                  countdown === '00:00' ? 'bg-red-50 border border-red-200' : 'bg-amber-50 border border-amber-200'
+                  countdown === '00:00' ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800' : 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800'
                 }`}>
-                  <Timer className={`w-5 h-5 shrink-0 ${countdown === '00:00' ? 'text-red-500' : 'text-amber-600'}`} />
+                  <Timer className={`w-5 h-5 shrink-0 ${countdown === '00:00' ? 'text-red-500' : 'text-amber-600 dark:text-amber-400'}`} />
                   <div className="flex-1">
-                    <p className={`text-sm font-bold ${countdown === '00:00' ? 'text-red-700' : 'text-amber-800'}`}>
+                    <p className={`text-sm font-bold ${countdown === '00:00' ? 'text-red-700 dark:text-red-400' : 'text-amber-800 dark:text-amber-300'}`}>
                       {countdown === '00:00' ? 'Reservation expired!' : 'Slots reserved for you'}
                     </p>
-                    <p className={`text-xs ${countdown === '00:00' ? 'text-red-600' : 'text-amber-700'}`}>
+                    <p className={`text-xs ${countdown === '00:00' ? 'text-red-600 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'}`}>
                       {countdown === '00:00' ? 'Please select slots again and try once more.' : 'Complete payment before the timer runs out.'}
                     </p>
                   </div>
                   {countdown !== '00:00' && (
                     <div className="text-right shrink-0">
-                      <div className="font-mono font-black text-2xl text-amber-800">{countdown}</div>
-                      <div className="text-[10px] text-amber-600">remaining</div>
+                      <div className="font-mono font-black text-2xl text-amber-800 dark:text-amber-300">{countdown}</div>
+                      <div className="text-[10px] text-amber-600 dark:text-amber-400">remaining</div>
                     </div>
                   )}
                 </div>
@@ -800,7 +812,7 @@ const BookingPage = () => {
               </div>
 
               {!reserved && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-800 mb-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-3 text-xs text-blue-800 dark:text-blue-300 mb-4">
                   <strong>Reserve Now:</strong> Hold your slots for 30 minutes while you arrange payment. Auto-cancelled if not paid within the deadline.
                 </div>
               )}
