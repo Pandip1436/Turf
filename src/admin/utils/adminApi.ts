@@ -2,12 +2,19 @@ import axios from 'axios';
 
 const adminApi = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
+// Direct EC2 instance for file uploads (bypasses CloudFront which blocks large POST bodies)
+export const uploadApi = axios.create({
+  baseURL: import.meta.env.VITE_UPLOAD_URL || import.meta.env.VITE_API_URL,
+});
+
 // ── Attach token from localStorage on every request
-adminApi.interceptors.request.use((config) => {
+const attachToken = (config: import('axios').InternalAxiosRequestConfig) => {
   const token = localStorage.getItem('hg360_admin_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
-});
+};
+adminApi.interceptors.request.use(attachToken);
+uploadApi.interceptors.request.use(attachToken);
 
 // ── Handle 401 responses — only redirect if a token actually existed
 //    This prevents redirect loops when the page first loads with no token
