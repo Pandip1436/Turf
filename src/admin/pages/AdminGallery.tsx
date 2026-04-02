@@ -81,7 +81,10 @@ const AdminGallery = () => {
       fd.append('image', file);
       const res = await adminApi.post('/gallery/upload', fd);
       setForm(f => ({ ...f, image: res.data.url }));
-    } catch { alert('Upload failed'); }
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Upload failed';
+      alert(msg);
+    }
     setUploading(false);
   };
 

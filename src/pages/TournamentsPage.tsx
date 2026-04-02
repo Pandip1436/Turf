@@ -246,19 +246,19 @@ const SuccessModal = ({ reg, onClose }: { reg: Registration; onClose: () => void
       </div>
       <h2 className="font-display text-3xl tracking-wider text-gray-900 dark:text-white mb-2">REGISTERED!</h2>
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Your team has been successfully registered.</p>
-      <div className="bg-green-50 border border-green-200 rounded-2xl p-4 text-left space-y-2 mb-6 text-sm">
-        <div className="flex justify-between"><span className="text-gray-500">Tournament</span><span className="font-semibold text-right max-w-[55%]">{reg.tournament}</span></div>
-        <div className="flex justify-between"><span className="text-gray-500">Team</span><span className="font-bold text-green-700">{reg.teamName}</span></div>
-        <div className="flex justify-between"><span className="text-gray-500">Captain</span><span className="font-semibold">{reg.captainName}</span></div>
-        <div className="flex justify-between"><span className="text-gray-500">Players</span><span className="font-semibold">{reg.players}</span></div>
-        <div className="flex justify-between"><span className="text-gray-500">Date</span><span className="font-semibold">{fmtDate(reg.date)} · {reg.time}</span></div>
+      <div className="bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 rounded-2xl p-4 text-left space-y-2 mb-6 text-sm">
+        <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Tournament</span><span className="font-semibold text-gray-900 dark:text-white text-right max-w-[55%]">{reg.tournament}</span></div>
+        <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Team</span><span className="font-bold text-green-700 dark:text-green-400">{reg.teamName}</span></div>
+        <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Captain</span><span className="font-semibold text-gray-900 dark:text-white">{reg.captainName}</span></div>
+        <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Players</span><span className="font-semibold text-gray-900 dark:text-white">{reg.players}</span></div>
+        <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Date</span><span className="font-semibold text-gray-900 dark:text-white">{fmtDate(reg.date)} · {reg.time}</span></div>
         {reg.entryFee > 0 && (
-          <div className="border-t pt-2 flex justify-between font-bold text-yellow-700">
+          <div className="border-t dark:border-green-800 pt-2 flex justify-between font-bold text-yellow-700 dark:text-yellow-400">
             <span>Entry Fee</span><span>₹{reg.entryFee} (pay at facility)</span>
           </div>
         )}
         {reg.entryFee === 0 && (
-          <div className="border-t pt-2 flex justify-between font-bold text-green-700">
+          <div className="border-t dark:border-green-800 pt-2 flex justify-between font-bold text-green-700 dark:text-green-400">
             <span>Entry Fee</span><span>Free 🎉</span>
           </div>
         )}
