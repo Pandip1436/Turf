@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit3, Upload, X, Image as ImageIcon, Search } from 'lucide-react';
-import adminApi, { uploadApi } from '../utils/adminApi';
+import adminApi from '../utils/adminApi';
 import { useAdminAuth } from '../context/AdminAuthContext';
 
 interface Turf {
@@ -79,7 +79,7 @@ const AdminGallery = () => {
     try {
       const fd = new FormData();
       fd.append('image', file);
-      const res = await uploadApi.post('/gallery/upload', fd);
+      const res = await adminApi.post('/gallery/upload', fd);
       setForm(f => ({ ...f, image: res.data.url }));
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Upload failed';
